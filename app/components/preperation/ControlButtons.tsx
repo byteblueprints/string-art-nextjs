@@ -1,12 +1,13 @@
 "use client";
 
 import { ControlType } from "@/app/types/enum/ControlType";
-import { useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   FaAngleDown,
   FaAngleLeft,
   FaAngleRight,
   FaAngleUp,
+  FaCog,
   FaMinus,
   FaPlus,
 } from "react-icons/fa";
@@ -17,12 +18,18 @@ interface Props {
   setImgXPos: React.Dispatch<React.SetStateAction<number>>
   setImgYPos: React.Dispatch<React.SetStateAction<number>>
   setImgScale: React.Dispatch<React.SetStateAction<number>>
+  selectedImage: HTMLImageElement | null
 }
 
 
-const ControlButtons: React.FC<Props> = (props: Props) => {
+const ControlButtons: React.FC<Props> = forwardRef((props: Props) => {
   const { zoomIn, zoomOut, resetTransform, setTransform } = useControls();
-  const { setImgXPos, setImgYPos, setImgScale } = props
+  const [showConfig, setShowConfig] = useState(false);
+  const [numOfNails, setNumOfNails] = useState(0);
+  const [stringWeight, setStringWeight] = useState(0);
+  const [maxLineCount, setMaxLineCount] = useState(0);
+  const [outputScalingFactor, setOutputScalingFactor] = useState(1);
+  const { setImgXPos, setImgYPos, setImgScale, selectedImage } = props
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [s, setS] = useState(1);
@@ -51,31 +58,119 @@ const ControlButtons: React.FC<Props> = (props: Props) => {
     setImgYPos(state.positionY)
     setImgScale(state.scale)
   });
+  useEffect(() => {
+    resetTransform()
+  }, [selectedImage])
   return (
-    <div className="tools" style={{ color: "black", position: "absolute" }}>
-      <button onClick={() => zoomIn()}>
+    <div className="absolute bottom-0 flex space-x-2 p-4">
+      <button
+        onClick={() => zoomIn()}
+        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+      >
         <FaPlus />
       </button>
-      <button onClick={() => zoomOut()}>
+      <button
+        onClick={() => zoomOut()}
+        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+      >
         <FaMinus />
       </button>
-      <button onClick={() => resetTransform()}>
+      <button
+        onClick={() => resetTransform()}
+        className="p-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
+      >
         <FaXmark />
       </button>
-      <button onClick={() => transform(ControlType.LEFT)}>
+      <button
+        onClick={() => transform(ControlType.LEFT)}
+        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+      >
         <FaAngleLeft />
       </button>
-      <button onClick={() => transform(ControlType.RIGHT)}>
+      <button
+        onClick={() => transform(ControlType.RIGHT)}
+        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+      >
         <FaAngleRight />
       </button>
-      <button onClick={() => transform(ControlType.UP)}>
+      <button
+        onClick={() => transform(ControlType.UP)}
+        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+      >
         <FaAngleUp />
       </button>
-      <button onClick={() => transform(ControlType.DOWN)}>
+      <button
+        onClick={() => transform(ControlType.DOWN)}
+        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+      >
         <FaAngleDown />
       </button>
+      <button
+        onClick={() => setShowConfig(!showConfig)}
+        className="p-3 bg-gray-500 text-white rounded-full shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all"
+      >
+        <FaCog />
+      </button>
+      {showConfig && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Configuration</h2>
+            <div className="mb-4">
+              <label className="block mb-1">Number of Nails</label>
+              <input
+                type="number"
+                value={numOfNails}
+                onChange={(e) => setNumOfNails(Number(e.target.value))}
+                className="border rounded px-3 py-2 w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1">String Weight</label>
+              <input
+                type="number"
+                value={stringWeight}
+                onChange={(e) => setStringWeight(Number(e.target.value))}
+                className="border rounded px-3 py-2 w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1">Max Line Count</label>
+              <input
+                type="number"
+                value={maxLineCount}
+                onChange={(e) => setMaxLineCount(Number(e.target.value))}
+                className="border rounded px-3 py-2 w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1">Output Scaling Factor</label>
+              <input
+                type="number"
+                value={outputScalingFactor}
+                onChange={(e) => setOutputScalingFactor(Number(e.target.value))}
+                className="border rounded px-3 py-2 w-full"
+              />
+            </div>
+            <div className="flex">
+              <button
+                onClick={() => setShowConfig(false)}
+                className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-all mr-2"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setShowConfig(false)}
+                className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+
   );
-};
+});
 
 export default ControlButtons;

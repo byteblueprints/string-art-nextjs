@@ -6,17 +6,7 @@ function sleep(ms: number): Promise<void> {
 }
 export class LineSolver {
     public async solveIterativelyWithLineScores(
-        allLineCoordinates: { [key: string]: Array<[number, number]>; },
-        baseImage: ImageData,
-        maxIterations: number,
-        height: number,
-        width: number,
-        nailsCoord: Array<[number, number]>,
-        outputScalingFactor: number,
-        stringWeight: number,
-        canvas: HTMLCanvasElement,
-        skip: number
-    ) {
+allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: ImageData, maxIterations: number, height: number, width: number, nailsCoord: Array<[number, number]>, outputScalingFactor: number, stringWeight: number, canvas: HTMLCanvasElement, skip: number, setCount: any    ) {
         const doneNails: Set<string> = new Set();
         const nailSequence: number[] = [];
         const lastPins: number[] = [];
@@ -63,11 +53,13 @@ export class LineSolver {
             targetResized = this.drawLineUsingBreshenHamLineDrawingAlgo(targetResized, startPoint, endPoint);
             if (count % 10 === 0) {
                 this.showImage(ctx, targetResized);
-                await this.sleep(10)
+                await this.sleep(100)
             }
             console.log("count: ", count);
+            setCount(count)
         }
-        this.downloadFinalImage(width, outputScalingFactor, height, targetResized);
+        // this.downloadFinalImage(width, outputScalingFactor, height, targetResized);
+        return nailSequence
     }
 
     private downloadFinalImage(width: number, outputScalingFactor: number, height: number, targetResized: ImageData) {
@@ -177,7 +169,6 @@ export class LineSolver {
     private drawLineUsingBreshenHamLineDrawingAlgo(imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }): ImageData {
         const { width, height, data } = imageData;
 
-        // Bresenham's line algorithm
         const dx = Math.abs(endPoint.x - startPoint.x);
         const dy = Math.abs(endPoint.y - startPoint.y);
         const sx = startPoint.x < endPoint.x ? 1 : -1;

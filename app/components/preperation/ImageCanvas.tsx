@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import ControlButtons from "./ControlButtons";
-import { assert } from "console";
 import ImagePreviewCanvasMask from "./ImagePreviewCanvasMask";
 import ImagePreviewCanvas from "./ImagePreviewCanvas";
 
@@ -12,23 +11,28 @@ interface Props {
     setImgYPos: React.Dispatch<React.SetStateAction<number>>
     setImgScale: React.Dispatch<React.SetStateAction<number>>
     setImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>
+    selectedImage: HTMLImageElement | null
 }
 const ImageCanvas: React.FC<Props> = (props: Props) => {
-    const { setImgXPos, setImgYPos, setImgScale, setImage } = props
+    const { setImgXPos, setImgYPos, setImgScale, setImage, selectedImage } = props
     return (
         <>
-            <div className="image-container" style={{ position: "relative" }}>
-                <ImagePreviewCanvasMask />
-                <TransformWrapper
-                    initialScale={1}
-                    initialPositionX={0}
-                    initialPositionY={0}
-                >
-                    <TransformComponent>
-                        <ImagePreviewCanvas setImage={setImage} />
-                    </TransformComponent>
-                    <ControlButtons setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} />
-                </TransformWrapper>
+            <div className="container w-full">
+                <div className="flex flex-col items-center justify-center relative">                    
+                    <ImagePreviewCanvasMask />
+                    <TransformWrapper
+                        initialScale={1}
+                        initialPositionX={0}
+                        initialPositionY={0}
+                        smooth={false}
+                        pinch={{ step: 1 }}
+                    >
+                        <TransformComponent>
+                            <ImagePreviewCanvas setImage={setImage} selectedImage={selectedImage} />
+                        </TransformComponent>
+                        <ControlButtons setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} selectedImage={selectedImage} />
+                    </TransformWrapper>
+                </div>
             </div>
         </>
     );

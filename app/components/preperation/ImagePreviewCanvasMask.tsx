@@ -39,9 +39,9 @@ const ImagePreviewCanvasMask: React.FC = () => {
         }
     }, []);
     return (
-        <>
-            <canvas ref={canvasRef} style={{ position: "absolute" }} />
-        </>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <canvas ref={canvasRef} className="rounded-2xl"/>
+        </div>
     );
 };
 

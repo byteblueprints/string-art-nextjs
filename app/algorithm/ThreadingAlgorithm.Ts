@@ -22,8 +22,10 @@ export class ThreadingAlgorithm {
             this.ctx = this.canvas.getContext('2d');
         }
     }
-    public startThreading(image: HTMLImageElement | null) {
+    public async startThreading(image: HTMLImageElement | null, setCount: unknown, setNailSequence: unknown) {
         let imageData;
+        let nailSeq: number[] = [];
+        let allLineCoordinates = {}
         if (this.ctx) {
             if (this.canvas && image) {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -55,10 +57,10 @@ export class ThreadingAlgorithm {
                 this.drawNails(nailsCordinates);
 
                 const lineConnections = new LineConnections();
-                const allLineCoordinates = lineConnections.getAllPossibleLinesCoordinatesAgainstConnection(nailsCordinates);
+                allLineCoordinates = lineConnections.getAllPossibleLinesCoordinatesAgainstConnection(nailsCordinates);
 
                 const lineSolver = new LineSolver();
-                lineSolver.solveIterativelyWithLineScores(
+                nailSeq = await lineSolver.solveIterativelyWithLineScores(
                     allLineCoordinates,
                     imageData,
                     this.max_line_count,
@@ -68,11 +70,13 @@ export class ThreadingAlgorithm {
                     this.output_scaling_factor,
                     this.string_weight,
                     this.canvas,
-                    this.skip
-                ).catch((err) => console.log(err));
+                    this.skip,
+                    setCount
+                )
             }
             this.cleanup()
         }
+        return {nailSeq, allLineCoordinates};
     }
 
 
