@@ -1,7 +1,7 @@
 "use client";
 
 import { ControlType } from "@/app/types/enum/ControlType";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaAngleDown,
   FaAngleLeft,
@@ -22,7 +22,7 @@ interface Props {
 }
 
 
-const ControlButtons: React.FC<Props> = forwardRef((props: Props) => {
+const ControlButtons: React.FC<Props> = ((props: Props) => {
   const { zoomIn, zoomOut, resetTransform, setTransform } = useControls();
   const [showConfig, setShowConfig] = useState(false);
   const [numOfNails, setNumOfNails] = useState(0);

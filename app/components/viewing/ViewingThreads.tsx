@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import ThreadingCanvas from './ThreadingCanvas';
 import { ControlType } from '@/app/types/enum/ControlType';
 
@@ -13,15 +13,16 @@ interface Props {
   startManualThreading: boolean
   controlType: ControlType
   nailSequenseIndex: number
+  setFinalImage: Dispatch<SetStateAction<ImageData | null>>
 }
 
 
 const ViewingThreads: React.FC<Props> = (props: Props) => {
-  const { imgXPos, imgYPos, imgScale, image, setNailSequence, startManualThreading, controlType, nailSequenseIndex } = props
+  const { imgXPos, imgYPos, imgScale, image, setNailSequence, startManualThreading, controlType, nailSequenseIndex, setFinalImage } = props
   return (
-    <div className="rounded-2xl m-5 items-center">
+    <div className="container">
       <div className="flex flex-col w-full items-center justify-center">
-        <ThreadingCanvas imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} />
+        <ThreadingCanvas imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} setFinalImage={setFinalImage}/>
       </div>
       <div className="">
       </div>

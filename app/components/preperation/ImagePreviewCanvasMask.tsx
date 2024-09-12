@@ -11,14 +11,14 @@ const ImagePreviewCanvasMask: React.FC = () => {
             canvas.width = 500;
             canvas.height = 500;
             const ctx = canvas.getContext("2d");
-            const startX = Math.floor(500 / 2 - 1);
-            const startY = Math.floor(500 / 2 - 1);
+            const startX = Math.floor(canvas.width / 2 - 1);
+            const startY = Math.floor(canvas.height / 2 - 1);
 
             if (ctx != null) {
                 ctx.fillStyle = 'black';
-                ctx.fillRect(0, 0, 500, 500);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.beginPath();
-                ctx.arc(startX, startX, 249, 0, 2 * Math.PI);
+                ctx.arc(startX, startX, canvas.width / 2 - 1, 0, 2 * Math.PI);
                 ctx.stroke();
                 ctx.fillStyle = 'white';
                 ctx.fill();

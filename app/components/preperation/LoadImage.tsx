@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyFileUploader from "./MyFileUploader";
 import ImageCanvas from "./ImageCanvas";
 
@@ -14,12 +14,12 @@ const LoadImage: React.FC<Props> = (props: Props) => {
   const { setImgXPos, setImgYPos, setImgScale, setImage } = props
   const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
   return (
-    <div className="rounded-2xl m-5 content-center">
-      <div className="flex flex-col w-full content-center">
+    <div className="container m-5">
+      <div className="flex flex-col">
         <div className="content-center rounded-2xl">
-          <ImageCanvas setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} setImage={setImage} selectedImage={selectedImage}></ImageCanvas>
+          <ImageCanvas setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} selectedImage={selectedImage}></ImageCanvas>
         </div>
-        <MyFileUploader setSelectedImage={setSelectedImage}></MyFileUploader>
+        <MyFileUploader setSelectedImage={setSelectedImage} setImage={setImage}></MyFileUploader>
       </div>
     </div>
   );

@@ -10,14 +10,13 @@ interface Props {
     setImgXPos: React.Dispatch<React.SetStateAction<number>>
     setImgYPos: React.Dispatch<React.SetStateAction<number>>
     setImgScale: React.Dispatch<React.SetStateAction<number>>
-    setImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>
     selectedImage: HTMLImageElement | null
 }
 const ImageCanvas: React.FC<Props> = (props: Props) => {
-    const { setImgXPos, setImgYPos, setImgScale, setImage, selectedImage } = props
+    const { setImgXPos, setImgYPos, setImgScale, selectedImage } = props
     return (
         <>
-            <div className="container w-full">
+            <div className="container">
                 <div className="flex flex-col items-center justify-center relative">                    
                     <ImagePreviewCanvasMask />
                     <TransformWrapper
@@ -25,10 +24,9 @@ const ImageCanvas: React.FC<Props> = (props: Props) => {
                         initialPositionX={0}
                         initialPositionY={0}
                         smooth={false}
-                        pinch={{ step: 1 }}
                     >
                         <TransformComponent>
-                            <ImagePreviewCanvas setImage={setImage} selectedImage={selectedImage} />
+                            <ImagePreviewCanvas selectedImage={selectedImage} />
                         </TransformComponent>
                         <ControlButtons setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} selectedImage={selectedImage} />
                     </TransformWrapper>

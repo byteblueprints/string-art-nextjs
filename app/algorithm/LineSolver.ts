@@ -1,12 +1,12 @@
 import Pica from 'pica';
+import { NailsCoordinatesCalculator } from './NailsCoordinatesCalculator';
+import { Dispatch, SetStateAction } from 'react';
 
 const pica = Pica();
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 export class LineSolver {
     public async solveIterativelyWithLineScores(
-allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: ImageData, maxIterations: number, height: number, width: number, nailsCoord: Array<[number, number]>, outputScalingFactor: number, stringWeight: number, canvas: HTMLCanvasElement, skip: number, setCount: any    ) {
+        allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: ImageData, maxIterations: number, height: number, width: number, nailsCoord: Array<[number, number]>, outputScalingFactor: number, stringWeight: number, canvas: HTMLCanvasElement, skip: number, setCount: any, setViewedImage: Dispatch<SetStateAction<ImageData | null>>) {
         const doneNails: Set<string> = new Set();
         const nailSequence: number[] = [];
         const lastPins: number[] = [];
@@ -48,41 +48,17 @@ allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: Imag
             if (lastPins.length > 30) {
                 lastPins.shift();
             }
-            count++;
             nailSequence.push(bestNail);
             targetResized = this.drawLineUsingBreshenHamLineDrawingAlgo(targetResized, startPoint, endPoint);
             if (count % 10 === 0) {
                 this.showImage(ctx, targetResized);
                 await this.sleep(100)
             }
-            console.log("count: ", count);
-            setCount(count)
+            setCount(count)            
+            count++;
         }
-        // this.downloadFinalImage(width, outputScalingFactor, height, targetResized);
+        setViewedImage(targetResized)
         return nailSequence
-    }
-
-    private downloadFinalImage(width: number, outputScalingFactor: number, height: number, targetResized: ImageData) {
-        const offscreenCanvas = new OffscreenCanvas(width * outputScalingFactor, height * outputScalingFactor);
-        offscreenCanvas.width = targetResized.width;
-        offscreenCanvas.height = targetResized.height;
-        const offScreenContext = offscreenCanvas.getContext('2d');
-        if (!offScreenContext) {
-            throw new Error('2D context not available');
-        }
-
-        offScreenContext.putImageData(targetResized, 0, 0);
-
-        offscreenCanvas.convertToBlob().then(blob => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'image.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
     }
 
     private getBestNail(skip: number, nailsCount: number, startNail: number, lastPins: number[], doneNails: Set<string>, allLineCoordinates: { [key: string]: [number, number][]; }, error: ImageData) {
@@ -97,7 +73,7 @@ allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: Imag
             }
 
             const lineCoordinates = allLineCoordinates[combination];
-            const lineScore = this.getLineScoreWithoutW(error, lineCoordinates);
+            const lineScore = this.getLineScore(error, lineCoordinates);
 
             if (lineScore > maxLineScore) {
                 bestNail = endNail;
@@ -107,7 +83,7 @@ allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: Imag
         return bestNail;
     }
 
-    private getLineScoreWithoutW(error: ImageData, param: Array<[number, number]>): number {
+    private getLineScore(error: ImageData, param: Array<[number, number]>): number {
         const scores: number[] = [];
         for (const coord of param) {
             scores.push(this.getPixelValue(error, coord[0], coord[1]));
@@ -121,11 +97,10 @@ allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: Imag
             imageData.data[i] = fillValue;
             imageData.data[i + 1] = fillValue;
             imageData.data[i + 2] = fillValue;
-            imageData.data[i + 3] = 255; // Alpha channel
+            imageData.data[i + 3] = 255;
         }
         return imageData;
     }
-
     private getPixelValue(imageData: ImageData, x: number, y: number): number {
         const index = (y * imageData.width + x) * 4;
         return imageData.data[index];
@@ -144,26 +119,9 @@ allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: Imag
             result.data[i] = imageData1.data[i] - imageData2.data[i];
             result.data[i + 1] = imageData1.data[i + 1] - imageData2.data[i + 1];
             result.data[i + 2] = imageData1.data[i + 2] - imageData2.data[i + 2];
-            result.data[i + 3] = 255; // Alpha channel
+            result.data[i + 3] = 255;
         }
         return result;
-    }
-
-    private drawLine(imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }): ImageData {
-        const offscreenCanvas = new OffscreenCanvas(imageData.width, imageData.height);
-        const ctx = offscreenCanvas.getContext('2d');
-        if (!ctx) {
-            throw new Error('2D context not available');
-        }
-
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.putImageData(imageData, 0, 0);
-        ctx.beginPath();
-        ctx.moveTo(startPoint.x, startPoint.y);
-        ctx.lineTo(endPoint.x, endPoint.y);
-        ctx.stroke();
-
-        return ctx.getImageData(0, 0, imageData.width, imageData.height);
     }
 
     private drawLineUsingBreshenHamLineDrawingAlgo(imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }): ImageData {
@@ -201,24 +159,6 @@ allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: Imag
         }
 
         return imageData;
-    }
-
-
-
-    private resizeImageData(imageData: ImageData, width: number, height: number, outputScalingFactor: number): ImageData {
-        const offscreenCanvas = new OffscreenCanvas(width * outputScalingFactor, height * outputScalingFactor);
-        const ctx = offscreenCanvas.getContext('2d');
-        if (!ctx) {
-            throw new Error('2D context not available');
-        }
-        ctx.putImageData(imageData, 0, 0);
-        const resizedCanvas = new OffscreenCanvas(width, height);
-        const resizedCtx = resizedCanvas.getContext('2d');
-        if (!resizedCtx) {
-            throw new Error('2D context not available');
-        }
-        resizedCtx.drawImage(offscreenCanvas, 0, 0, width, height);
-        return resizedCtx.getImageData(0, 0, width, height);
     }
 
     private showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData): void {

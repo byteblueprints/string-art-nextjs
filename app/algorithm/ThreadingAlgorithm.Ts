@@ -1,6 +1,7 @@
 import { NailsCoordinatesCalculator } from "./NailsCoordinatesCalculator";
 import { LineConnections } from "./LineConnections";
 import { LineSolver } from "./LineSolver";
+import { Dispatch, SetStateAction } from "react";
 export class ThreadingAlgorithm {
     private xc: number = 250;
     private yc: number = 250;
@@ -13,48 +14,40 @@ export class ThreadingAlgorithm {
     private max_line_count: number = 4000;
     private skip: number = 20;
 
-    private canvas: HTMLCanvasElement | null = null;
-    private ctx: CanvasRenderingContext2D | null = null;
-
-    constructor(canvasId: string) {
-        this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-        if (this.canvas) {
-            this.ctx = this.canvas.getContext('2d');
-        }
-    }
-    public async startThreading(image: HTMLImageElement | null, setCount: unknown, setNailSequence: unknown) {
+    public async startThreading(canvasId: string, image: HTMLImageElement | null, setCount: unknown, setNailSequence: React.Dispatch<React.SetStateAction<number[]>>, setViewedImage: Dispatch<SetStateAction<ImageData | null>>) {
+        let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
+        let ctx: CanvasRenderingContext2D | null = null
         let imageData;
         let nailSeq: number[] = [];
         let allLineCoordinates = {}
-        if (this.ctx) {
-            if (this.canvas && image) {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.globalCompositeOperation = 'source-over';
-                this.ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+        if (canvas) {
+            ctx = canvas.getContext('2d');
+            if (ctx && image) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-                imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.globalCompositeOperation = 'destination-in';
-                this.ctx.beginPath();
-                this.ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), this.r, 0, Math.PI * 2);
-                this.ctx.closePath();
-                this.ctx.fill();
-                const offscreenCanvas = new OffscreenCanvas(image.width, image.height);
-                const ctx = offscreenCanvas.getContext('2d');
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                ctx.globalCompositeOperation = 'destination-in';
+                ctx.beginPath();
+                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), this.r, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
 
                 this.convertToGrayscale(imageData);
 
-                this.ctx.putImageData(imageData, 0, 0);
-                this.ctx.globalCompositeOperation = 'destination-in';
-                this.ctx.beginPath();
-                this.ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), this.r, 0, Math.PI * 2);
-                this.ctx.closePath();
-                this.ctx.fill();
-                this.ctx.globalCompositeOperation = 'source-over';
+                ctx.putImageData(imageData, 0, 0);
+                ctx.globalCompositeOperation = 'destination-in';
+                ctx.beginPath();
+                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), this.r, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over';
 
                 const calculator = new NailsCoordinatesCalculator(this.xc, this.yc, this.r);
                 const nailsCordinates = calculator.getNailsCoordinates(this.num_of_nails);
 
-                this.drawNails(nailsCordinates);
+                this.drawNails(nailsCordinates, ctx);
 
                 const lineConnections = new LineConnections();
                 allLineCoordinates = lineConnections.getAllPossibleLinesCoordinatesAgainstConnection(nailsCordinates);
@@ -69,28 +62,30 @@ export class ThreadingAlgorithm {
                     nailsCordinates,
                     this.output_scaling_factor,
                     this.string_weight,
-                    this.canvas,
+                    canvas,
                     this.skip,
-                    setCount
+                    setCount,
+                    setViewedImage
                 )
+                setNailSequence(nailSeq)
+                this.cleanup(ctx, canvas)
             }
-            this.cleanup()
         }
-        return {nailSeq, allLineCoordinates};
+        return { nailSeq, allLineCoordinates };
     }
 
 
-    private drawNails(nc: [number, number][]) {
-        nc.forEach(([xx, yy]) => {
+    private drawNails(nailsCordinates: [number, number][], ctx: CanvasRenderingContext2D) {
+        nailsCordinates.forEach(([xx, yy]) => {
             for (let x = xx; x < xx + 2; x++) {
                 for (let y = yy; y < yy + 2; y++) {
-                    if (this.ctx) {
-                        const pixelData = this.ctx.createImageData(1, 1);
+                    if (ctx) {
+                        const pixelData = ctx.createImageData(1, 1);
                         pixelData.data[0] = 255;
                         pixelData.data[1] = 0;
                         pixelData.data[2] = 0;
                         pixelData.data[3] = 255;
-                        this.ctx.putImageData(pixelData, x, y);
+                        ctx.putImageData(pixelData, x, y);
                     }
                 }
             };
@@ -112,11 +107,11 @@ export class ThreadingAlgorithm {
             data[i + 2] = gray;
         }
     }
-    private cleanup() {
-        if (this.ctx) {
-            this.ctx.clearRect(0, 0, this.canvas?.width ?? 0, this.canvas?.height ?? 0);
+    private cleanup(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement | null) {
+        if (ctx && canvas) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
-        this.canvas = null;
-        this.ctx = null;
+        canvas = null;
+        ctx = null;
     }
 }

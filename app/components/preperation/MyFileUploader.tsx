@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   setSelectedImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>;
+  setImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>
 }
 
-const MyFileUploader: React.FC<Props> = ({ setSelectedImage }) => {
+const MyFileUploader: React.FC<Props> = (props: Props) => {
+  const{ setSelectedImage, setImage } = props
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +30,14 @@ const MyFileUploader: React.FC<Props> = ({ setSelectedImage }) => {
     }
   };
 
+  useEffect(() => {
+    const image = new Image();
+    image.src = "/base.jpeg";
+    image.onload = () => {
+      setSelectedImage(image)
+      setImage(image)
+    };
+  }, [])
   return (
     <div className="flex flex-col items-center w-full space-y-4 mt-5">
       <label className="flex flex-col items-center p-3 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 w-full max-w-xs text-center">
