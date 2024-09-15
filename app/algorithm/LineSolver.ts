@@ -15,7 +15,7 @@ export class LineSolver {
         const nailsCount = nailsCoord.length;
         let startNail = 0;
         nailSequence.push(startNail);
-        let targetResized = this.createImageData(height * outputScalingFactor, width * outputScalingFactor, 255);
+        let target = this.createImageData(height * outputScalingFactor, width * outputScalingFactor, 255);
         let ctx = canvas.getContext('2d');
         if (!ctx) {
             throw new Error('2D context not available');
@@ -49,15 +49,15 @@ export class LineSolver {
                 lastPins.shift();
             }
             nailSequence.push(bestNail);
-            targetResized = this.drawLineUsingBreshenHamLineDrawingAlgo(targetResized, startPoint, endPoint);
+            target = this.drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint);
             if (count % 10 === 0) {
-                this.showImage(ctx, targetResized);
+                this.showImage(ctx, target);
                 await this.sleep(100)
             }
             setCount(count)            
             count++;
         }
-        setViewedImage(targetResized)
+        setViewedImage(target)
         return nailSequence
     }
 

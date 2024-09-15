@@ -14,7 +14,7 @@ const Home: React.FC = () => {
   const [nailSequence, setNailSequence] = useState<number[]>([]);
   const [startManualThreading, setStartManualThreading] = useState<boolean>(false);
   const [controlType, setControlType] = useState<ControlType>(ControlType.UP);
-  const [nailSequenseIndex, setNailSequenseIndex] = useState<number>(0);  
+  const [nailSequenseIndex, setNailSequenseIndex] = useState<number>(0);
   const [finalImage, setFinalImage] = useState<ImageData | null>(null)
 
   return (
@@ -24,12 +24,18 @@ const Home: React.FC = () => {
           <LoadImage setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} setImage={setImage} />
         </div>
         <div className='basis-1/2'>
-          <ViewingThreads imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} setFinalImage={setFinalImage}/>
+          <ViewingThreads imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} setFinalImage={setFinalImage} />
         </div>
       </div>
-      <div className='flex flex-row'>
-        <div className='basis-full'>
-          <ManualViewing nailSequence={nailSequence} setStartManualThreading={setStartManualThreading} setControlType={setControlType} setNailSequenseIndex={setNailSequenseIndex} finalImage={finalImage}/>
+      <div className="flex flex-row h-screen m-4">
+        <div className="basis-full">
+          <ManualViewing
+            nailSequence={nailSequence}
+            setStartManualThreading={setStartManualThreading}
+            setControlType={setControlType}
+            setNailSequenseIndex={setNailSequenseIndex}
+            finalImage={finalImage}
+          />
         </div>
       </div>
     </div>
