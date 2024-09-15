@@ -20,7 +20,7 @@ interface Props {
 const ViewingThreads: React.FC<Props> = (props: Props) => {
   const { imgXPos, imgYPos, imgScale, image, setNailSequence, startManualThreading, controlType, nailSequenseIndex, setFinalImage } = props
   return (
-    <div className="container">
+    <div className="container mt-5">
       <div className="flex flex-col w-full items-center justify-center">
         <ThreadingCanvas imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} setFinalImage={setFinalImage}/>
       </div>

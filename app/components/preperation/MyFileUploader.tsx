@@ -23,6 +23,7 @@ const MyFileUploader: React.FC<Props> = (props: Props) => {
           img.src = reader.result as string;
           img.onload = () => {
             setSelectedImage(img);
+            setImage(img);
           };
         }
       };
