@@ -1,9 +1,8 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { ThreadingAlgorithm } from '../../algorithm/ThreadingAlgorithm';
 import { ControlType } from "@/app/types/enum/ControlType";
-import { ManualDraw } from "@/app/algorithm/ManualDraw";
+import { ThreadingAlgorithm } from "@/app/algorithm/ThreadingAlgorithm";
 import { FaDownload } from "react-icons/fa";
 
 interface Props {
