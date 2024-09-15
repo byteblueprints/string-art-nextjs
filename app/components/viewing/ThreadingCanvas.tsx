@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ControlType } from "@/app/types/enum/ControlType";
-import { ThreadingAlgorithm } from "@/app/algorithm/ThreadingAlgorithm";
+import { ThreadingAlgorithm } from "@/app/algorithm/ThreadingAlgorithm.ts";
 import { FaDownload } from "react-icons/fa";
 
 interface Props {
