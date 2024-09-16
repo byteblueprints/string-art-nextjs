@@ -2,6 +2,7 @@
 const nextConfig = {
   output: 'export',
   assetPrefix: './',
+  basePath: '/string-art',
   webpack: function (config, env) {
       config.resolve.fallback = {
         fs: false,
