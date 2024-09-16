@@ -16,43 +16,44 @@ const Home: React.FC = () => {
   const [controlType, setControlType] = useState<ControlType>(ControlType.UP);
   const [nailSequenseIndex, setNailSequenseIndex] = useState<number>(0);
   const [finalImage, setFinalImage] = useState<ImageData | null>(null)
-  
+
   const [numOfNails, setNumOfNails] = useState(250);
   const [stringWeight, setStringWeight] = useState(20);
   const [maxLineCount, setMaxLineCount] = useState(4000);
 
   return (
     <div className='container'>
-      <div className=' flex flex-row'>
-        <div className='basis-1/2'>
-          <LoadImage 
-          setImgXPos={setImgXPos} 
-          setImgYPos={setImgYPos} 
-          setImgScale={setImgScale} 
-          setImage={setImage} 
-          setNumOfNails={setNumOfNails} 
-          setStringWeight={setStringWeight} 
-          setMaxLineCount={setMaxLineCount}
+      <div className='flex flex-col lg:flex-row'>
+        <div className='basis-full lg:basis-1/2'>
+          <LoadImage
+            setImgXPos={setImgXPos}
+            setImgYPos={setImgYPos}
+            setImgScale={setImgScale}
+            setImage={setImage}
+            setNumOfNails={setNumOfNails}
+            setStringWeight={setStringWeight}
+            setMaxLineCount={setMaxLineCount}
           />
         </div>
-        <div className='basis-1/2'>
-          <ViewingThreads 
-          imgXPos={imgXPos} 
-          imgYPos={imgYPos} 
-          imgScale={imgScale} 
-          image={image} 
-          setNailSequence={setNailSequence} 
-          startManualThreading={startManualThreading} 
-          controlType={controlType} 
-          nailSequenseIndex={nailSequenseIndex} 
-          setFinalImage={setFinalImage} 
-          numOfNails={numOfNails} 
-          maxLineCount={maxLineCount} 
-          stringWeight={stringWeight}
+        <div className='basis-full lg:basis-1/2'>
+          <ViewingThreads
+            imgXPos={imgXPos}
+            imgYPos={imgYPos}
+            imgScale={imgScale}
+            image={image}
+            setNailSequence={setNailSequence}
+            startManualThreading={startManualThreading}
+            controlType={controlType}
+            nailSequenseIndex={nailSequenseIndex}
+            setFinalImage={setFinalImage}
+            numOfNails={numOfNails}
+            maxLineCount={maxLineCount}
+            stringWeight={stringWeight}
           />
         </div>
       </div>
-      <div className="flex flex-row h-screen m-4">
+
+      <div className="flex flex-col h-screen m-4">
         <div className="basis-full">
           <ManualViewing
             nailSequence={nailSequence}
@@ -64,6 +65,7 @@ const Home: React.FC = () => {
         </div>
       </div>
     </div>
+
   );
 };
 
