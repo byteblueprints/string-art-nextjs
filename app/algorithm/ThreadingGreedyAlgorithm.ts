@@ -2,7 +2,7 @@ import { NailsCoordinatesCalculator } from "./NailsCoordinatesCalculator";
 import { LineConnections } from "./LineConnections";
 import { LineSolver } from "./LineSolver";
 import { Dispatch, SetStateAction } from "react";
-export class ThreadingAlgorithm {
+export class ThreadingGreedyAlgorithm {
     private xc: number = 250;
     private yc: number = 250;
     private r: number = 250;
@@ -106,7 +106,6 @@ export class ThreadingAlgorithm {
             const b = data[i + 2];
 
             const gray = 0.21 * r + 0.72 * g + 0.07 * b;
-
             data[i] = gray;
             data[i + 1] = gray;
             data[i + 2] = gray;

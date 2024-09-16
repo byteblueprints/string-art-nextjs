@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ControlType } from "@/app/types/enum/ControlType";
-import { ThreadingAlgorithm } from "@/app/algorithm/ThreadingAlgorithm";
+import { ThreadingGreedyAlgorithm } from "@/app/algorithm/ThreadingGreedyAlgorithm";
 import { FaDownload } from "react-icons/fa";
 
 interface Props {
@@ -102,7 +102,7 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
             await sleep(100)
             context.globalCompositeOperation = 'source-over';
             context.drawImage(newImage, 0, 0);
-            let algorithm = new ThreadingAlgorithm()
+            let algorithm = new ThreadingGreedyAlgorithm()
             await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage, numOfNails, maxLineCount, stringWeight)
         }
     }
