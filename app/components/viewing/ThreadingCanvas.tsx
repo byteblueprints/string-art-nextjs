@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ControlType } from "@/app/types/enum/ControlType";
-import { ThreadingAlgorithm } from "@/app/algorithm/ThreadingAlgorithm.ts";
+import { ThreadingAlgorithm } from "@/app/algorithm/ThreadingAlgorithm";
 import { FaDownload } from "react-icons/fa";
 
 interface Props {
@@ -14,13 +14,29 @@ interface Props {
     startManualThreading: boolean
     controlType: ControlType
     nailSequenseIndex: number
-    setFinalImage: Dispatch<SetStateAction<ImageData | null>>
+    setFinalImage: Dispatch<SetStateAction<ImageData | null>>  
+    numOfNails: number
+    stringWeight: number
+    maxLineCount: number
 }
 function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 const ThreadingCanvas: React.FC<Props> = (props: Props) => {
-    const { imgXPos, imgYPos, imgScale, image, setNailSequence, startManualThreading, controlType, nailSequenseIndex, setFinalImage } = props
+    const { 
+        imgXPos, 
+        imgYPos, 
+        imgScale, 
+        image, 
+        setNailSequence, 
+        startManualThreading, 
+        controlType, 
+        nailSequenseIndex, 
+        setFinalImage,
+        numOfNails, 
+        stringWeight, 
+        maxLineCount 
+    } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [context, setContext] = useState<CanvasRenderingContext2D>()
     const [count, setCount] = useState<number>(0)
@@ -87,7 +103,7 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
             context.globalCompositeOperation = 'source-over';
             context.drawImage(newImage, 0, 0);
             let algorithm = new ThreadingAlgorithm()
-            await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage)
+            await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage, numOfNails, maxLineCount, stringWeight)
         }
     }
 
@@ -131,13 +147,13 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
             <div className="relative w-full bg-gray-200 rounded-full h-4">
                 <div
                     className="bg-green-500 h-4 rounded-full"
-                    style={{ width: `${(count / 4000) * 100}%` }}
+                    style={{ width: `${(count / maxLineCount) * 100}%` }}
                 ></div>
                 <span
                     className="absolute inset-0 flex items-center justify-center text-black font-bold"
                     style={{ right: '0', paddingRight: '4px' }}
                 >
-                    {`${Math.min((count / 4000) * 100, 100).toFixed(0)}%`}
+                    {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
                 </span>
             </div>
             <div className="text-lg font-semibold text-gray-800">

@@ -5,16 +5,21 @@ import { Dispatch, SetStateAction } from "react";
 export class ThreadingAlgorithm {
     private xc: number = 250;
     private yc: number = 250;
-    private r: number = 249;
-    private num_of_nails: number = 288;
+    private r: number = 250;
     private height: number = 500;
     private width: number = 500;
     private output_scaling_factor: number = 7;
-    private string_weight: number = 20;
-    private max_line_count: number = 4000;
     private skip: number = 20;
 
-    public async startThreading(canvasId: string, image: HTMLImageElement | null, setCount: unknown, setNailSequence: React.Dispatch<React.SetStateAction<number[]>>, setViewedImage: Dispatch<SetStateAction<ImageData | null>>) {
+    public async startThreading(
+        canvasId: string, 
+        image: HTMLImageElement | null, 
+        setCount: unknown, setNailSequence: React.Dispatch<React.SetStateAction<number[]>>, 
+        setViewedImage: Dispatch<SetStateAction<ImageData | null>>,
+        num_of_nails: number,
+        max_line_count: number,
+        string_weight: number
+    ) {
         let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx: CanvasRenderingContext2D | null = null
         let imageData;
@@ -45,7 +50,7 @@ export class ThreadingAlgorithm {
                 ctx.globalCompositeOperation = 'source-over';
 
                 const calculator = new NailsCoordinatesCalculator(this.xc, this.yc, this.r);
-                const nailsCordinates = calculator.getNailsCoordinates(this.num_of_nails);
+                const nailsCordinates = calculator.getNailsCoordinates(num_of_nails);
 
                 this.drawNails(nailsCordinates, ctx);
 
@@ -56,12 +61,12 @@ export class ThreadingAlgorithm {
                 nailSeq = await lineSolver.solveIterativelyWithLineScores(
                     allLineCoordinates,
                     imageData,
-                    this.max_line_count,
+                    max_line_count,
                     this.height,
                     this.width,
                     nailsCordinates,
                     this.output_scaling_factor,
-                    this.string_weight,
+                    string_weight,
                     canvas,
                     this.skip,
                     setCount,

@@ -16,15 +16,40 @@ const Home: React.FC = () => {
   const [controlType, setControlType] = useState<ControlType>(ControlType.UP);
   const [nailSequenseIndex, setNailSequenseIndex] = useState<number>(0);
   const [finalImage, setFinalImage] = useState<ImageData | null>(null)
+  
+  const [numOfNails, setNumOfNails] = useState(250);
+  const [stringWeight, setStringWeight] = useState(20);
+  const [maxLineCount, setMaxLineCount] = useState(4000);
 
   return (
     <div className='container'>
       <div className=' flex flex-row'>
         <div className='basis-1/2'>
-          <LoadImage setImgXPos={setImgXPos} setImgYPos={setImgYPos} setImgScale={setImgScale} setImage={setImage} />
+          <LoadImage 
+          setImgXPos={setImgXPos} 
+          setImgYPos={setImgYPos} 
+          setImgScale={setImgScale} 
+          setImage={setImage} 
+          setNumOfNails={setNumOfNails} 
+          setStringWeight={setStringWeight} 
+          setMaxLineCount={setMaxLineCount}
+          />
         </div>
         <div className='basis-1/2'>
-          <ViewingThreads imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} setFinalImage={setFinalImage} />
+          <ViewingThreads 
+          imgXPos={imgXPos} 
+          imgYPos={imgYPos} 
+          imgScale={imgScale} 
+          image={image} 
+          setNailSequence={setNailSequence} 
+          startManualThreading={startManualThreading} 
+          controlType={controlType} 
+          nailSequenseIndex={nailSequenseIndex} 
+          setFinalImage={setFinalImage} 
+          numOfNails={numOfNails} 
+          maxLineCount={maxLineCount} 
+          stringWeight={stringWeight}
+          />
         </div>
       </div>
       <div className="flex flex-row h-screen m-4">

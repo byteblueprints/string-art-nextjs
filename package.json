@@ -6,8 +6,7 @@
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
-    "build": "next build && next export",
-    "deploy": "gh-pages -d out"
+    "build": "next build"
   },
   "dependencies": {
     "@techstark/opencv-js": "^4.10.0-beta.1",
