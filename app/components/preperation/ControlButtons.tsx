@@ -19,20 +19,28 @@ interface Props {
   setImgYPos: React.Dispatch<React.SetStateAction<number>>
   setImgScale: React.Dispatch<React.SetStateAction<number>>
   selectedImage: HTMLImageElement | null
+  setNumOfNails: React.Dispatch<React.SetStateAction<number>>
+  setStringWeight: React.Dispatch<React.SetStateAction<number>>
+  setMaxLineCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 
 const ControlButtons: React.FC<Props> = ((props: Props) => {
   const { zoomIn, zoomOut, resetTransform, setTransform } = useControls();
   const [showConfig, setShowConfig] = useState(false);
-  const [numOfNails, setNumOfNails] = useState(0);
-  const [stringWeight, setStringWeight] = useState(0);
-  const [maxLineCount, setMaxLineCount] = useState(0);
-  const [outputScalingFactor, setOutputScalingFactor] = useState(1);
-  const { setImgXPos, setImgYPos, setImgScale, selectedImage } = props
+  const { setImgXPos, setImgYPos, setImgScale, selectedImage, setNumOfNails, setStringWeight, setMaxLineCount } = props
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [s, setS] = useState(1);
+  const [non, setNon] = useState(250);
+  const [sw, setSw] = useState(20);
+  const [mlc, setMlc] = useState(4000);
+
+  useEffect(() => {
+    setNumOfNails(non)
+    setStringWeight(sw)
+    setMaxLineCount(mlc)
+  }, [non, sw, mlc])
 
   const transform = (control_type: ControlType) => {
     switch (control_type) {
@@ -119,8 +127,8 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">Number of Nails</label>
               <input
                 type="number"
-                value={numOfNails}
-                onChange={(e) => setNumOfNails(Number(e.target.value))}
+                value={non}
+                onChange={(e) => setNon(Number(e.target.value))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
@@ -128,8 +136,8 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">String Weight</label>
               <input
                 type="number"
-                value={stringWeight}
-                onChange={(e) => setStringWeight(Number(e.target.value))}
+                value={sw}
+                onChange={(e) => setSw(Number(e.target.value))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
@@ -137,30 +145,21 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">Max Line Count</label>
               <input
                 type="number"
-                value={maxLineCount}
-                onChange={(e) => setMaxLineCount(Number(e.target.value))}
-                className="border rounded px-3 py-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1">Output Scaling Factor</label>
-              <input
-                type="number"
-                value={outputScalingFactor}
-                onChange={(e) => setOutputScalingFactor(Number(e.target.value))}
+                value={mlc}
+                onChange={(e) => setMlc(Number(e.target.value))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
             <div className="flex">
               <button
                 onClick={() => setShowConfig(false)}
-                className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition-all mr-2"
+                className="bg-blue-500 text-white rounded-full px-4 py-2 hover:bg-blue-600 transition-all mr-2"
               >
                 Save
               </button>
               <button
                 onClick={() => setShowConfig(false)}
-                className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition-all"
+                className="bg-red-500 text-white rounded-full px-4 py-2 hover:bg-red-600 transition-all"
               >
                 Cancel
               </button>

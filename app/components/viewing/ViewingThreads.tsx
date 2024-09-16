@@ -14,15 +14,44 @@ interface Props {
   controlType: ControlType
   nailSequenseIndex: number
   setFinalImage: Dispatch<SetStateAction<ImageData | null>>
+  numOfNails: number
+  stringWeight: number
+  maxLineCount: number
 }
 
 
 const ViewingThreads: React.FC<Props> = (props: Props) => {
-  const { imgXPos, imgYPos, imgScale, image, setNailSequence, startManualThreading, controlType, nailSequenseIndex, setFinalImage } = props
+  const {
+    imgXPos,
+    imgYPos,
+    imgScale,
+    image,
+    setNailSequence,
+    startManualThreading,
+    controlType,
+    nailSequenseIndex,
+    setFinalImage, 
+    numOfNails, 
+    stringWeight, 
+    maxLineCount
+  } = props
   return (
     <div className="container mt-5">
       <div className="flex flex-col w-full items-center justify-center">
-        <ThreadingCanvas imgXPos={imgXPos} imgYPos={imgYPos} imgScale={imgScale} image={image} setNailSequence={setNailSequence} startManualThreading={startManualThreading} controlType={controlType} nailSequenseIndex={nailSequenseIndex} setFinalImage={setFinalImage}/>
+        <ThreadingCanvas 
+        imgXPos={imgXPos} 
+        imgYPos={imgYPos} 
+        imgScale={imgScale} 
+        image={image} 
+        setNailSequence={setNailSequence} 
+        startManualThreading={startManualThreading} 
+        controlType={controlType} 
+        nailSequenseIndex={nailSequenseIndex} 
+        setFinalImage={setFinalImage}        
+        numOfNails={numOfNails} 
+        maxLineCount={maxLineCount} 
+        stringWeight={stringWeight} 
+        />
       </div>
       <div className="">
       </div>
