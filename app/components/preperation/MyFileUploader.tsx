@@ -33,7 +33,7 @@ const MyFileUploader: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     const image = new Image();
-    image.src = "/base.jpeg";
+    image.src = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/base.jpeg`;
     image.onload = () => {
       setSelectedImage(image)
       setImage(image)
