@@ -23,7 +23,7 @@ const Home: React.FC = () => {
 
   return (
     <div className='container'>
-      <div className='flex flex-col lg:flex-row'>
+      <div className='flex flex-col lg:flex-row content-center'>
         <div className='basis-full lg:basis-1/2'>
           <LoadImage
             setImgXPos={setImgXPos}
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col h-screen m-4">
+      <div className="flex flex-col h-screen m-4 content-center">
         <div className="basis-full">
           <ManualViewing
             nailSequence={nailSequence}
