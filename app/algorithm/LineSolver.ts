@@ -6,7 +6,19 @@ const pica = Pica();
 
 export class LineSolver {
     public async solveIterativelyWithLineScores(
-        allLineCoordinates: { [key: string]: Array<[number, number]>; }, baseImage: ImageData, maxIterations: number, height: number, width: number, nailsCoord: Array<[number, number]>, outputScalingFactor: number, stringWeight: number, canvas: HTMLCanvasElement, skip: number, setCount: any, setViewedImage: Dispatch<SetStateAction<ImageData | null>>) {
+        allLineCoordinates: { [key: string]: Array<[number, number]>; }, 
+        baseImage: ImageData, 
+        maxIterations: number, 
+        height: number, 
+        width: number, 
+        nailsCoord: Array<[number, number]>, 
+        outputScalingFactor: number, 
+        stringWeight: number, 
+        canvas: HTMLCanvasElement, 
+        skip: number, 
+        setCount: any, 
+        setViewedImage: Dispatch<SetStateAction<ImageData | null>>
+    ) {
         const doneNails: Set<string> = new Set();
         const nailSequence: number[] = [];
         const lastPins: number[] = [];
