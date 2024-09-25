@@ -95,16 +95,22 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     }, [imgXPos, imgYPos, imgScale, image]);
 
     async function startThreading(): Promise<void> {
-        if (context && canvasRef.current && image) {
-            const dataURL = canvasRef.current.toDataURL();
-            const newImage = new Image();
-            newImage.src = dataURL;
-            await sleep(100)
-            context.globalCompositeOperation = 'source-over';
-            context.drawImage(newImage, 0, 0);
-            let algorithm = new ThreadingGreedyAlgorithm()
-            await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage, numOfNails, maxLineCount, stringWeight)
-        }
+        const worker = new Worker(new URL("../../algorithm/worker.ts", import.meta.url));
+        worker.postMessage(null);
+
+        worker.onmessage = function (e) {
+            console.log(e)
+        };
+        // if (context && canvasRef.current && image) {
+        //     const dataURL = canvasRef.current.toDataURL();
+        //     const newImage = new Image();
+        //     newImage.src = dataURL;
+        //     await sleep(100)
+        //     context.globalCompositeOperation = 'source-over';
+        //     context.drawImage(newImage, 0, 0);
+        //     let algorithm = new ThreadingGreedyAlgorithm()
+        //     await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage, numOfNails, maxLineCount, stringWeight)
+        // }
     }
 
     const circleCrop = (context: CanvasRenderingContext2D) => {
