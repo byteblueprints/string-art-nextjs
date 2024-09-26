@@ -15,32 +15,37 @@ import { FaXmark } from "react-icons/fa6";
 import { useControls, useTransformEffect } from "react-zoom-pan-pinch";
 
 interface Props {
+  selectedImage: HTMLImageElement | null
   setImgXPos: React.Dispatch<React.SetStateAction<number>>
   setImgYPos: React.Dispatch<React.SetStateAction<number>>
   setImgScale: React.Dispatch<React.SetStateAction<number>>
-  selectedImage: HTMLImageElement | null
   setNumOfNails: React.Dispatch<React.SetStateAction<number>>
   setStringWeight: React.Dispatch<React.SetStateAction<number>>
   setMaxLineCount: React.Dispatch<React.SetStateAction<number>>
+  numOfNails: number
+  stringWeight: number
+  maxLineCount: number
 }
 
 
 const ControlButtons: React.FC<Props> = ((props: Props) => {
   const { zoomIn, zoomOut, resetTransform, setTransform } = useControls();
   const [showConfig, setShowConfig] = useState(false);
-  const { setImgXPos, setImgYPos, setImgScale, selectedImage, setNumOfNails, setStringWeight, setMaxLineCount } = props
+  const { 
+    setImgXPos, 
+    setImgYPos, 
+    setImgScale, 
+    selectedImage, 
+    setNumOfNails, 
+    setStringWeight, 
+    setMaxLineCount,
+    numOfNails, 
+    stringWeight, 
+    maxLineCount
+  } = props
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [s, setS] = useState(1);
-  const [non, setNon] = useState(250);
-  const [sw, setSw] = useState(20);
-  const [mlc, setMlc] = useState(4000);
-
-  useEffect(() => {
-    setNumOfNails(non)
-    setStringWeight(sw)
-    setMaxLineCount(mlc)
-  }, [non, sw, mlc])
 
   const transform = (control_type: ControlType) => {
     switch (control_type) {
@@ -127,8 +132,8 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">Number of Nails</label>
               <input
                 type="number"
-                value={non}
-                onChange={(e) => setNon(Number(e.target.value))}
+                value={numOfNails}
+                onChange={(e) => setNumOfNails(Number(e.target.value))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
@@ -136,8 +141,8 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">String Weight</label>
               <input
                 type="number"
-                value={sw}
-                onChange={(e) => setSw(Number(e.target.value))}
+                value={stringWeight}
+                onChange={(e) => setStringWeight(Number(e.target.value))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
@@ -145,8 +150,8 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">Max Line Count</label>
               <input
                 type="number"
-                value={mlc}
-                onChange={(e) => setMlc(Number(e.target.value))}
+                value={maxLineCount}
+                onChange={(e) => setMaxLineCount(Number(e.target.value))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>

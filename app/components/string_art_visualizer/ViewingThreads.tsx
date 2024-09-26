@@ -2,18 +2,14 @@
 
 import React, { Dispatch, SetStateAction } from 'react';
 import ThreadingCanvas from './ThreadingCanvas';
-import { ControlType } from '@/app/types/enum/ControlType';
 
 interface Props {
   imgXPos: number
   imgYPos: number
   imgScale: number
-  image: HTMLImageElement | null
+  selectedImage: HTMLImageElement | null
   setNailSequence: React.Dispatch<React.SetStateAction<number[]>>
-  startManualThreading: boolean
-  controlType: ControlType
-  nailSequenseIndex: number
-  setFinalImage: Dispatch<SetStateAction<ImageData | null>>
+  setFinalStringArt: Dispatch<SetStateAction<ImageData | null>>
   numOfNails: number
   stringWeight: number
   maxLineCount: number
@@ -25,12 +21,9 @@ const ViewingThreads: React.FC<Props> = (props: Props) => {
     imgXPos,
     imgYPos,
     imgScale,
-    image,
+    selectedImage,
     setNailSequence,
-    startManualThreading,
-    controlType,
-    nailSequenseIndex,
-    setFinalImage, 
+    setFinalStringArt, 
     numOfNails, 
     stringWeight, 
     maxLineCount
@@ -42,18 +35,13 @@ const ViewingThreads: React.FC<Props> = (props: Props) => {
         imgXPos={imgXPos} 
         imgYPos={imgYPos} 
         imgScale={imgScale} 
-        image={image} 
+        image={selectedImage} 
         setNailSequence={setNailSequence} 
-        startManualThreading={startManualThreading} 
-        controlType={controlType} 
-        nailSequenseIndex={nailSequenseIndex} 
-        setFinalImage={setFinalImage}        
+        setFinalStringArt={setFinalStringArt}        
         numOfNails={numOfNails} 
         maxLineCount={maxLineCount} 
         stringWeight={stringWeight} 
         />
-      </div>
-      <div className="">
       </div>
     </div>
   );

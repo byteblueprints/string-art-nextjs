@@ -1,7 +1,9 @@
-import { NailsCoordinatesCalculator } from "./NailsCoordinatesCalculator";
-import { LineConnections } from "./LineConnections";
-import { LineSolver } from "./LineSolver";
+import Pica from 'pica';
 import { Dispatch, SetStateAction } from "react";
+import { CalculateLineMsgFromWorker, CalculateLineMsgToWorker, LineSolverMsgFromWorker, LineSolverMsgToWorker } from "../types/worker_messages";
+
+const pica = Pica();
+
 export class ThreadingGreedyAlgorithm {
     private xc: number = 250;
     private yc: number = 250;
@@ -12,9 +14,9 @@ export class ThreadingGreedyAlgorithm {
     private skip: number = 20;
 
     public async startThreading(
-        canvasId: string, 
-        image: HTMLImageElement | null, 
-        setCount: unknown, setNailSequence: React.Dispatch<React.SetStateAction<number[]>>, 
+        canvasId: string,
+        image: HTMLImageElement | null,
+        setCount: unknown, setNailSequence: React.Dispatch<React.SetStateAction<number[]>>,
         setViewedImage: Dispatch<SetStateAction<ImageData | null>>,
         num_of_nails: number,
         max_line_count: number,
@@ -22,7 +24,7 @@ export class ThreadingGreedyAlgorithm {
     ) {
         let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx: CanvasRenderingContext2D | null = null
-        let imageData;
+        let imageData: ImageData;
         let nailSeq: number[] = [];
         let allLineCoordinates = {}
         if (canvas) {
@@ -49,54 +51,54 @@ export class ThreadingGreedyAlgorithm {
                 ctx.fill();
                 ctx.globalCompositeOperation = 'source-over';
 
-                const calculator = new NailsCoordinatesCalculator(this.xc, this.yc, this.r);
-                const nailsCordinates = calculator.getNailsCoordinates(num_of_nails);
+                console.log("Started working with web workers")
+                const lineCalculateWorker = new Worker(new URL("./WorkerForCalculateLines.ts", import.meta.url));
+                const calculateLinMsgToWorker: CalculateLineMsgToWorker = { xc: this.xc, yc: this.yc, r: this.r, num_of_nails: num_of_nails }
+                const lineSolverMsgToWorker: LineSolverMsgToWorker = {
+                    max_line_count: max_line_count,
+                    imageData: imageData,
+                    height: this.height,
+                    width: this.width,
+                    output_scaling_factor: this.output_scaling_factor,
+                    string_weight: string_weight,
+                    skip: this.skip,
+                    allLineCoordinates: {},
+                    nailsCordinates: []
+                }
+                console.log("Started post message to lineCalculateWorker")
+                lineCalculateWorker.postMessage(calculateLinMsgToWorker);
 
-                this.drawNails(nailsCordinates, ctx);
+                lineCalculateWorker.onmessage = function (e) {
+                    console.log("Recieved lineCalculateWorker posted message", e)
+                    const calculateLinMsgFromWorker: CalculateLineMsgFromWorker = e.data
+                    if (ctx) {
+                        drawNails(calculateLinMsgFromWorker.nailsCoordinates, ctx);
+                    }
 
-                const lineConnections = new LineConnections();
-                allLineCoordinates = lineConnections.getAllPossibleLinesCoordinatesAgainstConnection(nailsCordinates);
+                    const lineSolverWorker = new Worker(new URL("./WorkerForLineSolver.ts", import.meta.url));
 
-                const lineSolver = new LineSolver();
-                nailSeq = await lineSolver.solveIterativelyWithLineScores(
-                    allLineCoordinates,
-                    imageData,
-                    max_line_count,
-                    this.height,
-                    this.width,
-                    nailsCordinates,
-                    this.output_scaling_factor,
-                    string_weight,
-                    canvas,
-                    this.skip,
-                    setCount,
-                    setViewedImage
-                )
-                setNailSequence(nailSeq)
-                this.cleanup(ctx, canvas)
+                    lineSolverMsgToWorker.allLineCoordinates = calculateLinMsgFromWorker.allLineCoordinates
+                    lineSolverMsgToWorker.nailsCordinates = calculateLinMsgFromWorker.nailsCoordinates
+
+                    console.log("Started post message to lineSolverWorker")
+                    lineSolverWorker.postMessage(lineSolverMsgToWorker);
+                    lineSolverWorker.onmessage = function (e) {
+                        console.log("Recieved lineSolverWorker posted message", e)
+                        const lineSolverMsgFromWorker: LineSolverMsgFromWorker = e.data
+
+                        if (ctx) {
+                            showImage(ctx, lineSolverMsgFromWorker.imageData)
+                        }
+                        // setNailSequence(lineSolverMsgFromWorker.nailSeq)
+                        // cleanup(ctx, canvas)
+                        console.log(e)
+                    };
+                    console.log(e)
+                };
             }
         }
         return { nailSeq, allLineCoordinates };
     }
-
-
-    private drawNails(nailsCordinates: [number, number][], ctx: CanvasRenderingContext2D) {
-        nailsCordinates.forEach(([xx, yy]) => {
-            for (let x = xx; x < xx + 2; x++) {
-                for (let y = yy; y < yy + 2; y++) {
-                    if (ctx) {
-                        const pixelData = ctx.createImageData(1, 1);
-                        pixelData.data[0] = 255;
-                        pixelData.data[1] = 0;
-                        pixelData.data[2] = 0;
-                        pixelData.data[3] = 255;
-                        ctx.putImageData(pixelData, x, y);
-                    }
-                }
-            };
-        });
-    }
-
     private convertToGrayscale(imageData: ImageData) {
         const data = imageData.data;
 
@@ -111,11 +113,58 @@ export class ThreadingGreedyAlgorithm {
             data[i + 2] = gray;
         }
     }
-    private cleanup(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement | null) {
-        if (ctx && canvas) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        canvas = null;
-        ctx = null;
+}
+function drawNails(nailsCordinates: [number, number][], ctx: CanvasRenderingContext2D) {
+    nailsCordinates.forEach(([xx, yy]) => {
+        for (let x = xx; x < xx + 2; x++) {
+            for (let y = yy; y < yy + 2; y++) {
+                if (ctx) {
+                    const pixelData = ctx.createImageData(1, 1);
+                    pixelData.data[0] = 255;
+                    pixelData.data[1] = 0;
+                    pixelData.data[2] = 0;
+                    pixelData.data[3] = 255;
+                    ctx.putImageData(pixelData, x, y);
+                }
+            }
+        };
+    });
+}
+
+
+function cleanup(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement | null) {
+    if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    canvas = null;
+    ctx = null;
+}
+
+
+function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData): void {
+    const canvas = document.createElement('canvas');
+    canvas.width = imageData.width;
+    canvas.height = imageData.height;
+    const ctx = canvas.getContext("2d");
+
+    if (ctx != null) {
+        ctx.putImageData(imageData, 0, 0);
+
+        const outputCanvas = document.createElement('canvas');
+        outputCanvas.width = 500;
+        outputCanvas.height = 500;
+
+        pica.resize(canvas, outputCanvas, {
+            quality: 3
+        }).then((result) => {
+            if (outputContext != null) {
+                outputContext.drawImage(outputCanvas, 0, 0);
+            }
+        }).catch((error) => {
+            console.error("Error during resizing with Pica: ", error);
+        }).finally(() => {
+            canvas.remove();
+            outputCanvas.remove();
+        });;
     }
 }

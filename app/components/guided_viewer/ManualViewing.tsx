@@ -11,16 +11,13 @@ import DrawFinalImage from './DrawFInalImage';
 
 interface Props {
   nailSequence: number[];
-  setStartManualThreading: React.Dispatch<React.SetStateAction<boolean>>;
-  setControlType: React.Dispatch<React.SetStateAction<ControlType>>;
-  setNailSequenseIndex: React.Dispatch<React.SetStateAction<number>>;
-  finalImage: ImageData | null
+  finalStringArt: ImageData | null
 }
 
 const pica = Pica();
 
 const ManualViewing: React.FC<Props> = (props: Props) => {
-  const { nailSequence, setStartManualThreading, setControlType, setNailSequenseIndex, finalImage } = props;
+  const { nailSequence, finalStringArt } = props;
   const [index, setIndex] = useState(0);
   const [target, setTarget] = useState<ImageData | null>(null);
   const [nailsCordinates, setNailsCordinates] = useState<[number, number][]>([]);
@@ -44,7 +41,6 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   }
   const start = async () => {
     setIsManualThreading(true)
-    setStartManualThreading(true)
   };
 
   return (
@@ -61,8 +57,8 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
           Start Manual Threading
         </button>
         <LeftStep />
-        <RightStep nailSequence={nailSequence} setConstructedFinal={setConstructedFinal} setControlType={setControlType} setNailSequenseIndex={setNailSequenseIndex} target={target} setTarget={setTarget} nailsCordinates={nailsCordinates} isManualThreading={isManualThreading} index={index} setIndex={setIndex}/>
-        <DrawFinalImage setConstructedFinal={setConstructedFinal} finalImage={finalImage} constructedFinal={constructedFinal} target={target}/>
+        <RightStep nailSequence={nailSequence} setConstructedFinal={setConstructedFinal} target={target} setTarget={setTarget} nailsCordinates={nailsCordinates} isManualThreading={isManualThreading} index={index} setIndex={setIndex}/>
+        <DrawFinalImage setConstructedFinal={setConstructedFinal} finalStringArt={finalStringArt} constructedFinal={constructedFinal} target={target}/>
       </div>
     </div>
   );

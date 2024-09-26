@@ -1,21 +1,17 @@
 "use client";
 
 import React, { useState } from 'react';
-import LoadImage from './components/preperation/LoadImage';
-import ViewingThreads from './components/viewing/ViewingThreads';
-import ManualViewing from './components/manual_view/ManualViewing';
-import { ControlType } from './types/enum/ControlType';
+import ImagePreProcessor from './components/image_preprocessor/ImagePreProcessor';
+import ViewingThreads from './components/string_art_visualizer/ViewingThreads';
+import ManualViewing from './components/guided_viewer/ManualViewing';
 
 const Home: React.FC = () => {
   const [imgXPos, setImgXPos] = useState(0)
   const [imgYPos, setImgYPos] = useState(0)
   const [imgScale, setImgScale] = useState(1)
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
+  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
   const [nailSequence, setNailSequence] = useState<number[]>([]);
-  const [startManualThreading, setStartManualThreading] = useState<boolean>(false);
-  const [controlType, setControlType] = useState<ControlType>(ControlType.UP);
-  const [nailSequenseIndex, setNailSequenseIndex] = useState<number>(0);
-  const [finalImage, setFinalImage] = useState<ImageData | null>(null)
+  const [finalStringArt, setFinalStringArt] = useState<ImageData | null>(null)
 
   const [numOfNails, setNumOfNails] = useState(250);
   const [stringWeight, setStringWeight] = useState(20);
@@ -25,11 +21,15 @@ const Home: React.FC = () => {
     <div className='container'>
       <div className='flex flex-col lg:flex-row content-center'>
         <div className='basis-full lg:basis-1/2'>
-          <LoadImage
+          <ImagePreProcessor
             setImgXPos={setImgXPos}
             setImgYPos={setImgYPos}
             setImgScale={setImgScale}
-            setImage={setImage}
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}            
+            numOfNails={numOfNails}
+            maxLineCount={maxLineCount}
+            stringWeight={stringWeight}
             setNumOfNails={setNumOfNails}
             setStringWeight={setStringWeight}
             setMaxLineCount={setMaxLineCount}
@@ -40,12 +40,9 @@ const Home: React.FC = () => {
             imgXPos={imgXPos}
             imgYPos={imgYPos}
             imgScale={imgScale}
-            image={image}
+            selectedImage={selectedImage}
             setNailSequence={setNailSequence}
-            startManualThreading={startManualThreading}
-            controlType={controlType}
-            nailSequenseIndex={nailSequenseIndex}
-            setFinalImage={setFinalImage}
+            setFinalStringArt={setFinalStringArt}
             numOfNails={numOfNails}
             maxLineCount={maxLineCount}
             stringWeight={stringWeight}
@@ -57,10 +54,7 @@ const Home: React.FC = () => {
         <div className="basis-full">
           <ManualViewing
             nailSequence={nailSequence}
-            setStartManualThreading={setStartManualThreading}
-            setControlType={setControlType}
-            setNailSequenseIndex={setNailSequenseIndex}
-            finalImage={finalImage}
+            finalStringArt={finalStringArt}
           />
         </div>
       </div>
