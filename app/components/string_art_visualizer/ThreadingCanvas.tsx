@@ -59,8 +59,8 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     }, [viewedImage])
     useEffect(() => {
         if (context && image) {
-            const canvasWidth = 500 * imgScale;
-            const canvasHeight = 500 * imgScale;
+            const canvasWidth = DEFAULT_CANVAS_WIDTH * imgScale;
+            const canvasHeight = DEFAULT_CANVAS_HEIGHT * imgScale;
 
             const imageAspectRatio = image.width / image.height;
             const canvasAspectRatio = canvasWidth / canvasHeight;
@@ -89,13 +89,7 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
         }
     }, [imgXPos, imgYPos, imgScale, image]);
 
-    async function startThreading(): Promise<void> {
-        const worker = new Worker(new URL("../../algorithm/worker.ts", import.meta.url));
-        worker.postMessage(null);
-
-        worker.onmessage = function (e) {
-            console.log(e)
-        };
+    async function startThreading() {
         if (context && canvasRef.current && image) {
             const dataURL = canvasRef.current.toDataURL();
             const newImage = new Image();
@@ -109,8 +103,8 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     }
 
     const circleCrop = (context: CanvasRenderingContext2D) => {
-        const startX = Math.floor(500 / 2 - 1);
-        const startY = Math.floor(500 / 2 - 1);
+        const startX = Math.floor((DEFAULT_CANVAS_WIDTH / 2) - 1);
+        const startY = Math.floor((DEFAULT_CANVAS_HEIGHT / 2) - 1);
         context.beginPath();
         context.arc(startX, startY, 249, 0, Math.PI * 2);
         context.closePath();
