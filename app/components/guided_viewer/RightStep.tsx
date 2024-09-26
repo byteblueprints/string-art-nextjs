@@ -7,8 +7,6 @@ import { FaAngleRight } from 'react-icons/fa';
 
 interface Props {
   nailSequence: number[];
-  setControlType: React.Dispatch<React.SetStateAction<ControlType>>;
-  setNailSequenseIndex: React.Dispatch<React.SetStateAction<number>>;
   setConstructedFinal: React.Dispatch<React.SetStateAction<ImageData | null>>;
   target: ImageData | null;
   setTarget: React.Dispatch<React.SetStateAction<ImageData | null>>;
@@ -19,7 +17,7 @@ interface Props {
 }
 
 const RightStep: React.FC<Props> = (props: Props) => {
-  const { nailSequence, setControlType, setNailSequenseIndex, target, setTarget, setConstructedFinal, nailsCordinates, isManualThreading, index, setIndex } = props;
+  const { nailSequence, target, setTarget, setConstructedFinal, nailsCordinates, isManualThreading, index, setIndex } = props;
   useEffect(() => {
     setTarget(createImageData(800, 800, 255));
   }, [])
@@ -35,8 +33,6 @@ const RightStep: React.FC<Props> = (props: Props) => {
   }
   const right = async () => {
     if (isManualThreading && target) {
-      setControlType(ControlType.RIGHT);
-      setNailSequenseIndex(index + 1);
       const startPoint = {
         x: nailsCordinates[nailSequence[index]][0],
         y: nailsCordinates[nailSequence[index]][1],

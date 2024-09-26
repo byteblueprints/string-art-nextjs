@@ -1,7 +1,7 @@
 "use client";
 
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/app/utils/constants";
 import { useEffect, useRef } from "react";
-import { useTransformEffect } from "react-zoom-pan-pinch";
 
 interface Props {
     selectedImage: HTMLImageElement | null
@@ -9,12 +9,6 @@ interface Props {
 const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
     const { selectedImage } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    useTransformEffect(({ state, instance }) => {
-        console.log("In Preview canvas", state.positionX, ", ", state.positionY);
-
-        return () => {
-        };
-    });
     useEffect(() => {
         if (selectedImage) {
             if (canvasRef.current) {
@@ -22,8 +16,8 @@ const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
                 const ctx = canvas.getContext("2d");
 
                 if (ctx != null) {
-                    const canvasWidth = 500;
-                    const canvasHeight = 500;
+                    const canvasWidth = DEFAULT_CANVAS_WIDTH;
+                    const canvasHeight = DEFAULT_CANVAS_HEIGHT;
 
                     const imageAspectRatio = selectedImage.width / selectedImage.height;
                     const canvasAspectRatio = canvasWidth / canvasHeight;

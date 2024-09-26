@@ -4,13 +4,13 @@ import React, { useState } from 'react';
 
 interface Props {
   setConstructedFinal: React.Dispatch<React.SetStateAction<ImageData | null>>;
-  finalImage: ImageData | null;
+  finalStringArt: ImageData | null;
   constructedFinal: ImageData | null;
   target: ImageData | null;
 }
 
 const DrawFinalImage: React.FC<Props> = (props: Props) => {
-  const { setConstructedFinal, finalImage, constructedFinal, target } = props;
+  const { setConstructedFinal, finalStringArt, constructedFinal, target } = props;
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
@@ -18,8 +18,8 @@ const DrawFinalImage: React.FC<Props> = (props: Props) => {
     finalView(event.target.checked);
   };
   const finalView = async (checked: boolean | ((prevState: boolean) => boolean) | undefined) => {
-    if (finalImage && checked) {      
-      setConstructedFinal(finalImage);
+    if (finalStringArt && checked) {      
+      setConstructedFinal(finalStringArt);
     } else {
       if (target) {
         const newImageData = new ImageData(

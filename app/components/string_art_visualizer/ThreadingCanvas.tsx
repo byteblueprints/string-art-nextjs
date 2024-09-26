@@ -1,9 +1,10 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { ControlType } from "@/app/types/enum/ControlType";
 import { ThreadingGreedyAlgorithm } from "@/app/algorithm/ThreadingGreedyAlgorithm";
-import { FaDownload } from "react-icons/fa";
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/app/utils/constants";
+import ImageDownloader from "./ImageDownloader";
+import ThreadingProgressVisualizer from "./ThreadingProgressVisualizer";
 
 interface Props {
     imgXPos: number
@@ -11,10 +12,7 @@ interface Props {
     imgScale: number
     image: HTMLImageElement | null
     setNailSequence: React.Dispatch<React.SetStateAction<number[]>>
-    startManualThreading: boolean
-    controlType: ControlType
-    nailSequenseIndex: number
-    setFinalImage: Dispatch<SetStateAction<ImageData | null>>  
+    setFinalStringArt: Dispatch<SetStateAction<ImageData | null>>  
     numOfNails: number
     stringWeight: number
     maxLineCount: number
@@ -28,11 +26,8 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
         imgYPos, 
         imgScale, 
         image, 
-        setNailSequence, 
-        startManualThreading, 
-        controlType, 
-        nailSequenseIndex, 
-        setFinalImage,
+        setNailSequence,  
+        setFinalStringArt,
         numOfNails, 
         stringWeight, 
         maxLineCount 
@@ -45,8 +40,8 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (canvasRef.current) {
             const canvas = canvasRef.current;
-            canvas.width = 500;
-            canvas.height = 500;
+            canvas.width = DEFAULT_CANVAS_WIDTH;
+            canvas.height = DEFAULT_CANVAS_HEIGHT;
             const ctx = canvas.getContext("2d");
             if (ctx != null) {
                 setContext(ctx)
@@ -56,10 +51,10 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (viewedImage) {
             setDownloadDisabled(false)
-            setFinalImage(viewedImage)
+            setFinalStringArt(viewedImage)
         } else {
             setDownloadDisabled(true)
-            setFinalImage(null)
+            setFinalStringArt(null)
         }
     }, [viewedImage])
     useEffect(() => {
@@ -101,16 +96,16 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
         worker.onmessage = function (e) {
             console.log(e)
         };
-        // if (context && canvasRef.current && image) {
-        //     const dataURL = canvasRef.current.toDataURL();
-        //     const newImage = new Image();
-        //     newImage.src = dataURL;
-        //     await sleep(100)
-        //     context.globalCompositeOperation = 'source-over';
-        //     context.drawImage(newImage, 0, 0);
-        //     let algorithm = new ThreadingGreedyAlgorithm()
-        //     await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage, numOfNails, maxLineCount, stringWeight)
-        // }
+        if (context && canvasRef.current && image) {
+            const dataURL = canvasRef.current.toDataURL();
+            const newImage = new Image();
+            newImage.src = dataURL;
+            await sleep(100)
+            context.globalCompositeOperation = 'source-over';
+            context.drawImage(newImage, 0, 0);
+            let algorithm = new ThreadingGreedyAlgorithm()
+            await algorithm.startThreading("string_art", newImage, setCount, setNailSequence, setViewedImage, numOfNails, maxLineCount, stringWeight)
+        }
     }
 
     const circleCrop = (context: CanvasRenderingContext2D) => {
@@ -121,66 +116,17 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
         context.closePath();
         context.fill();
     }
-    const handleDownload = () => {
-        if (viewedImage) {
-            downloadFinalImage(viewedImage)
-        }
-    };
-
-    const downloadFinalImage = (targetResized: ImageData) => {
-        const offscreenCanvas = new OffscreenCanvas(targetResized.width, targetResized.height);
-        const offScreenContext = offscreenCanvas.getContext('2d');
-        if (!offScreenContext) {
-            throw new Error('2D context not available');
-        }
-
-        offScreenContext.putImageData(targetResized, 0, 0);
-
-        offscreenCanvas.convertToBlob().then(blob => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'image.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-    }
     return (
         <div className="relative flex flex-col items-center space-y-4">
             <canvas ref={canvasRef} id="string_art" className="border-2 border-gray-300 rounded-2xl" />
-            <div className="relative w-full bg-gray-200 rounded-full h-4">
-                <div
-                    className="bg-green-500 h-4 rounded-full"
-                    style={{ width: `${(count / maxLineCount) * 100}%` }}
-                ></div>
-                <span
-                    className="absolute inset-0 flex items-center justify-center text-black font-bold"
-                    style={{ right: '0', paddingRight: '4px' }}
-                >
-                    {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
-                </span>
-            </div>
-            <div className="text-lg font-semibold text-gray-800">
-                Line count: {count}
-            </div>
-
+            <ThreadingProgressVisualizer count={count} maxLineCount={maxLineCount}/>
             <button
                 onClick={() => startThreading()}
                 className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
             >
                 Start Threading
             </button>
-
-            <button
-                onClick={handleDownload}
-                className={`absolute top-0 right-4 p-2 rounded-full ${!downloadDisabled ? 'bg-green-500' : 'bg-gray-400 cursor-not-allowed'
-                    }`}
-                disabled={downloadDisabled}
-            >
-                <FaDownload className="text-white" />
-            </button>
+            <ImageDownloader image={viewedImage} downloadDisabled={downloadDisabled}/>
         </div>
     );
 };
