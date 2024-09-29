@@ -1,32 +1,26 @@
 import Pica from 'pica';
-import { Dispatch, SetStateAction } from "react";
-import { CalculateLineMsgFromWorker, CalculateLineMsgToWorker, LineSolverMsgFromWorker, LineSolverMsgToWorker } from "../types/worker_messages";
+import { StringArtWorkerResponse, StringArtWorkerMsg } from "../types/WorkerMessages";
+import { CurrentStatus } from '../types/enum/CurrentStatus';
 
 const pica = Pica();
-
-export class ThreadingGreedyAlgorithm {
-    private xc: number = 250;
-    private yc: number = 250;
-    private r: number = 250;
+export class StringArtDrawer {
     private height: number = 500;
     private width: number = 500;
     private output_scaling_factor: number = 7;
     private skip: number = 20;
 
-    public async startThreading(
+    public async draw(
         canvasId: string,
         image: HTMLImageElement | null,
-        setCount: unknown, setNailSequence: React.Dispatch<React.SetStateAction<number[]>>,
-        setViewedImage: Dispatch<SetStateAction<ImageData | null>>,
-        num_of_nails: number,
-        max_line_count: number,
-        string_weight: number
+        maxLineCount: number,
+        stringWeight: number,
+        setCount: React.Dispatch<React.SetStateAction<number>>,
+        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>
     ) {
         let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx: CanvasRenderingContext2D | null = null
         let imageData: ImageData;
         let nailSeq: number[] = [];
-        let allLineCoordinates = {}
         if (canvas) {
             ctx = canvas.getContext('2d');
             if (ctx && image) {
@@ -37,7 +31,7 @@ export class ThreadingGreedyAlgorithm {
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.beginPath();
-                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), this.r, 0, Math.PI * 2);
+                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), 250, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.fill();
 
@@ -46,58 +40,45 @@ export class ThreadingGreedyAlgorithm {
                 ctx.putImageData(imageData, 0, 0);
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.beginPath();
-                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), this.r, 0, Math.PI * 2);
+                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), 250, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.fill();
                 ctx.globalCompositeOperation = 'source-over';
-
-                console.log("Started working with web workers")
-                const lineCalculateWorker = new Worker(new URL("./WorkerForCalculateLines.ts", import.meta.url));
-                const calculateLinMsgToWorker: CalculateLineMsgToWorker = { xc: this.xc, yc: this.yc, r: this.r, num_of_nails: num_of_nails }
-                const lineSolverMsgToWorker: LineSolverMsgToWorker = {
-                    max_line_count: max_line_count,
+                const lineSolverMsgToWorker: StringArtWorkerMsg = {
+                    maxLineCount: maxLineCount,
                     imageData: imageData,
                     height: this.height,
                     width: this.width,
-                    output_scaling_factor: this.output_scaling_factor,
-                    string_weight: string_weight,
+                    outputScalingFactor: this.output_scaling_factor,
+                    stringWeight: stringWeight,
                     skip: this.skip,
                     allLineCoordinates: {},
                     nailsCordinates: []
                 }
-                console.log("Started post message to lineCalculateWorker")
-                lineCalculateWorker.postMessage(calculateLinMsgToWorker);
+                const stringArtWorker = new Worker(new URL("./StringArtWorker.ts", import.meta.url));
 
-                lineCalculateWorker.onmessage = function (e) {
-                    console.log("Recieved lineCalculateWorker posted message", e)
-                    const calculateLinMsgFromWorker: CalculateLineMsgFromWorker = e.data
-                    if (ctx) {
-                        drawNails(calculateLinMsgFromWorker.nailsCoordinates, ctx);
-                    }
+                console.log("Started post message to lineSolverWorker")
+                stringArtWorker.postMessage(lineSolverMsgToWorker);
+                stringArtWorker.onmessage = function (e) {
+                    const lineSolverMsgFromWorker: StringArtWorkerResponse = e.data
 
-                    const lineSolverWorker = new Worker(new URL("./WorkerForLineSolver.ts", import.meta.url));
-
-                    lineSolverMsgToWorker.allLineCoordinates = calculateLinMsgFromWorker.allLineCoordinates
-                    lineSolverMsgToWorker.nailsCordinates = calculateLinMsgFromWorker.nailsCoordinates
-
-                    console.log("Started post message to lineSolverWorker")
-                    lineSolverWorker.postMessage(lineSolverMsgToWorker);
-                    lineSolverWorker.onmessage = function (e) {
-                        console.log("Recieved lineSolverWorker posted message", e)
-                        const lineSolverMsgFromWorker: LineSolverMsgFromWorker = e.data
-
-                        if (ctx) {
-                            showImage(ctx, lineSolverMsgFromWorker.imageData)
+                    if (lineSolverMsgFromWorker.status == CurrentStatus.INPROGRESS) {
+                        if (lineSolverMsgFromWorker.imageData == undefined) {
+                            setCount(lineSolverMsgFromWorker.count)
+                        } else {
+                            if (lineSolverMsgFromWorker.imageData != undefined) {
+                                if (ctx) {
+                                    showImage(ctx, lineSolverMsgFromWorker.imageData)
+                                }
+                            }
                         }
-                        // setNailSequence(lineSolverMsgFromWorker.nailSeq)
-                        // cleanup(ctx, canvas)
-                        console.log(e)
-                    };
-                    console.log(e)
+                    } else if (lineSolverMsgFromWorker.status == CurrentStatus.COMPLETED) {
+                        setViewedImage(lineSolverMsgFromWorker.imageData)
+                    }                    
                 };
             }
         }
-        return { nailSeq, allLineCoordinates };
+        return { nailSeq };
     }
     private convertToGrayscale(imageData: ImageData) {
         const data = imageData.data;

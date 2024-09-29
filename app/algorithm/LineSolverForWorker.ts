@@ -1,12 +1,12 @@
 import Pica from 'pica';
-import { NailsCoordinatesCalculator } from './NailsCoordinatesCalculator';
-import { Dispatch, SetStateAction } from 'react';
+import { Storage } from './Storage';
+import { CurrentStatus } from '../types/enum/CurrentStatus';
 
 const pica = Pica();
+const lineStorage = new Storage("lines")
 
 export class LineSolver {
     public async solveIterativelyWithLineScores(
-        allLineCoordinates: { [key: string]: Array<[number, number]>; },
         baseImage: ImageData,
         maxIterations: number,
         height: number,
@@ -15,7 +15,7 @@ export class LineSolver {
         outputScalingFactor: number,
         stringWeight: number,
         skip: number,
-        onProgress?: (progress: any) => void
+        callback: (progress: any) => void
     ) {
         const doneNails: Set<string> = new Set();
         const nailSequence: number[] = [];
@@ -26,8 +26,8 @@ export class LineSolver {
         let startNail = 0;
         nailSequence.push(startNail);
         let target = this.createImageData(height * outputScalingFactor, width * outputScalingFactor, 255);
-
         while (count <= maxIterations) {
+            const allLineCoordinates = await lineStorage.getByKey(`${startNail}`);
             let bestNail = this.getBestNail(skip, nailsCount, startNail, lastPins, doneNails, allLineCoordinates, error);
 
             const lineMask = this.createImageData(height, width, 0);
@@ -57,17 +57,21 @@ export class LineSolver {
             nailSequence.push(bestNail);
             target = this.drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint);
             if (count % 10 === 0) {
-                if (onProgress) {
-                    onProgress({
-                        image: target
-                    });
-                }
-                // this.showImage(ctx, target);
-                // await this.sleep(100)
+                callback({
+                    image: target,
+                    status: CurrentStatus.INPROGRESS
+                });
             }
+            callback({
+                status: CurrentStatus.INPROGRESS,
+                count: count
+            });
             count++;
         }
-        return nailSequence
+        callback({
+            nailSequence: nailSequence,
+            status: CurrentStatus.COMPLETED
+        });
     }
 
     private getBestNail(skip: number, nailsCount: number, startNail: number, lastPins: number[], doneNails: Set<string>, allLineCoordinates: { [key: string]: [number, number][]; }, error: ImageData) {
