@@ -1,56 +1,43 @@
 import { CurrentStatus } from "../types/enum/CurrentStatus";
 import { StringArtWorkerMsg } from "../types/WorkerMessages";
-import { LineSolver } from "./LineSolverForWorker";
-import { Storage } from "./Storage";
+import { LineSolver } from "../algorithm/LineSolver";
+import { Storage } from "../algorithm/Storage";
 
-const ctx: Worker = self as any;
 
 const nailStorage = new Storage("nails")
-ctx.addEventListener("message", async (event) => {
-  console.log("Recieved message to lineSolverWorker")
+self.onmessage = async (event) => {
   const data: StringArtWorkerMsg = event.data;
 
-  const {
-    imageData,
-    maxLineCount: max_line_count,
-    height,
-    width,
-    outputScalingFactor: output_scaling_factor,
-    stringWeight: string_weight,
-    skip
-  } = data;
+  
   const lineSolver = new LineSolver();
   const nailsCordinates = await nailStorage.getByKey("nailCoordinates");
-  if (nailsCordinates != null) {
-    console.log("Unable to retrieve nailCordinates")
-  }
 
   await lineSolver.solveIterativelyWithLineScores(
-    imageData,
-    max_line_count,
-    height,
-    width,
+    data.imageData,
+    data.maxLineCount,
+    data.height,
+    data.width,
     nailsCordinates,
-    output_scaling_factor,
-    string_weight,
-    skip,
+    data.outputScalingFactor,
+    data.stringWeight,
+    data.skip,
     (progress) => {
       if (progress.status == CurrentStatus.INPROGRESS) {
         if (progress.image == undefined) {
-          ctx.postMessage({
+          self.postMessage({
             message: "String art inprogress!",
             count: progress.count,
             status: CurrentStatus.INPROGRESS
           });
         } else {
-          ctx.postMessage({
+          self.postMessage({
             message: "String art inprogress!",
             imageData: progress.image,
             status: CurrentStatus.INPROGRESS
           });
         }
       } else if (progress.status == CurrentStatus.COMPLETED) {
-        ctx.postMessage({
+        self.postMessage({
           message: "Worker done work!",
           imageData: progress.image,
           status: CurrentStatus.COMPLETED
@@ -58,7 +45,5 @@ ctx.addEventListener("message", async (event) => {
       }
     }
   );
-});
-
-export default null as any;
+};
 

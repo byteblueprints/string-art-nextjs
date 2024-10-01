@@ -1,8 +1,5 @@
 import { LinePreCalculatingWorkerResponse, LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
 
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 export class LinesPreCalculator {
     private xc: number = 250;
     private yc: number = 250;
@@ -13,7 +10,7 @@ export class LinesPreCalculator {
         setLineCalculated: React.Dispatch<React.SetStateAction<boolean>>
     ) {
         console.log("Started working with web workers")
-        const linePreCalculatingWorker = new Worker(new URL("./LinePreCalculatingWorker.ts", import.meta.url));
+        const linePreCalculatingWorker = new Worker(new URL("../workers/LinePreCalculate.Worker.ts", import.meta.url));
         const linePreCalculatingWorkerMsg: LinePreCalculatingWorkerMsg = { xc: this.xc, yc: this.yc, r: this.r, nailCount: nailCount }
 
         console.log("Started post message to lineCalculateWorker")

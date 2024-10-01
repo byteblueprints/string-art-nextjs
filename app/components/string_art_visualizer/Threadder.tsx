@@ -1,6 +1,5 @@
 "use client";
 
-import { Storage } from '@/app/algorithm/Storage';
 import { LinesPreCalculator } from '@/app/algorithm/LinesPreCalculator';
 import { StringArtDrawer } from '@/app/algorithm/StringArtDrawer';
 import React, { RefObject, useEffect, useState } from 'react';
@@ -32,6 +31,9 @@ const Threadder: React.FC<Props> = (props: Props) => {
     const [lineCalculated, setLineCalculated] = useState<boolean>(false)
     const [count, setCount] = useState<number>(0)
 
+
+    useEffect(() => {
+    }, [])
 
     useEffect(() => {
         if (lineCalculated) {
