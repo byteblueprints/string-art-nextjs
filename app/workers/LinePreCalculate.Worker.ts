@@ -1,14 +1,13 @@
 import { CurrentStatus } from "../types/enum/CurrentStatus";
 import { LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
-import { LineConnections } from "./LineConnections";
-import { NailsCoordinatesCalculator } from "./NailsCoordinatesCalculator";
-import { Storage } from "./Storage";
+import { LineConnections } from "../algorithm/LineConnections";
+import { NailsCoordinatesCalculator } from "../algorithm/NailsCoordinatesCalculator";
+import { Storage } from "../algorithm/Storage";
 
-const ctx: Worker = self as any;
 const lineStorage = new Storage("lines")
 const nailStorage = new Storage("nails")
 
-ctx.addEventListener("message", async (event) => {
+self.onmessage = async (event) => {
   await lineStorage.clearObjectStore();
   await nailStorage.clearObjectStore();
   const data: LinePreCalculatingWorkerMsg = event.data;
@@ -17,7 +16,7 @@ ctx.addEventListener("message", async (event) => {
     const calculator = new NailsCoordinatesCalculator(data.xc, data.yc, data.r);
     const nailsCoordinates = calculator.getNailsCoordinates(data.nailCount);
     await nailStorage.store("nailCoordinates", nailsCoordinates);
-    ctx.postMessage({
+    self.postMessage({
       message: "Calculating nail cordinates completed"
     })
 
@@ -26,15 +25,13 @@ ctx.addEventListener("message", async (event) => {
       if (progress.status == CurrentStatus.INPROGRESS) {
         await lineStorage.store(progress.key, progress.lineCoordinates);
       } else if (progress.status == CurrentStatus.COMPLETED) {
-        ctx.postMessage({
+        self.postMessage({
           message: "Line precalculating completed!"
         })
       }
     });
   } else {
-    ctx.postMessage({ message: "Invalid data provided to worker" });
+    self.postMessage({ message: "Invalid data provided to worker" });
   }
-});
-
-export default null as any;
+};
 

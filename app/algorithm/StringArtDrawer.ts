@@ -55,7 +55,7 @@ export class StringArtDrawer {
                     allLineCoordinates: {},
                     nailsCordinates: []
                 }
-                const stringArtWorker = new Worker(new URL("./StringArtWorker.ts", import.meta.url));
+                const stringArtWorker = new Worker(new URL("../workers/StrinArtDraw.Worker.ts", import.meta.url));
 
                 console.log("Started post message to lineSolverWorker")
                 stringArtWorker.postMessage(lineSolverMsgToWorker);
