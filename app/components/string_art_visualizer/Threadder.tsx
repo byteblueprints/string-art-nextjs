@@ -29,6 +29,8 @@ const Threadder: React.FC<Props> = (props: Props) => {
 
     const [nailesCordinates, setNailsCordinates] = useState<[number, number][] | []>([])
     const [lineCalculated, setLineCalculated] = useState<boolean>(false)
+    const [startDrawing, setStartDrawing] = useState<boolean>(false)
+    const [preCalcLineCount, setPreCalcLineCount] = useState<number>(0)
     const [count, setCount] = useState<number>(0)
 
 
@@ -38,6 +40,7 @@ const Threadder: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (lineCalculated) {
             if (canvasRef.current) {
+                setStartDrawing(true)
                 const ctx = canvasRef.current.getContext("2d");
                 if (ctx != null) {
                     const dataURL = canvasRef.current.toDataURL();
@@ -66,27 +69,50 @@ const Threadder: React.FC<Props> = (props: Props) => {
         let algorithm = new LinesPreCalculator()
         await algorithm.startThreading(
             numOfNails,
-            setLineCalculated
+            setLineCalculated,
+            setPreCalcLineCount
         )
     }
 
     return (
         <>
-            <div className="relative w-full bg-gray-200 rounded-full h-4">
-                <div
-                    className="bg-green-500 h-4 rounded-full"
-                    style={{ width: `${(count / maxLineCount) * 100}%` }}
-                ></div>
-                <span
-                    className="absolute inset-0 flex items-center justify-center text-black font-bold"
-                    style={{ right: '0', paddingRight: '4px' }}
-                >
-                    {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
-                </span>
-            </div>
-            <div className="text-lg font-semibold text-gray-800">
-                Line count: {count}
-            </div>
+            {!startDrawing ? (
+                <>
+                    <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
+                        <div
+                            className="bg-green-500 h-4 rounded-full"
+                            style={{ width: `${(preCalcLineCount / 57500) * 100}%` }}
+                        ></div>
+                        <span
+                            className="absolute inset-0 flex items-center justify-center text-black font-bold"
+                            style={{ right: '0', paddingRight: '4px' }}
+                        >
+                            {`${Math.min((preCalcLineCount / 57500) * 100, 100).toFixed(0)}%`}
+                        </span>
+                    </div>
+                    <div className="text-lg font-semibold text-gray-800">
+                        Pre calculated Line count: {preCalcLineCount}
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
+                        <div
+                            className="bg-green-500 h-4 rounded-full"
+                            style={{ width: `${(count / maxLineCount) * 100}%` }}
+                        ></div>
+                        <span
+                            className="absolute inset-0 flex items-center justify-center text-black font-bold"
+                            style={{ right: '0', paddingRight: '4px' }}
+                        >
+                            {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
+                        </span>
+                    </div>
+                    <div className="text-lg font-semibold text-gray-800">
+                        Line count: {count}
+                    </div>
+                </>
+            )}
             <button
                 onClick={() => startThreading()}
                 className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"

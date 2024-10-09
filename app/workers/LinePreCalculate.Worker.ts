@@ -23,12 +23,19 @@ self.onmessage = async (event) => {
     const lineConnections = new LineConnections();
     lineConnections.getAllPossibleLinesCoordinatesAgainstConnection(nailsCoordinates, async (progress) => {
       if (progress.status == CurrentStatus.INPROGRESS) {
-        await lineStorage.store(progress.key, progress.lineCoordinates);
-      } else if (progress.status == CurrentStatus.COMPLETED) {
+        // await lineStorage.store(progress.key, progress.lineCoordinates);
         self.postMessage({
-          message: "Line precalculating completed!"
+          message: "Line precalculating inprogress! " + progress.calculateLineCount,
+          count: progress.calculateLineCount,
+          status: CurrentStatus.INPROGRESS
         })
-      }
+      } 
+      // else if (progress.status == CurrentStatus.COMPLETED) {
+      //   self.postMessage({
+      //     message: "Line precalculating completed!",
+      //     status: CurrentStatus.COMPLETED
+      //   })
+      // }
     });
   } else {
     self.postMessage({ message: "Invalid data provided to worker" });
