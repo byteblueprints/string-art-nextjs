@@ -10,6 +10,8 @@ export type LinePreCalculatingWorkerMsg = {
 
 export type LinePreCalculatingWorkerResponse = {
     message: string;
+    count: number
+    status: CurrentStatus
 };
 
 export type StringArtWorkerMsg = {
