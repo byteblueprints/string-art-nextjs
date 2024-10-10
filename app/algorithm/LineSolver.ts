@@ -68,7 +68,8 @@ export class LineSolver {
         }
         callback({
             nailSequence: nailSequence,
-            status: CurrentStatus.COMPLETED
+            status: CurrentStatus.COMPLETED,
+            image: target
         });
     }
 

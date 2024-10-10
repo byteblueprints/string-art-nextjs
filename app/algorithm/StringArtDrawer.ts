@@ -15,7 +15,8 @@ export class StringArtDrawer {
         maxLineCount: number,
         stringWeight: number,
         setCount: React.Dispatch<React.SetStateAction<number>>,
-        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>
+        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>,
+        setNailSequence: React.Dispatch<React.SetStateAction<number[]>>
     ) {
         let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx: CanvasRenderingContext2D | null = null
@@ -74,6 +75,8 @@ export class StringArtDrawer {
                         }
                     } else if (lineSolverMsgFromWorker.status == CurrentStatus.COMPLETED) {
                         setViewedImage(lineSolverMsgFromWorker.imageData)
+                        setNailSequence(lineSolverMsgFromWorker.nailSequence)
+                        stringArtWorker.terminate()
                     }                    
                 };
             }

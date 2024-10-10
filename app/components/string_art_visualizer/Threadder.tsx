@@ -57,7 +57,8 @@ const Threadder: React.FC<Props> = (props: Props) => {
                             maxLineCount,
                             stringWeight,
                             setCount,
-                            setViewedImage
+                            setViewedImage,
+                            setNailSequence
                         )
                     })
                 }

@@ -40,6 +40,7 @@ self.onmessage = async (event) => {
         self.postMessage({
           message: "Worker done work!",
           imageData: progress.image,
+          nailSequence: progress.nailSequence,
           status: CurrentStatus.COMPLETED
         });
       }

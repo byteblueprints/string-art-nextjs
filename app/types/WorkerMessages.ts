@@ -31,4 +31,5 @@ export type StringArtWorkerResponse = {
     imageData: ImageData;
     status: CurrentStatus;
     count: number
+    nailSequence: number[]
 };
