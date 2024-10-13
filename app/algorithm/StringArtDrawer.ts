@@ -1,22 +1,23 @@
 import Pica from 'pica';
 import { StringArtWorkerResponse, StringArtWorkerMsg } from "../types/WorkerMessages";
 import { CurrentStatus } from '../types/enum/CurrentStatus';
+import { MIN_DISTANCE } from '../utils/constants';
 
 const pica = Pica();
 export class StringArtDrawer {
     private height: number = 500;
     private width: number = 500;
     private output_scaling_factor: number = 7;
-    private skip: number = 20;
 
     public async draw(
-        canvasId: string,
-        image: HTMLImageElement | null,
-        maxLineCount: number,
-        stringWeight: number,
-        setCount: React.Dispatch<React.SetStateAction<number>>,
-        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>,
-        setNailSequence: React.Dispatch<React.SetStateAction<number[]>>
+        canvasId: string, 
+        image: HTMLImageElement | null, 
+        maxLineCount: number, 
+        stringWeight: number, 
+        setCount: React.Dispatch<React.SetStateAction<number>>, 
+        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>, 
+        setNailSequence: React.Dispatch<React.SetStateAction<number[]>>, 
+        setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
     ) {
         let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx: CanvasRenderingContext2D | null = null
@@ -52,7 +53,7 @@ export class StringArtDrawer {
                     width: this.width,
                     outputScalingFactor: this.output_scaling_factor,
                     stringWeight: stringWeight,
-                    skip: this.skip,
+                    skip: MIN_DISTANCE,
                     allLineCoordinates: {},
                     nailsCordinates: []
                 }
@@ -76,8 +77,9 @@ export class StringArtDrawer {
                     } else if (lineSolverMsgFromWorker.status == CurrentStatus.COMPLETED) {
                         setViewedImage(lineSolverMsgFromWorker.imageData)
                         setNailSequence(lineSolverMsgFromWorker.nailSequence)
+                        setThreddingInProgress(false)
                         stringArtWorker.terminate()
-                    }                    
+                    }
                 };
             }
         }

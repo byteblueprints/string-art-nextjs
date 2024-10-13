@@ -16,6 +16,7 @@ interface Props {
     numOfNails: number
     stringWeight: number
     maxLineCount: number
+    threddingInProgress: boolean
 }
 const ImageVisualizer: React.FC<Props> = (props: Props) => {
     const {
@@ -26,9 +27,10 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
         setNumOfNails,
         setStringWeight,
         setMaxLineCount,
-        numOfNails, 
-        stringWeight, 
-        maxLineCount
+        numOfNails,
+        stringWeight,
+        maxLineCount,
+        threddingInProgress
     } = props
     return (
         <>
@@ -40,6 +42,7 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
                         initialPositionX={0}
                         initialPositionY={0}
                         smooth={false}
+                        disabled={threddingInProgress}
                     >
                         <TransformComponent>
                             <ImagePreviewCanvas selectedImage={selectedImage} />
@@ -51,10 +54,11 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
                             selectedImage={selectedImage}
                             setNumOfNails={setNumOfNails}
                             setStringWeight={setStringWeight}
-                            setMaxLineCount={setMaxLineCount}           
+                            setMaxLineCount={setMaxLineCount}
                             numOfNails={numOfNails}
                             maxLineCount={maxLineCount}
                             stringWeight={stringWeight}
+                            threddingInProgress={threddingInProgress}
                         />
                     </TransformWrapper>
                 </div>

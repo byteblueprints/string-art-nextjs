@@ -1,29 +1,29 @@
 "use client";
 
+import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
 import Pica from 'pica';
 import React, { useEffect, useRef } from 'react';
 
 interface Props {
   finalImage: ImageData | null
   index: number
+  nailCount: number
 }
 const pica = Pica();
 
-
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
-  const { finalImage, index } = props;
+  const { finalImage, index, nailCount } = props;
   const canvasReference = useRef<HTMLCanvasElement>(null);
+  let maxHeight = 700
+  const calculator = new NailsCoordinatesCalculator((maxHeight / 2) + 25, (maxHeight / 2) + 25, maxHeight / 2);
+  const nailsCoordinates = calculator.getNailsCoordinates(nailCount);
 
   useEffect(() => {
-    let maxHeight = 700
     if (canvasReference.current && finalImage) {
       const canvas = canvasReference.current;
-      maxHeight = canvas.width
-      canvas.width = maxHeight;
-      canvas.height = maxHeight;
+      // maxHeight = canvas.width
+      canvas.width = maxHeight + 50;
+      canvas.height = maxHeight + 50;
       const outputContext = canvas.getContext("2d")
       const createdCanvas = document.createElement('canvas');
       createdCanvas.width = finalImage.width;
@@ -41,7 +41,8 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
         }).then((result) => {
           if (outputContext != null) {
             outputContext.globalCompositeOperation = 'source-over';
-            outputContext.drawImage(outputCanvas, 0, 0, maxHeight, maxHeight);
+            outputContext.drawImage(outputCanvas, 25, 25, maxHeight, maxHeight);
+            drawNails(nailsCoordinates, outputContext)
           }
         }).catch((error) => {
           console.error("Error during resizing with Pica: ", error);
@@ -65,7 +66,30 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
       }
     }
   }
-
+  function drawNails(nailsCordinates: [number, number][], ctx: CanvasRenderingContext2D) {
+    let count = 0;
+    let i = 1;
+    nailsCordinates.forEach(([xx, yy]) => {
+      for (let x = xx; x < xx + 4; x++) {
+        for (let y = yy; y < yy + 4; y++) {
+          if (ctx) {
+            const pixelData = ctx.createImageData(1, 1);
+            pixelData.data[0] = 255;
+            pixelData.data[1] = 0;
+            pixelData.data[2] = 0;
+            pixelData.data[3] = 255;
+            ctx.putImageData(pixelData, x, y);
+          }
+        }
+      };
+      if (count % 5 == 0) {
+        ctx.font = "10px Arial";
+        ctx.fillText("" + i, xx, yy);
+      }
+      count++;
+      i++;
+    });
+  }
   return (
     <div className="flex-grow flex justify-center items-center mb-4">
       <div className="justify-center items-center bg-white">

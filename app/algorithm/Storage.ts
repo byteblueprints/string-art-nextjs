@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
-
 export class Storage {
     private storeName: string = ""
     private dbName: string = "StringArt"
@@ -31,37 +29,12 @@ export class Storage {
             };
         });
     };
-
-    // public store = async (key: string, value: any): Promise<void> => {
-    //     try {
-    //         const db = await this.openIndexedDB();
-    //         const transaction = db.transaction([this.storeName], "readwrite");
-    //         const store = transaction.objectStore(this.storeName);
-
-    //         const request = store.get(key);
-
-    //         request.onsuccess = () => {
-    //             store.put({ id: key, value: value });
-
-    //             transaction.oncomplete = () => {
-    //                 console.log(`Data saved inside indexed db ${this.storeName} store with ${key} successfully!`);
-    //             };
-
-    //             transaction.onerror = (event) => {
-    //                 console.error(`Failed to save data: ${(event.target as IDBRequest).error}`);
-    //             };
-    //         };
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //     }
-    // };
     public store = async (key: string, value: any): Promise<void> => {
         try {
             const db = await this.openIndexedDB();
             const transaction = db.transaction([this.storeName], "readwrite");
             const store = transaction.objectStore(this.storeName);
 
-            // Create a promise for the get request
             const getRequest = new Promise((resolve, reject) => {
                 const request = store.get(key);
 
@@ -69,10 +42,8 @@ export class Storage {
                 request.onerror = (event) => reject((event.target as IDBRequest).error);
             });
 
-            // Await the result of the get request
             const result = await getRequest;
 
-            // Proceed to store the new value
             const putRequest = new Promise<void>((resolve, reject) => {
                 store.put({ id: key, value: value });
 
@@ -87,7 +58,6 @@ export class Storage {
                 };
             });
 
-            // Await the result of the put request
             await putRequest;
         } catch (error) {
             console.error("Error:", error);

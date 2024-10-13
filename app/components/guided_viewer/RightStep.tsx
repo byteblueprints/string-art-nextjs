@@ -1,8 +1,6 @@
 "use client";
 
-import { ControlType } from '@/app/types/enum/ControlType';
-import Pica from 'pica';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FaAngleRight } from 'react-icons/fa';
 
 interface Props {
@@ -69,9 +67,9 @@ const RightStep: React.FC<Props> = (props: Props) => {
     while (true) {
       if (x >= 0 && x < width && y >= 0 && y < height) {
         const index = (y * width + x) * 4;
-        data[index] = 20;
-        data[index + 1] = 20;
-        data[index + 2] = 20;
+        data[index] = 0;
+        data[index + 1] = 0;
+        data[index + 2] = 0;
         data[index + 3] = 255;
       }
 
