@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  } from "react";
+import React, { } from "react";
 import ImageSelector from "./ImageSelector";
 import ImageVisualizer from "./ImageVisualizer";
 
@@ -12,6 +12,7 @@ interface Props {
   setNumOfNails: React.Dispatch<React.SetStateAction<number>>
   setStringWeight: React.Dispatch<React.SetStateAction<number>>
   setMaxLineCount: React.Dispatch<React.SetStateAction<number>>
+  threddingInProgress: boolean
   selectedImage: HTMLImageElement | null
   numOfNails: number
   stringWeight: number
@@ -19,17 +20,18 @@ interface Props {
 }
 
 const ImagePreProcessor: React.FC<Props> = (props: Props) => {
-  const { 
-    setImgXPos, 
-    setImgYPos, 
-    setImgScale, 
-    selectedImage, 
-    setSelectedImage, 
-    setNumOfNails, 
-    setStringWeight, 
-    setMaxLineCount,  
-    numOfNails, 
-    stringWeight, 
+  const {
+    setImgXPos,
+    setImgYPos,
+    setImgScale,
+    selectedImage,
+    setSelectedImage,
+    setNumOfNails,
+    setStringWeight,
+    setMaxLineCount,
+    threddingInProgress,
+    numOfNails,
+    stringWeight,
     maxLineCount
   } = props
   return (
@@ -43,13 +45,17 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
             setImgScale={setImgScale}
             setNumOfNails={setNumOfNails}
             setStringWeight={setStringWeight}
-            setMaxLineCount={setMaxLineCount}           
+            setMaxLineCount={setMaxLineCount}
             numOfNails={numOfNails}
             maxLineCount={maxLineCount}
             stringWeight={stringWeight}
+            threddingInProgress={threddingInProgress}
           />
         </div>
-        <ImageSelector setSelectedImage={setSelectedImage}></ImageSelector>
+        <ImageSelector
+          setSelectedImage={setSelectedImage}
+          threddingInProgress={threddingInProgress}
+        ></ImageSelector>
       </div>
     </div>
   );

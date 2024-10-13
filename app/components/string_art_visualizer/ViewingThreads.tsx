@@ -13,6 +13,8 @@ interface Props {
   numOfNails: number
   stringWeight: number
   maxLineCount: number
+  setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
+  threddingInProgress: boolean
 }
 
 
@@ -23,24 +25,28 @@ const ViewingThreads: React.FC<Props> = (props: Props) => {
     imgScale,
     selectedImage,
     setNailSequence,
-    setFinalStringArt, 
-    numOfNails, 
-    stringWeight, 
-    maxLineCount
+    setFinalStringArt,
+    numOfNails,
+    stringWeight,
+    maxLineCount,
+    setThreddingInProgress,
+    threddingInProgress
   } = props
   return (
     <div className="container mt-5">
       <div className="flex flex-col w-full items-center justify-center">
-        <ThreadingCanvas 
-        imgXPos={imgXPos} 
-        imgYPos={imgYPos} 
-        imgScale={imgScale} 
-        image={selectedImage} 
-        setNailSequence={setNailSequence} 
-        setFinalStringArt={setFinalStringArt}        
-        numOfNails={numOfNails} 
-        maxLineCount={maxLineCount} 
-        stringWeight={stringWeight} 
+        <ThreadingCanvas
+          imgXPos={imgXPos}
+          imgYPos={imgYPos}
+          imgScale={imgScale}
+          image={selectedImage}
+          setNailSequence={setNailSequence}
+          setFinalStringArt={setFinalStringArt}
+          numOfNails={numOfNails}
+          maxLineCount={maxLineCount}
+          stringWeight={stringWeight}
+          setThreddingInProgress={setThreddingInProgress}
+          threddingInProgress={threddingInProgress}
         />
       </div>
     </div>

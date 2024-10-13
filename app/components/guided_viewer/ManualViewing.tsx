@@ -12,12 +12,14 @@ import DrawFinalImage from './DrawFInalImage';
 interface Props {
   nailSequence: number[];
   finalStringArt: ImageData | null
+  threddingInProgress: boolean
+  nailCount: number
 }
 
 const pica = Pica();
 
 const ManualViewing: React.FC<Props> = (props: Props) => {
-  const { nailSequence, finalStringArt } = props;
+  const { nailSequence, finalStringArt, threddingInProgress, nailCount } = props;
   const [index, setIndex] = useState(0);
   const [target, setTarget] = useState<ImageData | null>(null);
   const [nailsCordinates, setNailsCordinates] = useState<[number, number][]>([]);
@@ -25,10 +27,10 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   const [isManualThreading, setIsManualThreading] = useState(false);
 
   useEffect(() => {
-    setTarget(createImageData(800 * 7, 800 * 7, 255));
-    const calculator = new NailsCoordinatesCalculator(800 * 7 / 2, 800 * 7 / 2, (800 * 7 / 2) - 1);
-    setNailsCordinates(calculator.getNailsCoordinates(288));
-  }, [])
+    setTarget(createImageData(700 * 7, 700 * 7, 255));
+    const calculator = new NailsCoordinatesCalculator(700 * 7 / 2, 700 * 7 / 2, (700 * 7 / 2) - 1);
+    setNailsCordinates(calculator.getNailsCoordinates(nailCount));
+  }, [nailCount])
   const createImageData = (width: number, height: number, fillValue: number): ImageData => {
     const imageData = new ImageData(width, height);
     for (let i = 0; i < imageData.data.length; i += 4) {
@@ -46,19 +48,43 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col w-full h-full p-4 justify-center items-center bg-white">
       <div className="mb-4 text-lg font-semibold text-black">
-        Current Index: {index} Starting Nail: {nailSequence[index-1]} -{'>'} End Nail: {nailSequence[index]}
+        Current Index: {index} Starting Nail: {nailSequence[index - 1] + 1} -{'>'} End Nail: {nailSequence[index] + 1}
       </div>
-      <ManualViewingCanvas finalImage={constructedFinal} index={index}/>
+      <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount}/>
       <div className="flex space-x-4 justify-center items-center bg-white">
         <button
+          disabled={threddingInProgress}
           className="bg-blue-500 text-white px-4 py-2 rounded-full"
           onClick={() => start()}
         >
           Start Manual Threading
         </button>
-        <LeftStep nailSequence={nailSequence} setConstructedFinal={setConstructedFinal} target={target} setTarget={setTarget} nailsCordinates={nailsCordinates} isManualThreading={isManualThreading} index={index} setIndex={setIndex}/>
-        <RightStep nailSequence={nailSequence} setConstructedFinal={setConstructedFinal} target={target} setTarget={setTarget} nailsCordinates={nailsCordinates} isManualThreading={isManualThreading} index={index} setIndex={setIndex}/>
-        <DrawFinalImage setConstructedFinal={setConstructedFinal} finalStringArt={finalStringArt} constructedFinal={constructedFinal} target={target}/>
+        <LeftStep
+          nailSequence={nailSequence}
+          setConstructedFinal={setConstructedFinal}
+          target={target}
+          setTarget={setTarget}
+          nailsCordinates={nailsCordinates}
+          isManualThreading={isManualThreading}
+          index={index}
+          setIndex={setIndex}
+        />
+        <RightStep
+          nailSequence={nailSequence}
+          setConstructedFinal={setConstructedFinal}
+          target={target} setTarget={setTarget}
+          nailsCordinates={nailsCordinates}
+          isManualThreading={isManualThreading}
+          index={index}
+          setIndex={setIndex}
+        />
+        <DrawFinalImage
+          setConstructedFinal={setConstructedFinal}
+          finalStringArt={finalStringArt}
+          constructedFinal={constructedFinal}
+          target={target}
+          threddingInProgress={threddingInProgress}
+        />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { LinesPreCalculator } from '@/app/algorithm/LinesPreCalculator';
 import { StringArtDrawer } from '@/app/algorithm/StringArtDrawer';
+import { MIN_DISTANCE } from '@/app/utils/constants';
 import React, { RefObject, useEffect, useState } from 'react';
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
     numOfNails: number
     maxLineCount: number
     stringWeight: number
+    setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
+    threddingInProgress: boolean
 }
 
 
@@ -24,10 +27,11 @@ const Threadder: React.FC<Props> = (props: Props) => {
         setNailSequence,
         setViewedImage,
         numOfNails,
-        stringWeight
+        stringWeight,
+        setThreddingInProgress,
+        threddingInProgress
     } = props
 
-    const [nailesCordinates, setNailsCordinates] = useState<[number, number][] | []>([])
     const [lineCalculated, setLineCalculated] = useState<boolean>(false)
     const [startDrawing, setStartDrawing] = useState<boolean>(false)
     const [preCalcLineCount, setPreCalcLineCount] = useState<number>(0)
@@ -58,7 +62,8 @@ const Threadder: React.FC<Props> = (props: Props) => {
                             stringWeight,
                             setCount,
                             setViewedImage,
-                            setNailSequence
+                            setNailSequence,
+                            setThreddingInProgress
                         )
                     })
                 }
@@ -67,6 +72,7 @@ const Threadder: React.FC<Props> = (props: Props) => {
     }, [lineCalculated])
 
     async function startThreading() {
+        setThreddingInProgress(true)
         let algorithm = new LinesPreCalculator()
         await algorithm.startThreading(
             numOfNails,
@@ -82,13 +88,13 @@ const Threadder: React.FC<Props> = (props: Props) => {
                     <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
                         <div
                             className="bg-green-500 h-4 rounded-full"
-                            style={{ width: `${(preCalcLineCount / 57500) * 100}%` }}
+                            style={{ width: `${(preCalcLineCount / ((numOfNails * numOfNails) - (numOfNails * MIN_DISTANCE))) * 100}%` }}
                         ></div>
                         <span
                             className="absolute inset-0 flex items-center justify-center text-black font-bold"
                             style={{ right: '0', paddingRight: '4px' }}
                         >
-                            {`${Math.min((preCalcLineCount / 57500) * 100, 100).toFixed(0)}%`}
+                            {`${Math.min((preCalcLineCount / ((numOfNails * numOfNails) - (numOfNails * MIN_DISTANCE))) * 100, 100).toFixed(0)}%`}
                         </span>
                     </div>
                     <div className="text-lg font-semibold text-gray-800">
@@ -115,6 +121,7 @@ const Threadder: React.FC<Props> = (props: Props) => {
                 </>
             )}
             <button
+                disabled={threddingInProgress}
                 onClick={() => startThreading()}
                 className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
             >

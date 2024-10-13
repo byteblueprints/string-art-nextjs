@@ -16,6 +16,7 @@ const Home: React.FC = () => {
   const [numOfNails, setNumOfNails] = useState(250);
   const [stringWeight, setStringWeight] = useState(20);
   const [maxLineCount, setMaxLineCount] = useState(4000);
+  const [threddingInProgress, setThreddingInProgress] = useState(false);
 
   return (
     <div className='container'>
@@ -33,6 +34,7 @@ const Home: React.FC = () => {
             setNumOfNails={setNumOfNails}
             setStringWeight={setStringWeight}
             setMaxLineCount={setMaxLineCount}
+            threddingInProgress={threddingInProgress}
           />
         </div>
         <div className='basis-full lg:basis-1/2'>
@@ -46,6 +48,8 @@ const Home: React.FC = () => {
             numOfNails={numOfNails}
             maxLineCount={maxLineCount}
             stringWeight={stringWeight}
+            setThreddingInProgress={setThreddingInProgress}
+            threddingInProgress={threddingInProgress}
           />
         </div>
       </div>
@@ -54,7 +58,9 @@ const Home: React.FC = () => {
         <div className="basis-full">
           <ManualViewing
             nailSequence={nailSequence}
-            finalStringArt={finalStringArt}
+            finalStringArt={finalStringArt}            
+            threddingInProgress={threddingInProgress}
+            nailCount={numOfNails}
           />
         </div>
       </div>

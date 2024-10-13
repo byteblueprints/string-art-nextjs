@@ -25,23 +25,25 @@ interface Props {
   numOfNails: number
   stringWeight: number
   maxLineCount: number
+  threddingInProgress: boolean
 }
 
 
 const ControlButtons: React.FC<Props> = ((props: Props) => {
   const { zoomIn, zoomOut, resetTransform, setTransform } = useControls();
   const [showConfig, setShowConfig] = useState(false);
-  const { 
-    setImgXPos, 
-    setImgYPos, 
-    setImgScale, 
-    selectedImage, 
-    setNumOfNails, 
-    setStringWeight, 
+  const {
+    setImgXPos,
+    setImgYPos,
+    setImgScale,
+    selectedImage,
+    setNumOfNails,
+    setStringWeight,
     setMaxLineCount,
-    numOfNails, 
-    stringWeight, 
-    maxLineCount
+    numOfNails,
+    stringWeight,
+    maxLineCount,
+    threddingInProgress
   } = props
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
@@ -77,48 +79,56 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
   return (
     <div className="absolute bottom-0 flex space-x-2 p-4">
       <button
+        disabled={threddingInProgress}
         onClick={() => zoomIn()}
         className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
       >
         <FaPlus />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => zoomOut()}
         className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
       >
         <FaMinus />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => resetTransform()}
         className="p-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
       >
         <FaXmark />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => transform(ControlType.LEFT)}
         className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
       >
         <FaAngleLeft />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => transform(ControlType.RIGHT)}
         className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
       >
         <FaAngleRight />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => transform(ControlType.UP)}
         className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
       >
         <FaAngleUp />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => transform(ControlType.DOWN)}
         className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
       >
         <FaAngleDown />
       </button>
       <button
+        disabled={threddingInProgress}
         onClick={() => setShowConfig(!showConfig)}
         className="p-3 bg-gray-500 text-white rounded-full shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all"
       >

@@ -15,6 +15,8 @@ interface Props {
     numOfNails: number
     stringWeight: number
     maxLineCount: number
+    setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
+    threddingInProgress: boolean
 }
 
 
@@ -28,7 +30,9 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
         setFinalStringArt,
         numOfNails,
         stringWeight,
-        maxLineCount
+        maxLineCount,
+        setThreddingInProgress,
+        threddingInProgress
     } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [downloadDisabled, setDownloadDisabled] = useState<boolean>(true)
@@ -96,13 +100,15 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     return (
         <div className="relative flex flex-col items-center space-y-4">
             <canvas ref={canvasRef} id="string_art" className="border-2 border-gray-300 rounded-2xl" />
-            <Threadder  
-            maxLineCount={maxLineCount} 
-            canvasRef={canvasRef} 
-            setNailSequence={setNailSequence}
-            setViewedImage={setViewedImage}
-            numOfNails={numOfNails}
-            stringWeight={stringWeight}
+            <Threadder
+                maxLineCount={maxLineCount}
+                canvasRef={canvasRef}
+                setNailSequence={setNailSequence}
+                setViewedImage={setViewedImage}
+                numOfNails={numOfNails}
+                stringWeight={stringWeight}
+                setThreddingInProgress={setThreddingInProgress}
+                threddingInProgress={threddingInProgress}
             />
             <ImageDownloader image={viewedImage} downloadDisabled={downloadDisabled} />
         </div>

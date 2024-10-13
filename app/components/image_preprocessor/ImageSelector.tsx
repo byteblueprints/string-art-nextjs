@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 
 interface Props {
   setSelectedImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>;
+  threddingInProgress: boolean
 }
 
 const ImageSelector: React.FC<Props> = (props: Props) => {
-  const{ setSelectedImage } = props
+  const {
+    setSelectedImage,
+    threddingInProgress
+  } = props
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +47,7 @@ const ImageSelector: React.FC<Props> = (props: Props) => {
           {file ? file.name : 'Click to Upload(JPG, JPEG, PNG)'}
         </span>
         <input
+          disabled={threddingInProgress}
           type="file"
           accept="image/jpeg, image/jpg, image/png"
           onChange={handleFileChange}
@@ -51,6 +56,7 @@ const ImageSelector: React.FC<Props> = (props: Props) => {
       </label>
       {file && (
         <button
+          disabled={threddingInProgress}
           onClick={() => setFile(null)}
           className="px-6 py-2 bg-red-500 text-white font-semibold rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
         >

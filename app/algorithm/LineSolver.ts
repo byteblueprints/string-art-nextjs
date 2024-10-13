@@ -53,7 +53,7 @@ export class LineSolver {
                 lastPins.shift();
             }
             nailSequence.push(bestNail);
-            target = this.drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint);
+            target = this.drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint, stringWeight);
             if (count % 10 === 0) {
                 callback({
                     image: target,
@@ -136,7 +136,12 @@ export class LineSolver {
         return result;
     }
 
-    private drawLineUsingBreshenHamLineDrawingAlgo(imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }): ImageData {
+    private drawLineUsingBreshenHamLineDrawingAlgo(
+        imageData: ImageData, 
+        startPoint: { x: number; y: number }, 
+        endPoint: { x: number; y: number }, 
+        stringWeight: number
+    ): ImageData {
         const { width, height, data } = imageData;
 
         const dx = Math.abs(endPoint.x - startPoint.x);
@@ -151,10 +156,10 @@ export class LineSolver {
         while (true) {
             if (x >= 0 && x < width && y >= 0 && y < height) {
                 const index = (y * width + x) * 4;
-                data[index] = 20;     // R
-                data[index + 1] = 20; // G
-                data[index + 2] = 20; // B
-                data[index + 3] = 255; // A
+                data[index] = stringWeight;     
+                data[index + 1] = stringWeight; 
+                data[index + 2] = stringWeight; 
+                data[index + 3] = 255; 
             }
 
             if (x === endPoint.x && y === endPoint.y) break;
