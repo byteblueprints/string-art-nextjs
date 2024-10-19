@@ -99,7 +99,7 @@ const Threadder: React.FC<Props> = (props: Props) => {
                             </span>
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
-                            Pre calculated Line count
+                            All Posible Lines
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
                             {preCalcLineCount}
@@ -122,7 +122,7 @@ const Threadder: React.FC<Props> = (props: Props) => {
                             </span>
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
-                            Line count:
+                            Viewed Thread Count
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
                             {count}

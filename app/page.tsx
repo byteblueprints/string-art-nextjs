@@ -20,9 +20,8 @@ const Home: React.FC = () => {
 
   return (
     <div className='container'>
-      {/* For larger screens, use flex-row. For smaller screens, flex-col. */}
-      <div className='flex flex-col md:flex-row h-screen'>
-        <div className='h-full md:h-[80%] md:basis-1/2 mt-10 p-5'>
+      <div className='flex flex-col lg:flex-row h-screen'>
+        <div className='h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5'>
           <ImagePreProcessor
             setImgXPos={setImgXPos}
             setImgYPos={setImgYPos}
@@ -38,7 +37,7 @@ const Home: React.FC = () => {
             threddingInProgress={threddingInProgress}
           />
         </div>
-        <div className='h-full md:h-[80%] md:basis-1/2 mt-10 p-5'>
+        <div className='h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5'>
           <ViewingThreads
             imgXPos={imgXPos}
             imgYPos={imgYPos}
