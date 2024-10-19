@@ -14,14 +14,13 @@ const pica = Pica();
 const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
   const { finalImage, index, nailCount } = props;
   const canvasReference = useRef<HTMLCanvasElement>(null);
-  let maxHeight = 700
-  const calculator = new NailsCoordinatesCalculator((maxHeight / 2) + 25, (maxHeight / 2) + 25, maxHeight / 2);
-  const nailsCoordinates = calculator.getNailsCoordinates(nailCount);
 
   useEffect(() => {
     if (canvasReference.current && finalImage) {
-      const canvas = canvasReference.current;
-      // maxHeight = canvas.width
+      const canvas = canvasReference.current;      
+      const maxHeight = canvas.clientWidth
+      const calculator = new NailsCoordinatesCalculator((maxHeight / 2) + 25, (maxHeight / 2) + 25, maxHeight / 2);
+      const nailsCoordinates = calculator.getNailsCoordinates(nailCount);
       canvas.width = maxHeight + 50;
       canvas.height = maxHeight + 50;
       const outputContext = canvas.getContext("2d")
@@ -52,7 +51,7 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
         });;
       }
     } else {
-      clearCanvas(maxHeight)
+      // clearCanvas(maxHeight)
     }
   }, [index, finalImage])
   const clearCanvas = async (maxHeight: number) => {
@@ -70,8 +69,8 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
     let count = 0;
     let i = 1;
     nailsCordinates.forEach(([xx, yy]) => {
-      for (let x = xx; x < xx + 4; x++) {
-        for (let y = yy; y < yy + 4; y++) {
+      for (let x = xx - 1; x < xx + 2; x++) {
+        for (let y = yy - 1; y < yy + 2; y++) {
           if (ctx) {
             const pixelData = ctx.createImageData(1, 1);
             pixelData.data[0] = 255;

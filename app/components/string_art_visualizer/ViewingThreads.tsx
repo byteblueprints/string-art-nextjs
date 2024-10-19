@@ -33,23 +33,19 @@ const ViewingThreads: React.FC<Props> = (props: Props) => {
     threddingInProgress
   } = props
   return (
-    <div className="container mt-5">
-      <div className="flex flex-col w-full items-center justify-center">
-        <ThreadingCanvas
-          imgXPos={imgXPos}
-          imgYPos={imgYPos}
-          imgScale={imgScale}
-          image={selectedImage}
-          setNailSequence={setNailSequence}
-          setFinalStringArt={setFinalStringArt}
-          numOfNails={numOfNails}
-          maxLineCount={maxLineCount}
-          stringWeight={stringWeight}
-          setThreddingInProgress={setThreddingInProgress}
-          threddingInProgress={threddingInProgress}
-        />
-      </div>
-    </div>
+    <ThreadingCanvas
+      imgXPos={imgXPos}
+      imgYPos={imgYPos}
+      imgScale={imgScale}
+      image={selectedImage}
+      setNailSequence={setNailSequence}
+      setFinalStringArt={setFinalStringArt}
+      numOfNails={numOfNails}
+      maxLineCount={maxLineCount}
+      stringWeight={stringWeight}
+      setThreddingInProgress={setThreddingInProgress}
+      threddingInProgress={threddingInProgress}
+    />
   );
 };
 

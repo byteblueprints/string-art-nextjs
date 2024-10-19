@@ -42,7 +42,7 @@ const ImageDownloader: React.FC<Props> = (props: Props) => {
         <>
             <button
                 onClick={handleDownload}
-                className={`absolute top-0 right-4 p-2 rounded-full ${!downloadDisabled ? 'bg-green-500' : 'bg-gray-400 cursor-not-allowed'
+                className={`p-2 rounded-full ${!downloadDisabled ? 'bg-green-500' : 'bg-gray-400 cursor-not-allowed'
                     }`}
                 disabled={downloadDisabled}
             >
