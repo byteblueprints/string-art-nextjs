@@ -20,14 +20,15 @@ const Home: React.FC = () => {
 
   return (
     <div className='container'>
-      <div className='flex flex-col lg:flex-row content-center'>
-        <div className='basis-full lg:basis-1/2'>
+      {/* For larger screens, use flex-row. For smaller screens, flex-col. */}
+      <div className='flex flex-col md:flex-row h-screen'>
+        <div className='basis-full md:basis-1/2 mt-10'>
           <ImagePreProcessor
             setImgXPos={setImgXPos}
             setImgYPos={setImgYPos}
             setImgScale={setImgScale}
             selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}            
+            setSelectedImage={setSelectedImage}
             numOfNails={numOfNails}
             maxLineCount={maxLineCount}
             stringWeight={stringWeight}
@@ -37,7 +38,7 @@ const Home: React.FC = () => {
             threddingInProgress={threddingInProgress}
           />
         </div>
-        <div className='basis-full lg:basis-1/2'>
+        <div className='basis-full md:basis-1/2 mt-10'>
           <ViewingThreads
             imgXPos={imgXPos}
             imgYPos={imgYPos}
@@ -58,14 +59,13 @@ const Home: React.FC = () => {
         <div className="basis-full">
           <ManualViewing
             nailSequence={nailSequence}
-            finalStringArt={finalStringArt}            
+            finalStringArt={finalStringArt}
             threddingInProgress={threddingInProgress}
             nailCount={numOfNails}
           />
         </div>
       </div>
     </div>
-
   );
 };
 

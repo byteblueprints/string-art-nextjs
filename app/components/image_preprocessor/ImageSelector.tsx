@@ -41,8 +41,8 @@ const ImageSelector: React.FC<Props> = (props: Props) => {
     };
   }, [])
   return (
-    <div className="flex flex-col items-center w-full space-y-4 mt-5">
-      <label className="flex flex-col items-center p-3 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 w-full max-w-xs text-center">
+    <div className="flex flex-col items-center space-y-4 mt-5">
+      <label className="flex flex-col items-center p-3 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 max-w-xs text-center">
         <span className="text-sm font-medium">
           {file ? file.name : 'Click to Upload(JPG, JPEG, PNG)'}
         </span>

@@ -26,14 +26,17 @@ export class StringArtDrawer {
         if (canvas) {
             ctx = canvas.getContext('2d');
             if (ctx && image) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
                 ctx.globalCompositeOperation = 'source-over';
-                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, canvas.clientWidth, canvas.clientHeight);
 
-                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                imageData = ctx.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight);
+                const startX = (canvas.clientWidth / 2);
+                const startY = (canvas.clientHeight / 2);
+                const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 1;
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.beginPath();
-                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), 250, 0, Math.PI * 2);
+                ctx.arc(startX, startY, radius, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.fill();
 
@@ -42,7 +45,7 @@ export class StringArtDrawer {
                 ctx.putImageData(imageData, 0, 0);
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.beginPath();
-                ctx.arc(Math.floor(500 / 2 - 1), Math.floor(500 / 2 - 1), 250, 0, Math.PI * 2);
+                ctx.arc(startX, startY, radius, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.fill();
                 ctx.globalCompositeOperation = 'source-over';
@@ -70,7 +73,7 @@ export class StringArtDrawer {
                         } else {
                             if (lineSolverMsgFromWorker.imageData != undefined) {
                                 if (ctx) {
-                                    showImage(ctx, lineSolverMsgFromWorker.imageData)
+                                    showImage(ctx, lineSolverMsgFromWorker.imageData, canvas)
                                 }
                             }
                         }
@@ -127,7 +130,7 @@ function cleanup(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement
 }
 
 
-function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData): void {
+function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData, c: HTMLCanvasElement): void {
     const canvas = document.createElement('canvas');
     canvas.width = imageData.width;
     canvas.height = imageData.height;
@@ -137,8 +140,8 @@ function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData
         ctx.putImageData(imageData, 0, 0);
 
         const outputCanvas = document.createElement('canvas');
-        outputCanvas.width = 500;
-        outputCanvas.height = 500;
+        outputCanvas.width = c.clientWidth;
+        outputCanvas.height = c.clientHeight;
 
         pica.resize(canvas, outputCanvas, {
             quality: 3

@@ -35,28 +35,26 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
     maxLineCount
   } = props
   return (
-    <div className="container m-5">
-      <div className="flex flex-col">
-        <div className="content-center rounded-2xl">
-          <ImageVisualizer
-            selectedImage={selectedImage}
-            setImgXPos={setImgXPos}
-            setImgYPos={setImgYPos}
-            setImgScale={setImgScale}
-            setNumOfNails={setNumOfNails}
-            setStringWeight={setStringWeight}
-            setMaxLineCount={setMaxLineCount}
-            numOfNails={numOfNails}
-            maxLineCount={maxLineCount}
-            stringWeight={stringWeight}
-            threddingInProgress={threddingInProgress}
-          />
-        </div>
-        <ImageSelector
-          setSelectedImage={setSelectedImage}
+    <div className="flex flex-col h-full">
+      <div className="relative h-4/5">
+        <ImageVisualizer
+          selectedImage={selectedImage}
+          setImgXPos={setImgXPos}
+          setImgYPos={setImgYPos}
+          setImgScale={setImgScale}
+          setNumOfNails={setNumOfNails}
+          setStringWeight={setStringWeight}
+          setMaxLineCount={setMaxLineCount}
+          numOfNails={numOfNails}
+          maxLineCount={maxLineCount}
+          stringWeight={stringWeight}
           threddingInProgress={threddingInProgress}
-        ></ImageSelector>
+        />
       </div>
+      <ImageSelector
+        setSelectedImage={setSelectedImage}
+        threddingInProgress={threddingInProgress}
+      ></ImageSelector>
     </div>
   );
 };

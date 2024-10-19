@@ -47,10 +47,10 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="flex flex-col w-full h-full p-4 justify-center items-center bg-white">
+      <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount}/>      
       <div className="mb-4 text-lg font-semibold text-black">
         Current Index: {index} Starting Nail: {nailSequence[index - 1] + 1} -{'>'} End Nail: {nailSequence[index] + 1}
       </div>
-      <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount}/>
       <div className="flex space-x-4 justify-center items-center bg-white">
         <button
           disabled={threddingInProgress}

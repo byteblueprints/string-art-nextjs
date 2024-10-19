@@ -40,8 +40,8 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (canvasRef.current) {
             const canvas = canvasRef.current;
-            canvas.width = DEFAULT_CANVAS_WIDTH;
-            canvas.height = DEFAULT_CANVAS_HEIGHT;
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
         }
     }, [])
     useEffect(() => {
@@ -56,10 +56,11 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         if (canvasRef.current && image) {
+            const canvas = canvasRef.current;
             const ctx = canvasRef.current.getContext("2d");
             if (ctx != null) {
-                const canvasWidth = DEFAULT_CANVAS_WIDTH * imgScale;
-                const canvasHeight = DEFAULT_CANVAS_HEIGHT * imgScale;
+                const canvasWidth = canvas.clientWidth * imgScale;
+                const canvasHeight = canvas.clientHeight * imgScale;
 
                 const imageAspectRatio = image.width / image.height;
                 const canvasAspectRatio = canvasWidth / canvasHeight;
@@ -84,34 +85,43 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
                 ctx.drawImage(image, xOffset + imgXPos, yOffset + imgYPos, drawWidth, drawHeight);
                 ctx.globalCompositeOperation = 'destination-in';
 
-                circleCrop(ctx);
+                circleCrop(ctx, canvas);
             }
         }
     }, [imgXPos, imgYPos, imgScale, image]);
 
-    const circleCrop = (context: CanvasRenderingContext2D) => {
-        const startX = Math.floor((DEFAULT_CANVAS_WIDTH / 2) - 1);
-        const startY = Math.floor((DEFAULT_CANVAS_HEIGHT / 2) - 1);
+    const circleCrop = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+        const startX = (canvas.clientWidth / 2);
+        const startY = (canvas.clientHeight / 2);
+        const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 1;
         context.beginPath();
-        context.arc(startX, startY, 249, 0, Math.PI * 2);
+        context.arc(startX, startY, radius, 0, Math.PI * 2);
         context.closePath();
         context.fill();
     }
     return (
-        <div className="relative flex flex-col items-center space-y-4">
-            <canvas ref={canvasRef} id="string_art" className="border-2 border-gray-300 rounded-2xl" />
-            <Threadder
-                maxLineCount={maxLineCount}
-                canvasRef={canvasRef}
-                setNailSequence={setNailSequence}
-                setViewedImage={setViewedImage}
-                numOfNails={numOfNails}
-                stringWeight={stringWeight}
-                setThreddingInProgress={setThreddingInProgress}
-                threddingInProgress={threddingInProgress}
-            />
-            <ImageDownloader image={viewedImage} downloadDisabled={downloadDisabled} />
-        </div>
+        <>
+            <div className="relative flex flex-col h-full items-center">
+                <div className="relative h-4/5 w-3/4 border-2 border-gray-300 rounded-2xl">
+                    <canvas ref={canvasRef} id="string_art" className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute top-5 right-5">
+                        <ImageDownloader image={viewedImage} downloadDisabled={downloadDisabled} />
+                    </div>
+                </div>
+                <div className="absolute w-1/2 left-1/2 transform -translate-x-1/2 bottom-0">
+                    <Threadder
+                        maxLineCount={maxLineCount}
+                        canvasRef={canvasRef}
+                        setNailSequence={setNailSequence}
+                        setViewedImage={setViewedImage}
+                        numOfNails={numOfNails}
+                        stringWeight={stringWeight}
+                        setThreddingInProgress={setThreddingInProgress}
+                        threddingInProgress={threddingInProgress}
+                    />
+                </div>
+            </div>
+        </>
     );
 };
 

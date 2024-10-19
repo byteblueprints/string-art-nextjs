@@ -16,8 +16,8 @@ const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
                 const ctx = canvas.getContext("2d");
 
                 if (ctx != null) {
-                    const canvasWidth = DEFAULT_CANVAS_WIDTH;
-                    const canvasHeight = DEFAULT_CANVAS_HEIGHT;
+                    const canvasWidth = canvas.width;
+                    const canvasHeight = canvas.width;
 
                     const imageAspectRatio = selectedImage.width / selectedImage.height;
                     const canvasAspectRatio = canvasWidth / canvasHeight;
@@ -47,8 +47,8 @@ const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
         }
     }, [selectedImage]);
     return (
-        <div className="flex flex-col w-full items-center justify-center">
-            <canvas ref={canvasRef} className="rounded-2xl"/>
+        <div className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <canvas ref={canvasRef} className="w-full h-full rounded-2xl"/>
         </div>
     );
 };

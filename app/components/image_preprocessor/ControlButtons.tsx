@@ -77,63 +77,66 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
     resetTransform()
   }, [selectedImage])
   return (
-    <div className="absolute bottom-0 flex space-x-2 p-4">
-      <button
-        disabled={threddingInProgress}
-        onClick={() => zoomIn()}
-        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaPlus />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => zoomOut()}
-        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaMinus />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => resetTransform()}
-        className="p-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaXmark />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => transform(ControlType.LEFT)}
-        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaAngleLeft />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => transform(ControlType.RIGHT)}
-        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaAngleRight />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => transform(ControlType.UP)}
-        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaAngleUp />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => transform(ControlType.DOWN)}
-        className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaAngleDown />
-      </button>
-      <button
-        disabled={threddingInProgress}
-        onClick={() => setShowConfig(!showConfig)}
-        className="p-3 bg-gray-500 text-white rounded-full shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all"
-      >
-        <FaCog />
-      </button>
+    <>
+      <div className="absolute flex flex-row bottom-0 space-x-2 p-4 left-1/2 transform -translate-x-1/2">
+        <button
+          disabled={threddingInProgress}
+          onClick={() => zoomIn()}
+          className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaPlus />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => zoomOut()}
+          className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaMinus />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => resetTransform()}
+          className="p-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaXmark />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => transform(ControlType.LEFT)}
+          className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaAngleLeft />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => transform(ControlType.RIGHT)}
+          className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaAngleRight />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => transform(ControlType.UP)}
+          className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaAngleUp />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => transform(ControlType.DOWN)}
+          className="p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaAngleDown />
+        </button>
+        <button
+          disabled={threddingInProgress}
+          onClick={() => setShowConfig(!showConfig)}
+          className="p-3 bg-gray-500 text-white rounded-full shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all"
+        >
+          <FaCog />
+        </button>
+      </div>
+
       {showConfig && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded shadow-lg w-96">
@@ -182,8 +185,7 @@ const ControlButtons: React.FC<Props> = ((props: Props) => {
           </div>
         </div>
       )}
-    </div>
-
+    </>
   );
 });
 

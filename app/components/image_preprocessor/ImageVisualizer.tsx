@@ -34,34 +34,32 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
     } = props
     return (
         <>
-            <div className="container">
-                <div className="flex flex-col items-center justify-center relative">
-                    <CircleMask />
-                    <TransformWrapper
-                        initialScale={1}
-                        initialPositionX={0}
-                        initialPositionY={0}
-                        smooth={false}
-                        disabled={threddingInProgress}
-                    >
-                        <TransformComponent>
-                            <ImagePreviewCanvas selectedImage={selectedImage} />
-                        </TransformComponent>
-                        <ControlButtons
-                            setImgXPos={setImgXPos}
-                            setImgYPos={setImgYPos}
-                            setImgScale={setImgScale}
-                            selectedImage={selectedImage}
-                            setNumOfNails={setNumOfNails}
-                            setStringWeight={setStringWeight}
-                            setMaxLineCount={setMaxLineCount}
-                            numOfNails={numOfNails}
-                            maxLineCount={maxLineCount}
-                            stringWeight={stringWeight}
-                            threddingInProgress={threddingInProgress}
-                        />
-                    </TransformWrapper>
-                </div>
+            <CircleMask />
+            <div className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <TransformWrapper
+                    initialScale={1}
+                    initialPositionX={0}
+                    initialPositionY={0}
+                    smooth={false}
+                    disabled={threddingInProgress}
+                >
+                    <TransformComponent>
+                        <ImagePreviewCanvas selectedImage={selectedImage} />
+                    </TransformComponent>
+                    <ControlButtons
+                        setImgXPos={setImgXPos}
+                        setImgYPos={setImgYPos}
+                        setImgScale={setImgScale}
+                        selectedImage={selectedImage}
+                        setNumOfNails={setNumOfNails}
+                        setStringWeight={setStringWeight}
+                        setMaxLineCount={setMaxLineCount}
+                        numOfNails={numOfNails}
+                        maxLineCount={maxLineCount}
+                        stringWeight={stringWeight}
+                        threddingInProgress={threddingInProgress}
+                    />
+                </TransformWrapper>
             </div>
         </>
     );
