@@ -99,34 +99,43 @@ const Threadder: React.FC<Props> = (props: Props) => {
                             </span>
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
-                            Pre calculated Line count: {preCalcLineCount}
+                            Pre calculated Line count
+                        </div>
+                        <div className="text-lg font-semibold text-gray-800">
+                            {preCalcLineCount}
                         </div>
                     </div>
                 </>
             ) : (
                 <>
-                    <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
-                        <div
-                            className="bg-green-500 h-4 rounded-full"
-                            style={{ width: `${(count / maxLineCount) * 100}%` }}
-                        ></div>
-                        <span
-                            className="absolute inset-0 flex items-center justify-center text-black font-bold"
-                            style={{ right: '0', paddingRight: '4px' }}
-                        >
-                            {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
-                        </span>
+                    <div className="flex flex-col items-center">
+                        <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
+                            <div
+                                className="bg-green-500 h-4 rounded-full"
+                                style={{ width: `${(count / maxLineCount) * 100}%` }}
+                            ></div>
+                            <span
+                                className="absolute inset-0 flex items-center justify-center text-black font-bold"
+                                style={{ right: '0', paddingRight: '4px' }}
+                            >
+                                {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
+                            </span>
+                        </div>
+                        <div className="text-lg font-semibold text-gray-800">
+                            Line count:
+                        </div>
+                        <div className="text-lg font-semibold text-gray-800">
+                            {count}
+                        </div>
                     </div>
-                    <div className="text-lg font-semibold text-gray-800">
-                        Line count: {count}
-                    </div>
+
                 </>
             )}
             <div className='flex flex-col items-center justify-cente'>
                 <button
                     disabled={threddingInProgress}
                     onClick={() => startThreading()}
-                    className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+                    className="px-6 py-2 bg-blue-500 text-white font-medium md:font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
                 >
                     Start Threading
                 </button>

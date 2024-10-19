@@ -22,7 +22,7 @@ const Home: React.FC = () => {
     <div className='container'>
       {/* For larger screens, use flex-row. For smaller screens, flex-col. */}
       <div className='flex flex-col md:flex-row h-screen'>
-        <div className='basis-full md:basis-1/2 mt-10'>
+        <div className='h-full md:h-[80%] md:basis-1/2 mt-10 p-5'>
           <ImagePreProcessor
             setImgXPos={setImgXPos}
             setImgYPos={setImgYPos}
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
             threddingInProgress={threddingInProgress}
           />
         </div>
-        <div className='basis-full md:basis-1/2 mt-10'>
+        <div className='h-full md:h-[80%] md:basis-1/2 mt-10 p-5'>
           <ViewingThreads
             imgXPos={imgXPos}
             imgYPos={imgYPos}
@@ -55,7 +55,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col h-screen m-4 content-center">
+      <div className="flex flex-col h-screen m-4 content-center p-5">
         <div className="basis-full">
           <ManualViewing
             nailSequence={nailSequence}
@@ -66,6 +66,7 @@ const Home: React.FC = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 
