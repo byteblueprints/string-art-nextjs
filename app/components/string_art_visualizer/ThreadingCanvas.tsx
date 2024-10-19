@@ -102,13 +102,13 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     return (
         <>
             <div className="relative flex flex-col h-full items-center">
-                <div className="relative h-4/5 w-3/4 border-2 border-gray-300 rounded-2xl">
+                <div className="relative h-full w-[95%] border-2 border-gray-300 rounded-2xl">
                     <canvas ref={canvasRef} id="string_art" className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                     <div className="absolute top-5 right-5">
                         <ImageDownloader image={viewedImage} downloadDisabled={downloadDisabled} />
                     </div>
                 </div>
-                <div className="absolute w-1/2 left-1/2 transform -translate-x-1/2 bottom-0">
+                <div className="absolute w-[85%] bottom-0 left-1/2 transform -translate-x-1/2  translate-y-[120%]">
                     <Threadder
                         maxLineCount={maxLineCount}
                         canvasRef={canvasRef}

@@ -48,17 +48,21 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col w-full h-full p-4 justify-center items-center bg-white">
       <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount}/>      
-      <div className="mb-4 text-lg font-semibold text-black">
-        Current Index: {index} Starting Nail: {nailSequence[index - 1] + 1} -{'>'} End Nail: {nailSequence[index] + 1}
+      <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
+        Current Index: {index} 
       </div>
-      <div className="flex space-x-4 justify-center items-center bg-white">
-        <button
+      <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
+        Starting Nail: {nailSequence[index - 1] + 1} -{'>'} End Nail: {nailSequence[index] + 1}
+      </div>
+      
+      <button
           disabled={threddingInProgress}
           className="bg-blue-500 text-white px-4 py-2 rounded-full"
           onClick={() => start()}
         >
           Start Manual Threading
         </button>
+      <div className="flex p-4 space-x-4 justify-center items-center bg-white">
         <LeftStep
           nailSequence={nailSequence}
           setConstructedFinal={setConstructedFinal}

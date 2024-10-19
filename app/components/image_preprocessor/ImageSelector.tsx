@@ -41,29 +41,18 @@ const ImageSelector: React.FC<Props> = (props: Props) => {
     };
   }, [])
   return (
-    <div className="flex flex-col items-center space-y-4 mt-5">
-      <label className="flex flex-col items-center p-3 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 max-w-xs text-center">
-        <span className="text-sm font-medium">
-          {file ? file.name : 'Click to Upload(JPG, JPEG, PNG)'}
-        </span>
-        <input
-          disabled={threddingInProgress}
-          type="file"
-          accept="image/jpeg, image/jpg, image/png"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-      </label>
-      {file && (
-        <button
-          disabled={threddingInProgress}
-          onClick={() => setFile(null)}
-          className="px-6 py-2 bg-red-500 text-white font-semibold rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
-        >
-          Remove File
-        </button>
-      )}
-    </div>
+    <label className="flex flex-col items-center p-3 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 text-center">
+      <span className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+        Click to Upload (JPG, JPEG, PNG)
+      </span>
+      <input
+        disabled={threddingInProgress}
+        type="file"
+        accept="image/jpeg, image/jpg, image/png"
+        onChange={file ? () => setFile(null) : handleFileChange}
+        className="hidden"
+      />
+    </label>
   );
 };
 

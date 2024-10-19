@@ -35,8 +35,8 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
     maxLineCount
   } = props
   return (
-    <div className="flex flex-col h-full">
-      <div className="relative h-4/5">
+    <div className="flex flex-col h-full relative">
+      <div className="relative h-full">
         <ImageVisualizer
           selectedImage={selectedImage}
           setImgXPos={setImgXPos}
@@ -51,10 +51,13 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
           threddingInProgress={threddingInProgress}
         />
       </div>
-      <ImageSelector
-        setSelectedImage={setSelectedImage}
-        threddingInProgress={threddingInProgress}
-      ></ImageSelector>
+
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[120%]">
+        <ImageSelector
+          setSelectedImage={setSelectedImage}
+          threddingInProgress={threddingInProgress}
+        ></ImageSelector>
+      </div>
     </div>
   );
 };
