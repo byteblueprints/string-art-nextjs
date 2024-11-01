@@ -7,11 +7,11 @@ interface Props {
   finalStringArt: ImageData | null;
   constructedFinal: ImageData | null;
   target: ImageData | null;
-  threddingInProgress: boolean
+  stringArtInProgress: boolean
 }
 
 const DrawFinalImage: React.FC<Props> = (props: Props) => {
-  const { setConstructedFinal, finalStringArt, constructedFinal, target, threddingInProgress } = props;
+  const { setConstructedFinal, finalStringArt, constructedFinal, target, stringArtInProgress } = props;
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
@@ -39,7 +39,7 @@ const DrawFinalImage: React.FC<Props> = (props: Props) => {
   return (
     <label className="inline-flex items-center cursor-pointer">
       <input
-        disabled={threddingInProgress}
+        disabled={stringArtInProgress}
         type="checkbox"
         className="form-checkbox h-5 w-5 text-blue-600"
         onChange={handleCheckboxChange}

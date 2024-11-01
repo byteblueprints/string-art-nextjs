@@ -1,5 +1,6 @@
 import { Storage } from './Storage';
 import { CurrentStatus } from '../types/enum/CurrentStatus';
+import { NailsCoordinatesCalculator } from './NailsCoordinatesCalculator';
 
 const lineStorage = new Storage("lines")
 
@@ -23,7 +24,7 @@ export class LineSolver {
         const nailsCount = nailsCoord.length;
         let startNail = 0;
         nailSequence.push(startNail);
-        let target = this.createImageData(height * outputScalingFactor, width * outputScalingFactor, 255);
+        let target = this.createImageDataWithNails(height * outputScalingFactor, width * outputScalingFactor, 255, nailsCount);
         while (count <= maxIterations) {
             const allLineCoordinates = await lineStorage.getByKey(`${startNail}`);
             let bestNail = this.getBestNail(skip, nailsCount, startNail, lastPins, doneNails, allLineCoordinates, error);
@@ -57,7 +58,8 @@ export class LineSolver {
             if (count % 10 === 0) {
                 callback({
                     image: target,
-                    status: CurrentStatus.INPROGRESS
+                    status: CurrentStatus.INPROGRESS,
+                    error:error
                 });
             }
             callback({
@@ -113,6 +115,35 @@ export class LineSolver {
         }
         return imageData;
     }
+    private createImageDataWithNails(width: number, height: number, fillValue: number, nailCount: number): ImageData {
+        const imageData = new ImageData(width, height);
+        const startX = (width / 2);
+        const startY = (height / 2);
+        const radius = Math.min(width, height) / 2 - 1;
+        // const nailCoordinates: [number, number][] = new NailsCoordinatesCalculator(startX, startY, radius).getNailsCoordinates(nailCount)
+        for (let i = 0; i < imageData.data.length; i += 4) {
+            imageData.data[i] = fillValue;
+            imageData.data[i + 1] = fillValue;
+            imageData.data[i + 2] = fillValue;
+            imageData.data[i + 3] = 255;
+        }
+        // nailCoordinates.forEach(([x, y]) => {
+        //     for (let dx = -1; dx <= 1; dx++) {
+        //         for (let dy = -1; dy <= 1; dy++) {
+        //             const pixelX = x + dx;
+        //             const pixelY = y + dy;
+        //             if (pixelX >= 0 && pixelX < width && pixelY >= 0 && pixelY < imageData.height) {
+        //                 const index = (pixelY * width + pixelX) * 4; // Calculate the index for RGBA in ImageData
+        //                 imageData.data[index] = 255;     // Red
+        //                 imageData.data[index + 1] = 0; // Green
+        //                 imageData.data[index + 2] = 0; // Blue
+        //                 imageData.data[index + 3] = 255; // Alpha
+        //             }
+        //         }
+        //     }
+        // });
+        return imageData;
+    }
     private getPixelValue(imageData: ImageData, x: number, y: number): number {
         const index = (y * imageData.width + x) * 4;
         return imageData.data[index];
@@ -137,9 +168,9 @@ export class LineSolver {
     }
 
     private drawLineUsingBreshenHamLineDrawingAlgo(
-        imageData: ImageData, 
-        startPoint: { x: number; y: number }, 
-        endPoint: { x: number; y: number }, 
+        imageData: ImageData,
+        startPoint: { x: number; y: number },
+        endPoint: { x: number; y: number },
         stringWeight: number
     ): ImageData {
         const { width, height, data } = imageData;
@@ -156,10 +187,10 @@ export class LineSolver {
         while (true) {
             if (x >= 0 && x < width && y >= 0 && y < height) {
                 const index = (y * width + x) * 4;
-                data[index] = stringWeight;     
-                data[index + 1] = stringWeight; 
-                data[index + 2] = stringWeight; 
-                data[index + 3] = 255; 
+                data[index] = stringWeight;
+                data[index + 1] = stringWeight;
+                data[index + 2] = stringWeight;
+                data[index + 3] = 255;
             }
 
             if (x === endPoint.x && y === endPoint.y) break;

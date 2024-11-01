@@ -12,6 +12,7 @@ export type LinePreCalculatingWorkerResponse = {
     message: string;
     count: number
     status: CurrentStatus
+    lines: Array<[number, number]>
 };
 
 export type StringArtWorkerMsg = {
@@ -31,5 +32,6 @@ export type StringArtWorkerResponse = {
     imageData: ImageData;
     status: CurrentStatus;
     count: number
-    nailSequence: number[]
+    nailSequence: number[],
+    error: any
 };

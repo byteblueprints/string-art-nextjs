@@ -1,9 +1,9 @@
 "use client";
 
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import ControlButtons from "./ControlButtons";
-import CircleMask from "./CircleMask";
-import ImagePreviewCanvas from "./ImagePreviewCanvas";
+import Controls from "./Controls";
+import Mask from "./Mask";
+import PreviewCanvas from "./PreviewCanvas";
 
 interface Props {
     selectedImage: HTMLImageElement | null
@@ -16,9 +16,9 @@ interface Props {
     numOfNails: number
     stringWeight: number
     maxLineCount: number
-    threddingInProgress: boolean
+    stringArtInProgress: boolean
 }
-const ImageVisualizer: React.FC<Props> = (props: Props) => {
+const Preview: React.FC<Props> = (props: Props) => {
     const {
         selectedImage,
         setImgXPos,
@@ -30,23 +30,23 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
         numOfNails,
         stringWeight,
         maxLineCount,
-        threddingInProgress
+        stringArtInProgress
     } = props
     return (
         <>
-            <CircleMask />
+            <Mask />
             <div className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <TransformWrapper
                     initialScale={1}
                     initialPositionX={0}
                     initialPositionY={0}
                     smooth={false}
-                    disabled={threddingInProgress}
+                    disabled={stringArtInProgress}
                 >
                     <TransformComponent>
-                        <ImagePreviewCanvas selectedImage={selectedImage} />
+                        <PreviewCanvas selectedImage={selectedImage} />
                     </TransformComponent>
-                    <ControlButtons
+                    <Controls
                         setImgXPos={setImgXPos}
                         setImgYPos={setImgYPos}
                         setImgScale={setImgScale}
@@ -57,7 +57,7 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
                         numOfNails={numOfNails}
                         maxLineCount={maxLineCount}
                         stringWeight={stringWeight}
-                        threddingInProgress={threddingInProgress}
+                        stringArtInProgress={stringArtInProgress}
                     />
                 </TransformWrapper>
             </div>
@@ -65,4 +65,4 @@ const ImageVisualizer: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default ImageVisualizer;
+export default Preview;

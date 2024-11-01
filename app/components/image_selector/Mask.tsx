@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const CircleMask: React.FC = () => {
+const Mask: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const markCenterPoint = (
@@ -61,4 +61,4 @@ const CircleMask: React.FC = () => {
     );
 };
 
-export default CircleMask;
+export default Mask;

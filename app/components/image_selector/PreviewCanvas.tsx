@@ -1,12 +1,11 @@
 "use client";
 
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/app/utils/constants";
 import { useEffect, useRef } from "react";
 
 interface Props {
     selectedImage: HTMLImageElement | null
 }
-const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
+const PreviewCanvas: React.FC<Props> = (props: Props) => {
     const { selectedImage } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
     useEffect(() => {
@@ -16,8 +15,8 @@ const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
                 const ctx = canvas.getContext("2d");
 
                 if (ctx != null) {
-                    const canvasWidth = canvas.width;
-                    const canvasHeight = canvas.width;
+                    const canvasWidth = canvas.clientWidth;
+                    const canvasHeight = canvas.clientHeight;
 
                     const imageAspectRatio = selectedImage.width / selectedImage.height;
                     const canvasAspectRatio = canvasWidth / canvasHeight;
@@ -53,4 +52,4 @@ const ImagePreviewCanvas: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default ImagePreviewCanvas;
+export default PreviewCanvas;

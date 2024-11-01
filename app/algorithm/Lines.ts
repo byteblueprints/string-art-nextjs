@@ -1,9 +1,9 @@
 import { CurrentStatus } from "../types/enum/CurrentStatus";
 import { MIN_DISTANCE } from "../utils/constants";
-import { BresenhamLine } from "./BresenhamLine";
+import { BresenhamAlgorithm } from "./BresenhamAlgorithm";
 import { Storage } from "./Storage";
 
-export class LineConnections {
+export class Lines {
   public async storeAllPosibleLineCordinates(nailsCordinates: Array<[number, number]>, callback: (progress: any) => void) {
     const lineStorage = new Storage("lines")
     let counter = 0;
@@ -25,13 +25,15 @@ export class LineConnections {
         count++;
       }
       await lineStorage.store(`${i}`, lineCoordinates);
-      callback({ lineCoordinates: lineCoordinates, key: `${i}`, status: CurrentStatus.INPROGRESS, calculateLineCount: counter })
+      callback({ lines: lineCoordinates 
+        ? Object.values(lineCoordinates).flatMap(coordinatesArray => coordinatesArray) 
+        : [], key: `${i}`, status: CurrentStatus.INPROGRESS, calculateLineCount: counter })
       lineCoordinates = null
     }
   }
 
   private getLineCoordinatesAsVector(x0: number, y0: number, x1: number, y1: number): Array<[number, number]> {
-    const bresenham = new BresenhamLine();
+    const bresenham = new BresenhamAlgorithm();
     return bresenham.getCoordinates(x0, y0, x1, y1);
   }
 }
