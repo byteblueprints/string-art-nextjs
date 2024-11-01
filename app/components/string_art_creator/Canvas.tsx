@@ -1,9 +1,8 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/app/utils/constants";
-import ImageDownloader from "./ImageDownloader";
-import Threadder from "./Threadder";
+import Downloader from "./Downloader";
+import Controls from "./Controls";
 
 interface Props {
     imgXPos: number
@@ -15,12 +14,12 @@ interface Props {
     numOfNails: number
     stringWeight: number
     maxLineCount: number
-    setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
-    threddingInProgress: boolean
+    setStringArtInProgress: React.Dispatch<React.SetStateAction<boolean>>
+    stringArtInProgress: boolean
 }
 
 
-const ThreadingCanvas: React.FC<Props> = (props: Props) => {
+const Canvas: React.FC<Props> = (props: Props) => {
     const {
         imgXPos,
         imgYPos,
@@ -31,8 +30,8 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
         numOfNails,
         stringWeight,
         maxLineCount,
-        setThreddingInProgress,
-        threddingInProgress
+        setStringArtInProgress,
+        stringArtInProgress
     } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [downloadDisabled, setDownloadDisabled] = useState<boolean>(true)
@@ -105,19 +104,19 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
                 <div className="relative h-full w-[95%] border-2 border-gray-300 rounded-2xl">
                     <canvas ref={canvasRef} id="string_art" className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                     <div className="absolute top-5 right-5">
-                        <ImageDownloader image={viewedImage} downloadDisabled={downloadDisabled} />
+                        <Downloader image={viewedImage} downloadDisabled={downloadDisabled} />
                     </div>
                 </div>
                 <div className="absolute w-[85%] bottom-0 left-1/2 transform -translate-x-1/2  translate-y-[120%]">
-                    <Threadder
+                    <Controls
                         maxLineCount={maxLineCount}
                         canvasRef={canvasRef}
                         setNailSequence={setNailSequence}
                         setViewedImage={setViewedImage}
                         numOfNails={numOfNails}
                         stringWeight={stringWeight}
-                        setThreddingInProgress={setThreddingInProgress}
-                        threddingInProgress={threddingInProgress}
+                        setStringArtInProgress={setStringArtInProgress}
+                        stringArtInProgress={stringArtInProgress}
                     />
                 </div>
             </div>
@@ -125,4 +124,4 @@ const ThreadingCanvas: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default ThreadingCanvas;
+export default Canvas;

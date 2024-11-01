@@ -1,7 +1,7 @@
 "use client";
 
 import { LinesPreCalculator } from '@/app/algorithm/LinesPreCalculator';
-import { StringArtDrawer } from '@/app/algorithm/StringArtDrawer';
+import { StringArtDrawer as GreedyBestLineFinder } from '@/app/algorithm/StringArtDrawer';
 import { MIN_DISTANCE } from '@/app/utils/constants';
 import React, { RefObject, useEffect, useState } from 'react';
 
@@ -12,15 +12,15 @@ interface Props {
     numOfNails: number
     maxLineCount: number
     stringWeight: number
-    setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
-    threddingInProgress: boolean
+    setStringArtInProgress: React.Dispatch<React.SetStateAction<boolean>>
+    stringArtInProgress: boolean
 }
 
 
 function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-const Threadder: React.FC<Props> = (props: Props) => {
+const Controls: React.FC<Props> = (props: Props) => {
     const {
         maxLineCount,
         canvasRef,
@@ -28,8 +28,8 @@ const Threadder: React.FC<Props> = (props: Props) => {
         setViewedImage,
         numOfNails,
         stringWeight,
-        setThreddingInProgress,
-        threddingInProgress
+        setStringArtInProgress,
+        stringArtInProgress
     } = props
 
     const [lineCalculated, setLineCalculated] = useState<boolean>(false)
@@ -43,43 +43,39 @@ const Threadder: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         if (lineCalculated) {
-            if (canvasRef.current) {
-                setStartDrawing(true)
-                const ctx = canvasRef.current.getContext("2d");
-                if (ctx != null) {
-                    const dataURL = canvasRef.current.toDataURL();
-                    const newImage = new Image();
-                    newImage.src = dataURL;
-                    sleep(100).then(() => {
-                        ctx.globalCompositeOperation = 'source-over';
-                        ctx.drawImage(newImage, 0, 0);
-
-                        let stringArtDrawer = new StringArtDrawer()
-                        stringArtDrawer.draw(
-                            "string_art",
-                            newImage,
-                            maxLineCount,
-                            stringWeight,
-                            setCount,
-                            setViewedImage,
-                            setNailSequence,
-                            setThreddingInProgress
-                        )
-                    })
-                }
-            }
+            setStartDrawing(true)
+            let greedyBestLineFinder = new GreedyBestLineFinder()
+            greedyBestLineFinder.startFindingBestLines(
+                canvasRef,
+                maxLineCount,
+                stringWeight,
+                setCount,
+                setViewedImage,
+                setNailSequence,
+                setStringArtInProgress
+            )
         }
     }, [lineCalculated])
 
-    async function startThreading() {
-        setThreddingInProgress(true)
-        let algorithm = new LinesPreCalculator()
-        await algorithm.startThreading(
-            numOfNails,
-            setLineCalculated,
-            setPreCalcLineCount
-        )
+    async function start() {
+        if (canvasRef.current) {
+            const canvas = canvasRef.current
+            const startX = Math.floor(canvas.clientWidth / 2);
+            const startY = Math.floor(canvas.clientHeight / 2);
+            const radius = Math.floor((Math.min(canvas.clientWidth, canvas.clientHeight) / 2) - 1);
+            setStringArtInProgress(true)
+            let lineCalculator = new LinesPreCalculator()
+            lineCalculator.preCalculateAllLines(
+                numOfNails,
+                setLineCalculated,
+                setPreCalcLineCount,
+                startX,
+                startY,
+                radius,
+            )
+        }
     }
+
 
     return (
         <>
@@ -133,15 +129,15 @@ const Threadder: React.FC<Props> = (props: Props) => {
             )}
             <div className='flex flex-col items-center justify-cente'>
                 <button
-                    disabled={threddingInProgress}
-                    onClick={() => startThreading()}
-                    className="px-6 py-2 bg-blue-500 text-white font-medium md:font-semibold rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
+                    disabled={stringArtInProgress}
+                    onClick={() => start()}
+                    className="w-1/2 px-6 py-2 bg-blue-500 text-white text-xs font-medium md:text-sm rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
                 >
-                    Start Threading
+                    Start
                 </button>
             </div>
         </>
     );
 };
 
-export default Threadder;
+export default Controls;

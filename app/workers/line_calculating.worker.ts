@@ -1,6 +1,6 @@
 import { CurrentStatus } from "../types/enum/CurrentStatus";
 import { LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
-import { LineConnections } from "../algorithm/LineConnections";
+import { Lines } from "../algorithm/Lines";
 import { NailsCoordinatesCalculator } from "../algorithm/NailsCoordinatesCalculator";
 import { Storage } from "../algorithm/Storage";
 
@@ -20,13 +20,14 @@ self.onmessage = async (event) => {
       message: "Calculating nail cordinates completed"
     })
 
-    const lineConnections = new LineConnections();
+    const lineConnections = new Lines();
     lineConnections.storeAllPosibleLineCordinates(nailsCoordinates, async (progress) => {
       if (progress.status == CurrentStatus.INPROGRESS) {
         self.postMessage({
           message: "Line precalculating inprogress! " + progress.calculateLineCount,
           count: progress.calculateLineCount,
-          status: CurrentStatus.INPROGRESS
+          status: CurrentStatus.INPROGRESS,
+          lines: progress.lines
         })
       } 
     });

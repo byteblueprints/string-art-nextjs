@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import ImagePreProcessor from './components/image_preprocessor/ImagePreProcessor';
-import ViewingThreads from './components/string_art_visualizer/ViewingThreads';
+import ImageSelector from './components/image_selector';
+import StringArtCreator from './components/string_art_creator';
 import ManualViewing from './components/guided_viewer/ManualViewing';
 
 const Home: React.FC = () => {
@@ -16,13 +16,13 @@ const Home: React.FC = () => {
   const [numOfNails, setNumOfNails] = useState(250);
   const [stringWeight, setStringWeight] = useState(20);
   const [maxLineCount, setMaxLineCount] = useState(4000);
-  const [threddingInProgress, setThreddingInProgress] = useState(false);
+  const [stringArtInProgress, setStringArtInProgress] = useState(false);
 
   return (
     <div className='container'>
       <div className='flex flex-col lg:flex-row h-screen'>
         <div className='h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5'>
-          <ImagePreProcessor
+          <ImageSelector
             setImgXPos={setImgXPos}
             setImgYPos={setImgYPos}
             setImgScale={setImgScale}
@@ -34,11 +34,11 @@ const Home: React.FC = () => {
             setNumOfNails={setNumOfNails}
             setStringWeight={setStringWeight}
             setMaxLineCount={setMaxLineCount}
-            threddingInProgress={threddingInProgress}
+            stringArtInProgress={stringArtInProgress}
           />
         </div>
         <div className='h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5'>
-          <ViewingThreads
+          <StringArtCreator
             imgXPos={imgXPos}
             imgYPos={imgYPos}
             imgScale={imgScale}
@@ -48,8 +48,8 @@ const Home: React.FC = () => {
             numOfNails={numOfNails}
             maxLineCount={maxLineCount}
             stringWeight={stringWeight}
-            setThreddingInProgress={setThreddingInProgress}
-            threddingInProgress={threddingInProgress}
+            setStringArtInProgress={setStringArtInProgress}
+            stringArtInProgress={stringArtInProgress}
           />
         </div>
       </div>
@@ -59,7 +59,7 @@ const Home: React.FC = () => {
           <ManualViewing
             nailSequence={nailSequence}
             finalStringArt={finalStringArt}
-            threddingInProgress={threddingInProgress}
+            stringArtInProgress={stringArtInProgress}
             nailCount={numOfNails}
           />
         </div>

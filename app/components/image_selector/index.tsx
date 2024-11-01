@@ -1,8 +1,8 @@
 "use client";
 
 import React, { } from "react";
-import ImageSelector from "./ImageSelector";
-import ImageVisualizer from "./ImageVisualizer";
+import FileChooser from "./FileChooser";
+import Preview from "./Preview";
 
 interface Props {
   setImgXPos: React.Dispatch<React.SetStateAction<number>>
@@ -12,14 +12,14 @@ interface Props {
   setNumOfNails: React.Dispatch<React.SetStateAction<number>>
   setStringWeight: React.Dispatch<React.SetStateAction<number>>
   setMaxLineCount: React.Dispatch<React.SetStateAction<number>>
-  threddingInProgress: boolean
+  stringArtInProgress: boolean
   selectedImage: HTMLImageElement | null
   numOfNails: number
   stringWeight: number
   maxLineCount: number
 }
 
-const ImagePreProcessor: React.FC<Props> = (props: Props) => {
+const ImageSelector: React.FC<Props> = (props: Props) => {
   const {
     setImgXPos,
     setImgYPos,
@@ -29,7 +29,7 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
     setNumOfNails,
     setStringWeight,
     setMaxLineCount,
-    threddingInProgress,
+    stringArtInProgress,
     numOfNails,
     stringWeight,
     maxLineCount
@@ -37,7 +37,7 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col h-full relative">
       <div className="relative h-full">
-        <ImageVisualizer
+        <Preview
           selectedImage={selectedImage}
           setImgXPos={setImgXPos}
           setImgYPos={setImgYPos}
@@ -48,19 +48,19 @@ const ImagePreProcessor: React.FC<Props> = (props: Props) => {
           numOfNails={numOfNails}
           maxLineCount={maxLineCount}
           stringWeight={stringWeight}
-          threddingInProgress={threddingInProgress}
+          stringArtInProgress={stringArtInProgress}
         />
       </div>
 
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[120%]">
-        <ImageSelector
+        <FileChooser
           setSelectedImage={setSelectedImage}
-          threddingInProgress={threddingInProgress}
-        ></ImageSelector>
+          stringArtInProgress={stringArtInProgress}
+        ></FileChooser>
       </div>
     </div>
   );
 };
 
-export default ImagePreProcessor;
+export default ImageSelector;
 

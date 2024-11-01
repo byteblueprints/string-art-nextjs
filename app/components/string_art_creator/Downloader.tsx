@@ -9,7 +9,7 @@ interface Props {
 }
 
 
-const ImageDownloader: React.FC<Props> = (props: Props) => {
+const Downloader: React.FC<Props> = (props: Props) => {
     const { image, downloadDisabled } = props
 
     const handleDownload = () => {
@@ -52,4 +52,4 @@ const ImageDownloader: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default ImageDownloader;
+export default Downloader;

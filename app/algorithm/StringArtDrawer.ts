@@ -2,34 +2,35 @@ import Pica from 'pica';
 import { StringArtWorkerResponse, StringArtWorkerMsg } from "../types/WorkerMessages";
 import { CurrentStatus } from '../types/enum/CurrentStatus';
 import { MIN_DISTANCE } from '../utils/constants';
+import { RefObject } from 'react';
 
 const pica = Pica();
+function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 export class StringArtDrawer {
-    private height: number = 500;
-    private width: number = 500;
-    private output_scaling_factor: number = 7;
+    private output_scaling_factor: number = 10;
 
-    public async draw(
-        canvasId: string, 
-        image: HTMLImageElement | null, 
-        maxLineCount: number, 
-        stringWeight: number, 
-        setCount: React.Dispatch<React.SetStateAction<number>>, 
-        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>, 
-        setNailSequence: React.Dispatch<React.SetStateAction<number[]>>, 
-        setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
+    public async startFindingBestLines(
+        canvasRef: RefObject<HTMLCanvasElement>,
+        maxLineCount: number,
+        stringWeight: number,
+        setCount: React.Dispatch<React.SetStateAction<number>>,
+        setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>,
+        setNailSequence: React.Dispatch<React.SetStateAction<number[]>>,
+        setStringArtInProgress: React.Dispatch<React.SetStateAction<boolean>>
     ) {
-        let canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
+        if (!canvasRef.current) {
+            throw Error("Unable to find the canvas")
+        }
+        let canvas: HTMLCanvasElement = canvasRef.current;
         let ctx: CanvasRenderingContext2D | null = null
         let imageData: ImageData;
         let nailSeq: number[] = [];
         if (canvas) {
             ctx = canvas.getContext('2d');
-            if (ctx && image) {
-                ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.drawImage(image, 0, 0, canvas.clientWidth, canvas.clientHeight);
 
+            if (ctx) {
                 imageData = ctx.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight);
                 const startX = (canvas.clientWidth / 2);
                 const startY = (canvas.clientHeight / 2);
@@ -41,26 +42,23 @@ export class StringArtDrawer {
                 ctx.fill();
 
                 this.convertToGrayscale(imageData);
-
+                await sleep(3000)
                 ctx.putImageData(imageData, 0, 0);
-                ctx.globalCompositeOperation = 'destination-in';
-                ctx.beginPath();
-                ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
+                await sleep(3000)
+                alert("Done")
                 ctx.globalCompositeOperation = 'source-over';
                 const lineSolverMsgToWorker: StringArtWorkerMsg = {
                     maxLineCount: maxLineCount,
                     imageData: imageData,
-                    height: this.height,
-                    width: this.width,
+                    height: canvas.clientHeight,
+                    width: canvas.clientWidth,
                     outputScalingFactor: this.output_scaling_factor,
                     stringWeight: stringWeight,
                     skip: MIN_DISTANCE,
                     allLineCoordinates: {},
                     nailsCordinates: []
                 }
-                const stringArtWorker = new Worker(new URL("../workers/StrinArtDraw.Worker.ts", import.meta.url));
+                const stringArtWorker = new Worker(new URL("../workers/string_art_creating.worker.ts", import.meta.url));
 
                 console.log("Started post message to lineSolverWorker")
                 stringArtWorker.postMessage(lineSolverMsgToWorker);
@@ -80,7 +78,7 @@ export class StringArtDrawer {
                     } else if (lineSolverMsgFromWorker.status == CurrentStatus.COMPLETED) {
                         setViewedImage(lineSolverMsgFromWorker.imageData)
                         setNailSequence(lineSolverMsgFromWorker.nailSequence)
-                        setThreddingInProgress(false)
+                        setStringArtInProgress(false)
                         stringArtWorker.terminate()
                     }
                 };

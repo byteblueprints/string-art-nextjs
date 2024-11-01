@@ -12,14 +12,14 @@ import DrawFinalImage from './DrawFInalImage';
 interface Props {
   nailSequence: number[];
   finalStringArt: ImageData | null
-  threddingInProgress: boolean
+  stringArtInProgress: boolean
   nailCount: number
 }
 
 const pica = Pica();
 
 const ManualViewing: React.FC<Props> = (props: Props) => {
-  const { nailSequence, finalStringArt, threddingInProgress, nailCount } = props;
+  const { nailSequence, finalStringArt, stringArtInProgress, nailCount } = props;
   const [index, setIndex] = useState(0);
   const [target, setTarget] = useState<ImageData | null>(null);
   const [nailsCordinates, setNailsCordinates] = useState<[number, number][]>([]);
@@ -56,7 +56,7 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
       </div>
       
       <button
-          disabled={threddingInProgress}
+          disabled={stringArtInProgress}
           className="bg-blue-500 text-white px-4 py-2 rounded-full"
           onClick={() => start()}
         >
@@ -87,7 +87,7 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
           finalStringArt={finalStringArt}
           constructedFinal={constructedFinal}
           target={target}
-          threddingInProgress={threddingInProgress}
+          stringArtInProgress={stringArtInProgress}
         />
       </div>
     </div>

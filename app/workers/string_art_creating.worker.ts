@@ -1,6 +1,6 @@
 import { CurrentStatus } from "../types/enum/CurrentStatus";
 import { StringArtWorkerMsg } from "../types/WorkerMessages";
-import { LineSolver } from "../algorithm/LineSolver";
+import { LineSolver } from "../algorithm/GreedyBestLineFinder";
 import { Storage } from "../algorithm/Storage";
 
 
@@ -33,7 +33,8 @@ self.onmessage = async (event) => {
           self.postMessage({
             message: "String art inprogress!",
             imageData: progress.image,
-            status: CurrentStatus.INPROGRESS
+            status: CurrentStatus.INPROGRESS,
+            error:progress.error
           });
         }
       } else if (progress.status == CurrentStatus.COMPLETED) {

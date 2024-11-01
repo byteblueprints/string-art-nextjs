@@ -1,4 +1,4 @@
-export class BresenhamLine {
+export class BresenhamAlgorithm {
     public getCoordinates(x0: number, y0: number, x1: number, y1: number): Array<[number, number]> {
       const lineCoordinates: Array<[number, number]> = [];
   

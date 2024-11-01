@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 
 interface Props {
   setSelectedImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>;
-  threddingInProgress: boolean
+  stringArtInProgress: boolean
 }
 
-const ImageSelector: React.FC<Props> = (props: Props) => {
+const FileChooser: React.FC<Props> = (props: Props) => {
   const {
     setSelectedImage,
-    threddingInProgress
+    stringArtInProgress
   } = props
   const [file, setFile] = useState<File | null>(null);
 
@@ -41,12 +41,12 @@ const ImageSelector: React.FC<Props> = (props: Props) => {
     };
   }, [])
   return (
-    <label className="flex flex-col items-center p-3 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 text-center">
-      <span className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+    <label className="flex flex-col items-center p-2 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 text-center">
+      <span className="w-1/2 text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis">
         Click to Upload (JPG, JPEG, PNG)
       </span>
       <input
-        disabled={threddingInProgress}
+        disabled={stringArtInProgress}
         type="file"
         accept="image/jpeg, image/jpg, image/png"
         onChange={file ? () => setFile(null) : handleFileChange}
@@ -56,4 +56,4 @@ const ImageSelector: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ImageSelector;
+export default FileChooser;

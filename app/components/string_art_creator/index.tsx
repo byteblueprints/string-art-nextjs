@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction } from 'react';
-import ThreadingCanvas from './ThreadingCanvas';
+import Canvas from './Canvas';
 
 interface Props {
   imgXPos: number
@@ -13,12 +13,12 @@ interface Props {
   numOfNails: number
   stringWeight: number
   maxLineCount: number
-  setThreddingInProgress: React.Dispatch<React.SetStateAction<boolean>>
-  threddingInProgress: boolean
+  setStringArtInProgress: React.Dispatch<React.SetStateAction<boolean>>
+  stringArtInProgress: boolean
 }
 
 
-const ViewingThreads: React.FC<Props> = (props: Props) => {
+const StringArtCreator: React.FC<Props> = (props: Props) => {
   const {
     imgXPos,
     imgYPos,
@@ -29,11 +29,11 @@ const ViewingThreads: React.FC<Props> = (props: Props) => {
     numOfNails,
     stringWeight,
     maxLineCount,
-    setThreddingInProgress,
-    threddingInProgress
+    setStringArtInProgress,
+    stringArtInProgress
   } = props
   return (
-    <ThreadingCanvas
+    <Canvas
       imgXPos={imgXPos}
       imgYPos={imgYPos}
       imgScale={imgScale}
@@ -43,10 +43,10 @@ const ViewingThreads: React.FC<Props> = (props: Props) => {
       numOfNails={numOfNails}
       maxLineCount={maxLineCount}
       stringWeight={stringWeight}
-      setThreddingInProgress={setThreddingInProgress}
-      threddingInProgress={threddingInProgress}
+      setStringArtInProgress={setStringArtInProgress}
+      stringArtInProgress={stringArtInProgress}
     />
   );
 };
 
-export default ViewingThreads;
+export default StringArtCreator;
