@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import ImageSelector from './components/image_selector';
 import StringArtCreator from './components/string_art_creator';
-import ManualViewing from './components/guided_viewer/ManualViewing';
+import ManualStringArtCreator from './components/manual_string_art_creator';
+import { DEFAULT_MAX_LINE_COUNT, DEFAULT_NUM_OF_NAILS, DEFAULT_STRING_WEIGHT } from './utils/constants';
 
 const Home: React.FC = () => {
   const [imgXPos, setImgXPos] = useState(0)
@@ -13,9 +14,9 @@ const Home: React.FC = () => {
   const [nailSequence, setNailSequence] = useState<number[]>([]);
   const [finalStringArt, setFinalStringArt] = useState<ImageData | null>(null)
 
-  const [numOfNails, setNumOfNails] = useState(250);
-  const [stringWeight, setStringWeight] = useState(20);
-  const [maxLineCount, setMaxLineCount] = useState(4000);
+  const [numOfNails, setNumOfNails] = useState(DEFAULT_NUM_OF_NAILS);
+  const [stringWeight, setStringWeight] = useState(DEFAULT_STRING_WEIGHT);
+  const [maxLineCount, setMaxLineCount] = useState(DEFAULT_MAX_LINE_COUNT);
   const [stringArtInProgress, setStringArtInProgress] = useState(false);
 
   return (
@@ -55,7 +56,7 @@ const Home: React.FC = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row h-screen">
-        <ManualViewing
+        <ManualStringArtCreator
           nailSequence={nailSequence}
           finalStringArt={finalStringArt}
           stringArtInProgress={stringArtInProgress}

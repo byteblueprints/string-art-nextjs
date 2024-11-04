@@ -12,7 +12,7 @@ interface Props {
 }
 const pica = Pica();
 
-const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
+const Canvas: React.FC<Props> = (props: Props) => {
   const { finalImage, index, nailCount } = props;
   const canvasReference = useRef<HTMLCanvasElement>(null);
 
@@ -24,35 +24,34 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
       const outputContext = canvas.getContext("2d")
-      const createdCanvas = document.createElement('canvas');
-      createdCanvas.width = finalImage.width;
-      createdCanvas.height = finalImage.height;
-      const ctx = createdCanvas.getContext("2d");
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = finalImage.width;
+      tempCanvas.height = finalImage.height;
+      const ctx = tempCanvas.getContext("2d");
 
       if (ctx != null) {
         ctx.putImageData(finalImage, 0, 0);
-
         const outputCanvas = document.createElement('canvas');
         outputCanvas.width = canvas.clientWidth;
         outputCanvas.height = canvas.clientHeight;
-        pica.resize(createdCanvas, outputCanvas, {
+        pica.resize(tempCanvas, outputCanvas, {
           quality: 3
         }).then((result) => {
           if (outputContext != null) {
             outputContext.globalCompositeOperation = 'source-over';
             outputContext.drawImage(
               outputCanvas,
-              MANUAL_DRAW_PADDING,      
-              MANUAL_DRAW_PADDING,      
-              canvas.width - MANUAL_DRAW_PADDING * 2,   
-              canvas.height - MANUAL_DRAW_PADDING * 2   
+              MANUAL_DRAW_PADDING,
+              MANUAL_DRAW_PADDING,
+              canvas.width - MANUAL_DRAW_PADDING * 2,
+              canvas.height - MANUAL_DRAW_PADDING * 2
             );
             drawNails(nailsCoordinates, outputContext)
           }
         }).catch((error) => {
           console.error("Error during resizing with Pica: ", error);
         }).finally(() => {
-          createdCanvas.remove();
           outputCanvas.remove();
         });;
       }
@@ -102,4 +101,4 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ManualViewingCanvas;
+export default Canvas;
