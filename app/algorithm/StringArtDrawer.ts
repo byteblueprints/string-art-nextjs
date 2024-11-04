@@ -42,9 +42,8 @@ export class StringArtDrawer {
                 ctx.fill();
 
                 this.convertToGrayscale(imageData);
-                await sleep(3000)
+                await sleep(1000)
                 ctx.putImageData(imageData, 0, 0);
-                await sleep(3000)
                 ctx.globalCompositeOperation = 'source-over';
                 const lineSolverMsgToWorker: StringArtWorkerMsg = {
                     maxLineCount: maxLineCount,

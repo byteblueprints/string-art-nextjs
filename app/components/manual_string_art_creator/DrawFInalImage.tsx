@@ -5,13 +5,12 @@ import React, { useState } from 'react';
 interface Props {
   setConstructedFinal: React.Dispatch<React.SetStateAction<ImageData | null>>;
   finalStringArt: ImageData | null;
-  constructedFinal: ImageData | null;
   target: ImageData | null;
   stringArtInProgress: boolean
 }
 
 const DrawFinalImage: React.FC<Props> = (props: Props) => {
-  const { setConstructedFinal, finalStringArt, constructedFinal, target, stringArtInProgress } = props;
+  const { setConstructedFinal, finalStringArt, target, stringArtInProgress } = props;
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {

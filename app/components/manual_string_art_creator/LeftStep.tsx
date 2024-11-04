@@ -52,13 +52,24 @@ const LeftStep: React.FC<Props> = (props: Props) => {
         x: nailsCordinates[nailSequence[index]][0],
         y: nailsCordinates[nailSequence[index]][1],
       };
-      const targetWithLine = drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint);
+      let targetWithLine = drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint, { r: 255, g: 255, b: 255 });
+      if (index > 1) {
+        const previousStartPoint = {
+          x: nailsCordinates[nailSequence[index - 1]][0],
+          y: nailsCordinates[nailSequence[index - 1]][1],
+        };
+        const previousEndPoint = {
+          x: nailsCordinates[nailSequence[index-2]][0],
+          y: nailsCordinates[nailSequence[index-2]][1],
+        };
+        targetWithLine = drawLineUsingBreshenHamLineDrawingAlgo(target, previousStartPoint, previousEndPoint, { r: 255, g: 0, b: 0 });
+      }
       setTarget(targetWithLine)
       setConstructedFinal(targetWithLine)
       setIndex(index - 1);
     }
   };
-  const drawLineUsingBreshenHamLineDrawingAlgo = (imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }): ImageData => {
+  const drawLineUsingBreshenHamLineDrawingAlgo = (imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }, color: { r: number, g: number, b: number }): ImageData => {
     const { width, height, data } = imageData;
 
     const dx = Math.abs(endPoint.x - startPoint.x);
@@ -73,9 +84,9 @@ const LeftStep: React.FC<Props> = (props: Props) => {
     while (true) {
       if (x >= 0 && x < width && y >= 0 && y < height) {
         const index = (y * width + x) * 4;
-        data[index] = 20;
-        data[index + 1] = 20;
-        data[index + 2] = 20;
+        data[index] = color.r;
+        data[index + 1] = color.g;
+        data[index + 2] = color.b;
         data[index + 3] = 255;
       }
 

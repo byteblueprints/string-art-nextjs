@@ -4,7 +4,7 @@ import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalc
 import { ControlType } from '@/app/types/enum/ControlType';
 import Pica from 'pica';
 import React, { useEffect, useRef, useState } from 'react';
-import ManualViewingCanvas from './ManualViewCanvas';
+import Canvas from './Canvas';
 import LeftStep from './LeftStep';
 import RightStep from './RightStep';
 import DrawFinalImage from './DrawFInalImage';
@@ -18,7 +18,7 @@ interface Props {
 
 const pica = Pica();
 
-const ManualViewing: React.FC<Props> = (props: Props) => {
+const ManualStringArtCreator: React.FC<Props> = (props: Props) => {
   const { nailSequence, finalStringArt, stringArtInProgress, nailCount } = props;
   const [index, setIndex] = useState(0);
   const [target, setTarget] = useState<ImageData | null>(null);
@@ -48,7 +48,7 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   return (
     <>
       <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5">
-        <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount} />
+        <Canvas finalImage={constructedFinal} index={index} nailCount={nailCount} />
       </div>
 
       <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5 flex flex-col justify-center items-center">
@@ -89,7 +89,6 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
           <DrawFinalImage
             setConstructedFinal={setConstructedFinal}
             finalStringArt={finalStringArt}
-            constructedFinal={constructedFinal}
             target={target}
             stringArtInProgress={stringArtInProgress}
           />
@@ -99,4 +98,4 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ManualViewing;
+export default ManualStringArtCreator;
