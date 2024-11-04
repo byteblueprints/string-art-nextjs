@@ -119,7 +119,7 @@ export class LineSolver {
         const imageData = new ImageData(width, height);
         const startX = (width / 2);
         const startY = (height / 2);
-        const radius = Math.min(width, height) / 2 - 1;
+        const radius = Math.min(width, height) / 2;
         // const nailCoordinates: [number, number][] = new NailsCoordinatesCalculator(startX, startY, radius).getNailsCoordinates(nailCount)
         for (let i = 0; i < imageData.data.length; i += 4) {
             imageData.data[i] = fillValue;

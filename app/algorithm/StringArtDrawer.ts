@@ -33,7 +33,7 @@ export class StringArtDrawer {
                 imageData = ctx.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight);
                 const startX = (canvas.clientWidth / 2);
                 const startY = (canvas.clientHeight / 2);
-                const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 1;
+                const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2;
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.beginPath();
                 ctx.arc(startX, startY, radius, 0, Math.PI * 2);

@@ -1,5 +1,6 @@
 "use client";
 
+import { drawZoomedImageOnCanvas } from "@/app/utils/canvas_operations";
 import { useEffect, useRef } from "react";
 
 interface Props {
@@ -9,39 +10,12 @@ const PreviewCanvas: React.FC<Props> = (props: Props) => {
     const { selectedImage } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
     useEffect(() => {
-        if (selectedImage) {
-            if (canvasRef.current) {
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext("2d");
-
-                if (ctx != null) {
-                    const canvasWidth = canvas.clientWidth;
-                    const canvasHeight = canvas.clientHeight;
-
-                    const imageAspectRatio = selectedImage.width / selectedImage.height;
-                    const canvasAspectRatio = canvasWidth / canvasHeight;
-
-                    let drawWidth = canvasWidth;
-                    let drawHeight = canvasHeight;
-
-                    if (imageAspectRatio > canvasAspectRatio) {
-                        drawHeight = canvasWidth / imageAspectRatio;
-                        drawWidth = canvasWidth;
-                    } else {
-                        drawWidth = canvasHeight * imageAspectRatio;
-                        drawHeight = canvasHeight;
-                    }
-
-                    const xOffset = (canvasWidth - drawWidth) / 2;
-                    const yOffset = (canvasHeight - drawHeight) / 2;
-
-                    canvas.width = canvasWidth;
-                    canvas.height = canvasHeight;
-
-                    ctx.globalAlpha = 0.4;
-                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                    ctx.drawImage(selectedImage, xOffset, yOffset, drawWidth, drawHeight);
-                }
+        if (selectedImage && canvasRef.current) {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d");
+    
+            if (ctx) {
+                drawZoomedImageOnCanvas(canvas, selectedImage, 0.4);
             }
         }
     }, [selectedImage]);

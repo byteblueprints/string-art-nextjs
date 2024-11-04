@@ -24,23 +24,6 @@ const pica = Pica();
 
 const LeftStep: React.FC<Props> = (props: Props) => {
   const { nailSequence, target, setTarget, setConstructedFinal, nailsCordinates, isManualThreading, index, setIndex } = props;
-  // const [isManualThreading, setIsManualThreading] = useState(false);
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const [index, setIndex] = useState(0);
-  // const [target, setTarget] = useState<ImageData | null>(null);
-  // useEffect(() => {
-  //   setTarget(createImageData(800, 800, 255));
-  // }, [])
-  const createImageData = (width: number, height: number, fillValue: number): ImageData => {
-    const imageData = new ImageData(width, height);
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      imageData.data[i] = fillValue;
-      imageData.data[i + 1] = fillValue;
-      imageData.data[i + 2] = fillValue;
-      imageData.data[i + 3] = 255;
-    }
-    return imageData;
-  }
 
   const left = () => {
     if (isManualThreading && target) {
