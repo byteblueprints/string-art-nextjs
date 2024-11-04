@@ -46,51 +46,56 @@ const ManualViewing: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full p-4 justify-center items-center bg-white">
-      <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount}/>      
-      <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
-        Current Index: {index} 
+    <>
+      <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5">
+        <ManualViewingCanvas finalImage={constructedFinal} index={index} nailCount={nailCount} />
       </div>
-      <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
-        Starting Nail: {nailSequence[index - 1] + 1} -{'>'} End Nail: {nailSequence[index] + 1}
-      </div>
-      
-      <button
+
+      <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5 flex flex-col justify-center items-center">
+        <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
+          Current Index: {index}
+        </div>
+        <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
+          Starting Nail: {nailSequence[index - 1] + 1} -{'>'} End Nail: {nailSequence[index] + 1}
+        </div>
+
+        <button
           disabled={stringArtInProgress}
           className="bg-blue-500 text-white px-4 py-2 rounded-full"
           onClick={() => start()}
         >
           Start Manual Threading
         </button>
-      <div className="flex p-4 space-x-4 justify-center items-center bg-white">
-        <LeftStep
-          nailSequence={nailSequence}
-          setConstructedFinal={setConstructedFinal}
-          target={target}
-          setTarget={setTarget}
-          nailsCordinates={nailsCordinates}
-          isManualThreading={isManualThreading}
-          index={index}
-          setIndex={setIndex}
-        />
-        <RightStep
-          nailSequence={nailSequence}
-          setConstructedFinal={setConstructedFinal}
-          target={target} setTarget={setTarget}
-          nailsCordinates={nailsCordinates}
-          isManualThreading={isManualThreading}
-          index={index}
-          setIndex={setIndex}
-        />
-        <DrawFinalImage
-          setConstructedFinal={setConstructedFinal}
-          finalStringArt={finalStringArt}
-          constructedFinal={constructedFinal}
-          target={target}
-          stringArtInProgress={stringArtInProgress}
-        />
+        <div className="flex p-4 space-x-4 justify-center items-center bg-white">
+          <LeftStep
+            nailSequence={nailSequence}
+            setConstructedFinal={setConstructedFinal}
+            target={target}
+            setTarget={setTarget}
+            nailsCordinates={nailsCordinates}
+            isManualThreading={isManualThreading}
+            index={index}
+            setIndex={setIndex}
+          />
+          <RightStep
+            nailSequence={nailSequence}
+            setConstructedFinal={setConstructedFinal}
+            target={target} setTarget={setTarget}
+            nailsCordinates={nailsCordinates}
+            isManualThreading={isManualThreading}
+            index={index}
+            setIndex={setIndex}
+          />
+          <DrawFinalImage
+            setConstructedFinal={setConstructedFinal}
+            finalStringArt={finalStringArt}
+            constructedFinal={constructedFinal}
+            target={target}
+            stringArtInProgress={stringArtInProgress}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
