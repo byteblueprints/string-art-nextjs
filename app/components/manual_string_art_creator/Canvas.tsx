@@ -1,23 +1,23 @@
 "use client";
 
 import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
-import { MANUAL_DRAW_PADDING } from '@/app/utils/constants';
+import { MANUAL_DRAW_PADDING, OUTPUT_SCALING_FACTOR } from '@/app/utils/constants';
 import Pica from 'pica';
-import React, { useEffect, useRef } from 'react';
+import React, { RefObject, useEffect, useRef } from 'react';
 
 interface Props {
   finalImage: ImageData | null
   index: number
   nailCount: number
+  canvasReference: RefObject<HTMLCanvasElement>
 }
 const pica = Pica();
 
 const Canvas: React.FC<Props> = (props: Props) => {
-  const { finalImage, index, nailCount } = props;
-  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const { finalImage, index, nailCount, canvasReference } = props;
 
   useEffect(() => {
-    if (canvasReference.current && finalImage) {
+    if (canvasReference && canvasReference.current && finalImage) {
       const canvas = canvasReference.current;
       const calculator = new NailsCoordinatesCalculator((canvas.clientWidth / 2), (canvas.clientHeight / 2), (canvas.clientWidth / 2) - MANUAL_DRAW_PADDING);
       const nailsCoordinates = calculator.getNailsCoordinates(nailCount);
@@ -29,7 +29,6 @@ const Canvas: React.FC<Props> = (props: Props) => {
       tempCanvas.width = finalImage.width;
       tempCanvas.height = finalImage.height;
       const ctx = tempCanvas.getContext("2d");
-
       if (ctx != null) {
         ctx.putImageData(finalImage, 0, 0);
         const outputCanvas = document.createElement('canvas');
