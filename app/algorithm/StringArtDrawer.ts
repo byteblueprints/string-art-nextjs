@@ -45,7 +45,6 @@ export class StringArtDrawer {
                 await sleep(3000)
                 ctx.putImageData(imageData, 0, 0);
                 await sleep(3000)
-                alert("Done")
                 ctx.globalCompositeOperation = 'source-over';
                 const lineSolverMsgToWorker: StringArtWorkerMsg = {
                     maxLineCount: maxLineCount,

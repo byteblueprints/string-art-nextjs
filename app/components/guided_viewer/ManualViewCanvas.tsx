@@ -21,8 +21,8 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
       const maxHeight = canvas.clientWidth
       const calculator = new NailsCoordinatesCalculator((maxHeight / 2) + 25, (maxHeight / 2) + 25, maxHeight / 2);
       const nailsCoordinates = calculator.getNailsCoordinates(nailCount);
-      canvas.width = maxHeight + 50;
-      canvas.height = maxHeight + 50;
+      canvas.width = maxHeight;
+      canvas.height = maxHeight;
       const outputContext = canvas.getContext("2d")
       const createdCanvas = document.createElement('canvas');
       createdCanvas.width = finalImage.width;
@@ -90,11 +90,9 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
     });
   }
   return (
-    <div className="flex-grow flex justify-center items-center mb-4">
-      <div className="justify-center items-center bg-white">
-        <canvas ref={canvasReference} className="bg-white" />
+      <div className="flex flex-col justify-center items-center w-full pt-24 lg:pt-0">
+        <canvas ref={canvasReference} className="w-[80%] aspect-square bg-white border-2 border-gray-300 rounded-2xl" />
       </div>
-    </div>
   );
 };
 

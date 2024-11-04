@@ -54,18 +54,16 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col h-screen m-4 content-center p-5">
-        <div className="basis-full">
-          <ManualViewing
-            nailSequence={nailSequence}
-            finalStringArt={finalStringArt}
-            stringArtInProgress={stringArtInProgress}
-            nailCount={numOfNails}
-          />
-        </div>
+      <div className="flex flex-col lg:flex-row h-screen">
+        <ManualViewing
+          nailSequence={nailSequence}
+          finalStringArt={finalStringArt}
+          stringArtInProgress={stringArtInProgress}
+          nailCount={numOfNails}
+        />
       </div>
     </div>
-    
+
   );
 };
 
