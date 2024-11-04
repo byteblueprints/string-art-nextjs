@@ -1,6 +1,7 @@
 "use client";
 
 import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
+import { MANUAL_DRAW_PADDING } from '@/app/utils/constants';
 import Pica from 'pica';
 import React, { useEffect, useRef } from 'react';
 
@@ -17,12 +18,11 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (canvasReference.current && finalImage) {
-      const canvas = canvasReference.current;      
-      const maxHeight = canvas.clientWidth
-      const calculator = new NailsCoordinatesCalculator((maxHeight / 2) + 25, (maxHeight / 2) + 25, maxHeight / 2);
+      const canvas = canvasReference.current;
+      const calculator = new NailsCoordinatesCalculator((canvas.clientWidth / 2), (canvas.clientHeight / 2), (canvas.clientWidth / 2) - MANUAL_DRAW_PADDING);
       const nailsCoordinates = calculator.getNailsCoordinates(nailCount);
-      canvas.width = maxHeight;
-      canvas.height = maxHeight;
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
       const outputContext = canvas.getContext("2d")
       const createdCanvas = document.createElement('canvas');
       createdCanvas.width = finalImage.width;
@@ -33,14 +33,20 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
         ctx.putImageData(finalImage, 0, 0);
 
         const outputCanvas = document.createElement('canvas');
-        outputCanvas.width = maxHeight;
-        outputCanvas.height = maxHeight;
+        outputCanvas.width = canvas.clientWidth;
+        outputCanvas.height = canvas.clientHeight;
         pica.resize(createdCanvas, outputCanvas, {
           quality: 3
         }).then((result) => {
           if (outputContext != null) {
             outputContext.globalCompositeOperation = 'source-over';
-            outputContext.drawImage(outputCanvas, 25, 25, maxHeight, maxHeight);
+            outputContext.drawImage(
+              outputCanvas,
+              MANUAL_DRAW_PADDING,      
+              MANUAL_DRAW_PADDING,      
+              canvas.width - MANUAL_DRAW_PADDING * 2,   
+              canvas.height - MANUAL_DRAW_PADDING * 2   
+            );
             drawNails(nailsCoordinates, outputContext)
           }
         }).catch((error) => {
@@ -90,9 +96,9 @@ const ManualViewingCanvas: React.FC<Props> = (props: Props) => {
     });
   }
   return (
-      <div className="flex flex-col justify-center items-center w-full pt-24 lg:pt-0">
-        <canvas ref={canvasReference} className="w-[80%] aspect-square bg-white border-2 border-gray-300 rounded-2xl" />
-      </div>
+    <div className="flex flex-col justify-center items-center w-full pt-24 lg:pt-0 p-5">
+      <canvas ref={canvasReference} className="w-full aspect-square bg-white border-2 border-gray-300 rounded-2xl" />
+    </div>
   );
 };
 
