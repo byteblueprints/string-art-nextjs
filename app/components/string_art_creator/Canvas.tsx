@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Downloader from "./Downloader";
 import Controls from "./Controls";
+import { circleCrop, drawImageOnCanvasWithOffset, getContext } from "@/app/utils/canvas_operations";
 
 interface Props {
     imgXPos: number
@@ -56,48 +57,14 @@ const Canvas: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (canvasRef.current && image) {
             const canvas = canvasRef.current;
-            const ctx = canvasRef.current.getContext("2d");
-            if (ctx != null) {
-                const canvasWidth = canvas.clientWidth * imgScale;
-                const canvasHeight = canvas.clientHeight * imgScale;
+            const centerX = (canvas.clientWidth / 2);
+            const centerY = (canvas.clientHeight / 2);
+            const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2;
 
-                const imageAspectRatio = image.width / image.height;
-                const canvasAspectRatio = canvasWidth / canvasHeight;
-
-                let drawWidth = canvasWidth;
-                let drawHeight = canvasHeight;
-
-                if (imageAspectRatio > canvasAspectRatio) {
-                    drawHeight = canvasWidth / imageAspectRatio;
-                    drawWidth = canvasWidth;
-                } else {
-                    drawWidth = canvasHeight * imageAspectRatio;
-                    drawHeight = canvasHeight;
-                }
-
-                const xOffset = (canvasWidth - (drawWidth)) / 2;
-                const yOffset = (canvasHeight - (drawHeight)) / 2;
-
-                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                ctx.globalAlpha = 1;
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.drawImage(image, xOffset + imgXPos, yOffset + imgYPos, drawWidth, drawHeight);
-                ctx.globalCompositeOperation = 'destination-in';
-
-                circleCrop(ctx, canvas);
-            }
+            drawImageOnCanvasWithOffset(canvas, image, imgXPos, imgYPos, imgScale);
+            circleCrop(canvas, centerX, centerY, radius);
         }
     }, [imgXPos, imgYPos, imgScale, image]);
-
-    const circleCrop = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-        const startX = (canvas.clientWidth / 2);
-        const startY = (canvas.clientHeight / 2);
-        const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 1;
-        context.beginPath();
-        context.arc(startX, startY, radius, 0, Math.PI * 2);
-        context.closePath();
-        context.fill();
-    }
     return (
         <>
             <div className="relative flex flex-col h-full items-center">

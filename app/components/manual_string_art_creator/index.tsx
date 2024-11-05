@@ -1,13 +1,13 @@
 "use client";
 
 import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
-import { ControlType } from '@/app/types/enum/ControlType';
 import Pica from 'pica';
 import React, { useEffect, useRef, useState } from 'react';
 import Canvas from './Canvas';
 import LeftStep from './LeftStep';
 import RightStep from './RightStep';
 import DrawFinalImage from './DrawFInalImage';
+import { OUTPUT_SCALING_FACTOR } from '@/app/utils/constants';
 
 interface Props {
   nailSequence: number[];
@@ -25,11 +25,15 @@ const ManualStringArtCreator: React.FC<Props> = (props: Props) => {
   const [nailsCordinates, setNailsCordinates] = useState<[number, number][]>([]);
   const [constructedFinal, setConstructedFinal] = useState<ImageData | null>(null);
   const [isManualThreading, setIsManualThreading] = useState(false);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    setTarget(createImageData(700 * 7, 700 * 7, 255));
-    const calculator = new NailsCoordinatesCalculator(700 * 7 / 2, 700 * 7 / 2, (700 * 7 / 2) - 1);
-    setNailsCordinates(calculator.getNailsCoordinates(nailCount));
+    if (canvasReference.current) {
+      const canvas = canvasReference.current
+      setTarget(createImageData(canvas.clientWidth * OUTPUT_SCALING_FACTOR, canvas.clientHeight * OUTPUT_SCALING_FACTOR, 255));
+      const calculator = new NailsCoordinatesCalculator(canvas.clientWidth * OUTPUT_SCALING_FACTOR / 2, canvas.clientHeight * OUTPUT_SCALING_FACTOR / 2, (canvas.clientWidth * OUTPUT_SCALING_FACTOR / 2) - 1);
+      setNailsCordinates(calculator.getNailsCoordinates(nailCount));
+    }
   }, [nailCount])
   const createImageData = (width: number, height: number, fillValue: number): ImageData => {
     const imageData = new ImageData(width, height);
@@ -48,7 +52,7 @@ const ManualStringArtCreator: React.FC<Props> = (props: Props) => {
   return (
     <>
       <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5">
-        <Canvas finalImage={constructedFinal} index={index} nailCount={nailCount} />
+        <Canvas finalImage={constructedFinal} index={index} nailCount={nailCount} canvasReference={canvasReference} />
       </div>
 
       <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5 flex flex-col justify-center items-center">

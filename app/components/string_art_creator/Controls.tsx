@@ -62,7 +62,7 @@ const Controls: React.FC<Props> = (props: Props) => {
             const canvas = canvasRef.current
             const startX = Math.floor(canvas.clientWidth / 2);
             const startY = Math.floor(canvas.clientHeight / 2);
-            const radius = Math.floor((Math.min(canvas.clientWidth, canvas.clientHeight) / 2) - 1);
+            const radius = Math.floor((Math.min(canvas.clientWidth, canvas.clientHeight) / 2));
             setStringArtInProgress(true)
             let lineCalculator = new LinesPreCalculator()
             lineCalculator.preCalculateAllLines(

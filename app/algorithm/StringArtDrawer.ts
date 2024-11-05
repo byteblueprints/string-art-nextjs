@@ -1,7 +1,7 @@
 import Pica from 'pica';
 import { StringArtWorkerResponse, StringArtWorkerMsg } from "../types/WorkerMessages";
 import { CurrentStatus } from '../types/enum/CurrentStatus';
-import { MIN_DISTANCE } from '../utils/constants';
+import { MIN_DISTANCE, OUTPUT_SCALING_FACTOR } from '../utils/constants';
 import { RefObject } from 'react';
 
 const pica = Pica();
@@ -9,7 +9,6 @@ function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 export class StringArtDrawer {
-    private output_scaling_factor: number = 10;
 
     public async startFindingBestLines(
         canvasRef: RefObject<HTMLCanvasElement>,
@@ -34,7 +33,7 @@ export class StringArtDrawer {
                 imageData = ctx.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight);
                 const startX = (canvas.clientWidth / 2);
                 const startY = (canvas.clientHeight / 2);
-                const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 1;
+                const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2;
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.beginPath();
                 ctx.arc(startX, startY, radius, 0, Math.PI * 2);
@@ -50,7 +49,7 @@ export class StringArtDrawer {
                     imageData: imageData,
                     height: canvas.clientHeight,
                     width: canvas.clientWidth,
-                    outputScalingFactor: this.output_scaling_factor,
+                    outputScalingFactor: OUTPUT_SCALING_FACTOR,
                     stringWeight: stringWeight,
                     skip: MIN_DISTANCE,
                     allLineCoordinates: {},
