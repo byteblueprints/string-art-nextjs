@@ -1,42 +1,16 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Downloader from "./Downloader";
 import Controls from "./Controls";
-import { circleCrop, drawImageOnCanvasWithOffset, getContext } from "@/app/utils/canvas_operations";
+import { circleCrop, drawImageOnCanvasWithOffset } from "@/app/utils/CanvasOperations";
+import { AppContext } from "@/app/context_provider";
 
-interface Props {
-    imgXPos: number
-    imgYPos: number
-    imgScale: number
-    image: HTMLImageElement | null
-    setNailSequence: React.Dispatch<React.SetStateAction<number[]>>
-    setFinalStringArt: Dispatch<SetStateAction<ImageData | null>>
-    numOfNails: number
-    stringWeight: number
-    maxLineCount: number
-    setStringArtInProgress: React.Dispatch<React.SetStateAction<boolean>>
-    stringArtInProgress: boolean
-}
+const Canvas: React.FC = () => {
+    const { state, updateState } = useContext(AppContext);
 
-
-const Canvas: React.FC<Props> = (props: Props) => {
-    const {
-        imgXPos,
-        imgYPos,
-        imgScale,
-        image,
-        setNailSequence,
-        setFinalStringArt,
-        numOfNails,
-        stringWeight,
-        maxLineCount,
-        setStringArtInProgress,
-        stringArtInProgress
-    } = props
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [downloadDisabled, setDownloadDisabled] = useState<boolean>(true)
-    const [viewedImage, setViewedImage] = useState<ImageData | null>(null)
     useEffect(() => {
         if (canvasRef.current) {
             const canvas = canvasRef.current;
@@ -45,45 +19,44 @@ const Canvas: React.FC<Props> = (props: Props) => {
         }
     }, [])
     useEffect(() => {
-        if (viewedImage) {
+        if (state.finalStringArt) {
             setDownloadDisabled(false)
-            setFinalStringArt(viewedImage)
+            updateState((prev) => ({
+                ...prev,
+                finalStringArt: state.finalStringArt,
+            }));
         } else {
             setDownloadDisabled(true)
-            setFinalStringArt(null)
+            updateState((prev) => ({
+                ...prev,
+                finalStringArt: null,
+            }));
         }
-    }, [viewedImage])
+    }, [state.finalStringArt])
 
     useEffect(() => {
-        if (canvasRef.current && image) {
+        if (canvasRef.current && state.selectedImage) {
             const canvas = canvasRef.current;
             const centerX = (canvas.clientWidth / 2);
             const centerY = (canvas.clientHeight / 2);
             const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2;
 
-            drawImageOnCanvasWithOffset(canvas, image, imgXPos, imgYPos, imgScale);
+            drawImageOnCanvasWithOffset(canvas, state.selectedImage, state.imgXPos, state.imgYPos, state.imgScale);
             circleCrop(canvas, centerX, centerY, radius);
         }
-    }, [imgXPos, imgYPos, imgScale, image]);
+    }, [state.imgXPos, state.imgYPos, state.imgScale, state.selectedImage]);
     return (
         <>
             <div className="relative flex flex-col h-full items-center">
                 <div className="relative h-full w-[95%] border-2 border-gray-300 rounded-2xl">
                     <canvas ref={canvasRef} id="string_art" className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                     <div className="absolute top-5 right-5">
-                        <Downloader image={viewedImage} downloadDisabled={downloadDisabled} />
+                        <Downloader image={state.finalStringArt} downloadDisabled={downloadDisabled} />
                     </div>
                 </div>
                 <div className="absolute w-[85%] bottom-0 left-1/2 transform -translate-x-1/2  translate-y-[120%]">
                     <Controls
-                        maxLineCount={maxLineCount}
                         canvasRef={canvasRef}
-                        setNailSequence={setNailSequence}
-                        setViewedImage={setViewedImage}
-                        numOfNails={numOfNails}
-                        stringWeight={stringWeight}
-                        setStringArtInProgress={setStringArtInProgress}
-                        stringArtInProgress={stringArtInProgress}
                     />
                 </div>
             </div>

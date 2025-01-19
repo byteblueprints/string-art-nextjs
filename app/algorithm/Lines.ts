@@ -1,5 +1,5 @@
-import { CurrentStatus } from "../types/enum/CurrentStatus";
-import { MIN_DISTANCE } from "../utils/constants";
+import { WorkingStatus } from "../types/enum/WorkingStatus";
+import { MIN_DISTANCE } from "../utils/Constants";
 import { BresenhamAlgorithm } from "./BresenhamAlgorithm";
 import { Storage } from "./Storage";
 
@@ -27,7 +27,7 @@ export class Lines {
       await lineStorage.store(`${i}`, lineCoordinates);
       callback({ lines: lineCoordinates 
         ? Object.values(lineCoordinates).flatMap(coordinatesArray => coordinatesArray) 
-        : [], key: `${i}`, status: CurrentStatus.INPROGRESS, calculateLineCount: counter })
+        : [], key: `${i}`, status: WorkingStatus.INPROGRESS, calculateLineCount: counter })
       lineCoordinates = null
     }
   }

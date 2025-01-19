@@ -1,27 +1,26 @@
 "use client";
 
-import { drawZoomedImageOnCanvas } from "@/app/utils/canvas_operations";
-import { useEffect, useRef } from "react";
+import { AppContext } from "@/app/context_provider";
+import { drawZoomedImageOnCanvas, getContext } from "@/app/utils/CanvasOperations";
+import { useContext, useEffect, useRef } from "react";
 
-interface Props {
-    selectedImage: HTMLImageElement | null
-}
-const PreviewCanvas: React.FC<Props> = (props: Props) => {
-    const { selectedImage } = props
+const PreviewCanvas: React.FC = () => {
+    const { state } = useContext(AppContext);
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     useEffect(() => {
-        if (selectedImage && canvasRef.current) {
+        if (state.selectedImage && canvasRef.current) {
             const canvas = canvasRef.current;
-            const ctx = canvas.getContext("2d");
-    
+            const ctx = getContext(canvas);
+
             if (ctx) {
-                drawZoomedImageOnCanvas(canvas, selectedImage, 0.4);
+                drawZoomedImageOnCanvas(canvas, state.selectedImage, 0.4);
             }
         }
-    }, [selectedImage]);
+    }, [state.selectedImage]);
     return (
         <div className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <canvas ref={canvasRef} className="w-full h-full rounded-2xl"/>
+            <canvas ref={canvasRef} className="w-full h-full rounded-2xl" />
         </div>
     );
 };

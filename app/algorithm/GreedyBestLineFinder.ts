@@ -1,5 +1,5 @@
 import { Storage } from './Storage';
-import { CurrentStatus } from '../types/enum/CurrentStatus';
+import { WorkingStatus } from '../types/enum/WorkingStatus';
 import { NailsCoordinatesCalculator } from './NailsCoordinatesCalculator';
 
 const lineStorage = new Storage("lines")
@@ -58,19 +58,19 @@ export class LineSolver {
             if (count % 10 === 0) {
                 callback({
                     image: target,
-                    status: CurrentStatus.INPROGRESS,
+                    status: WorkingStatus.INPROGRESS,
                     error:error
                 });
             }
             callback({
-                status: CurrentStatus.INPROGRESS,
+                status: WorkingStatus.INPROGRESS,
                 count: count
             });
             count++;
         }
         callback({
             nailSequence: nailSequence,
-            status: CurrentStatus.COMPLETED,
+            status: WorkingStatus.COMPLETED,
             image: target
         });
     }

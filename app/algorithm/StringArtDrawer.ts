@@ -1,8 +1,9 @@
 import Pica from 'pica';
 import { StringArtWorkerResponse, StringArtWorkerMsg } from "../types/WorkerMessages";
-import { CurrentStatus } from '../types/enum/CurrentStatus';
-import { MIN_DISTANCE, OUTPUT_SCALING_FACTOR } from '../utils/constants';
+import { WorkingStatus } from '../types/enum/WorkingStatus';
+import { MIN_DISTANCE, OUTPUT_SCALING_FACTOR } from '../utils/Constants';
 import { RefObject } from 'react';
+import { getContext } from '../utils/CanvasOperations';
 
 const pica = Pica();
 function sleep(ms: number): Promise<void> {
@@ -55,14 +56,14 @@ export class StringArtDrawer {
                     allLineCoordinates: {},
                     nailsCordinates: []
                 }
-                const stringArtWorker = new Worker(new URL("../workers/string_art_creating.worker.ts", import.meta.url));
+                const stringArtWorker = new Worker(new URL("../workers/StringArtCreating.Worker.ts", import.meta.url));
 
                 console.log("Started post message to lineSolverWorker")
                 stringArtWorker.postMessage(lineSolverMsgToWorker);
                 stringArtWorker.onmessage = function (e) {
                     const lineSolverMsgFromWorker: StringArtWorkerResponse = e.data
 
-                    if (lineSolverMsgFromWorker.status == CurrentStatus.INPROGRESS) {
+                    if (lineSolverMsgFromWorker.status == WorkingStatus.INPROGRESS) {
                         if (lineSolverMsgFromWorker.imageData == undefined) {
                             setCount(lineSolverMsgFromWorker.count)
                         } else {
@@ -72,7 +73,7 @@ export class StringArtDrawer {
                                 }
                             }
                         }
-                    } else if (lineSolverMsgFromWorker.status == CurrentStatus.COMPLETED) {
+                    } else if (lineSolverMsgFromWorker.status == WorkingStatus.COMPLETED) {
                         setViewedImage(lineSolverMsgFromWorker.imageData)
                         setNailSequence(lineSolverMsgFromWorker.nailSequence)
                         setStringArtInProgress(false)
@@ -129,7 +130,7 @@ function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData
     const canvas = document.createElement('canvas');
     canvas.width = imageData.width;
     canvas.height = imageData.height;
-    const ctx = canvas.getContext("2d");
+    const ctx = getContext(canvas);
 
     if (ctx != null) {
         ctx.putImageData(imageData, 0, 0);

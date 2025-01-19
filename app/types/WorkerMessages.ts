@@ -1,5 +1,4 @@
-import { Storage } from "../algorithm/Storage";
-import { CurrentStatus } from "./enum/CurrentStatus";
+import { WorkingStatus } from "./enum/WorkingStatus";
 
 export type LinePreCalculatingWorkerMsg = {
     xc: number;
@@ -11,7 +10,7 @@ export type LinePreCalculatingWorkerMsg = {
 export type LinePreCalculatingWorkerResponse = {
     message: string;
     count: number
-    status: CurrentStatus
+    status: WorkingStatus
     lines: Array<[number, number]>
 };
 
@@ -30,7 +29,7 @@ export type StringArtWorkerMsg = {
 export type StringArtWorkerResponse = {
     message: string;
     imageData: ImageData;
-    status: CurrentStatus;
+    status: WorkingStatus;
     count: number
     nailSequence: number[],
     error: any

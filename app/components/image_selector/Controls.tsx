@@ -1,7 +1,8 @@
 "use client";
 
-import { ControlType } from "@/app/types/enum/ControlType";
-import { useEffect, useState } from "react";
+import { AppContext } from "@/app/context_provider";
+import { ControlDirection } from "@/app/types/enum/ControlDirection";
+import { useContext, useEffect, useState } from "react";
 import {
   FaAngleDown,
   FaAngleLeft,
@@ -14,53 +15,28 @@ import {
 import { FaXmark } from "react-icons/fa6";
 import { useControls, useTransformEffect } from "react-zoom-pan-pinch";
 
-interface Props {
-  selectedImage: HTMLImageElement | null
-  setImgXPos: React.Dispatch<React.SetStateAction<number>>
-  setImgYPos: React.Dispatch<React.SetStateAction<number>>
-  setImgScale: React.Dispatch<React.SetStateAction<number>>
-  setNumOfNails: React.Dispatch<React.SetStateAction<number>>
-  setStringWeight: React.Dispatch<React.SetStateAction<number>>
-  setMaxLineCount: React.Dispatch<React.SetStateAction<number>>
-  numOfNails: number
-  stringWeight: number
-  maxLineCount: number
-  stringArtInProgress: boolean
-}
+const Controls: React.FC = (() => {  
+  const { state, updateState } = useContext(AppContext);
 
-
-const Controls: React.FC<Props> = ((props: Props) => {
   const { zoomIn, zoomOut, resetTransform, setTransform } = useControls();
   const [showConfig, setShowConfig] = useState(false);
-  const {
-    setImgXPos,
-    setImgYPos,
-    setImgScale,
-    selectedImage,
-    setNumOfNails,
-    setStringWeight,
-    setMaxLineCount,
-    numOfNails,
-    stringWeight,
-    maxLineCount,
-    stringArtInProgress
-  } = props
+
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [s, setS] = useState(1);
 
-  const transform = (control_type: ControlType) => {
+  const transform = (control_type: ControlDirection) => {
     switch (control_type) {
-      case ControlType.LEFT:
+      case ControlDirection.LEFT:
         setX(x - 1);
         break;
-      case ControlType.RIGHT:
+      case ControlDirection.RIGHT:
         setX(x + 1);
         break;
-      case ControlType.UP:
+      case ControlDirection.UP:
         setY(y - 1);
         break;
-      case ControlType.DOWN:
+      case ControlDirection.DOWN:
         setY(y + 1);
         break;
       default:
@@ -68,68 +44,71 @@ const Controls: React.FC<Props> = ((props: Props) => {
     }
     setTransform(x, y, s);
   };
-  useTransformEffect(({ state, instance }) => {
-    setImgXPos(state.positionX)
-    setImgYPos(state.positionY)
-    setImgScale(state.scale)
+  useTransformEffect(({ state }) => {
+    updateState((prev) => ({
+      ...prev,
+      imgXPos: state.positionX,
+      imgYPos: state.positionY,
+      imgScale: state.scale,
+    }));
   });
   useEffect(() => {
     resetTransform()
-  }, [selectedImage])
+  }, [state.selectedImage])
   return (
     <>
       <div className="absolute flex flex-row bottom-0 space-x-2 p-4 left-1/2 transform -translate-x-1/2">
         <button
-          disabled={stringArtInProgress}
+          disabled={state.stringArtInProgress}
           onClick={() => zoomIn()}
           className="p-1.5 md:p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
         >
           <FaPlus />
         </button>
         <button
-          disabled={stringArtInProgress}
+          disabled={state.stringArtInProgress}
           onClick={() => zoomOut()}
           className="p-1.5 md:p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
         >
           <FaMinus />
         </button>
         <button
-          disabled={stringArtInProgress}
+          disabled={state.stringArtInProgress}
           onClick={() => resetTransform()}
           className="p-1.5 md:p-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all"
         >
           <FaXmark />
         </button>
         <button
-          disabled={stringArtInProgress}
-          onClick={() => transform(ControlType.LEFT)}
+          disabled={state.stringArtInProgress}
+          onClick={() => transform(ControlDirection.LEFT)}
           className="p-1.5 md:p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
         >
           <FaAngleLeft />
         </button>
         <button
-          disabled={stringArtInProgress}
-          onClick={() => transform(ControlType.RIGHT)}
+          disabled={state.stringArtInProgress}
+          onClick={() => transform(ControlDirection.RIGHT)}
           className="p-1.5 md:p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
         >
           <FaAngleRight />
         </button>
         <button
-          disabled={stringArtInProgress}
-          onClick={() => transform(ControlType.UP)}
+          disabled={state.stringArtInProgress}
+          onClick={() => transform(ControlDirection.UP)}
           className="p-1.5 md:p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
         >
           <FaAngleUp />
         </button>
         <button
-          disabled={stringArtInProgress}
-          onClick={() => transform(ControlType.DOWN)}
+          disabled={state.stringArtInProgress}
+          onClick={() => transform(ControlDirection.DOWN)}
           className="p-1.5 md:p-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all"
         >
           <FaAngleDown />
         </button>
         <button
-          disabled={stringArtInProgress}
+          disabled={state.stringArtInProgress}
           onClick={() => setShowConfig(!showConfig)}
           className="p-1.5 md:p-3 bg-gray-500 text-white rounded-full shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all"
         >
@@ -145,8 +124,15 @@ const Controls: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">Number of Nails</label>
               <input
                 type="number"
-                value={numOfNails}
-                onChange={(e) => setNumOfNails(Number(e.target.value))}
+                value={state.configurations.numOfNails}
+                onChange={(e) => 
+                  updateState((prev) => ({
+                    ...prev,
+                    configurations: {
+                      ...prev.configurations,
+                      numOfNails: Number(e.target.value),
+                    },
+                  }))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
@@ -154,8 +140,15 @@ const Controls: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">String Weight</label>
               <input
                 type="number"
-                value={stringWeight}
-                onChange={(e) => setStringWeight(Number(e.target.value))}
+                value={state.configurations.stringWeight}
+                onChange={(e) => 
+                  updateState((prev) => ({
+                    ...prev,
+                    configurations: {
+                      ...prev.configurations,
+                      stringWeight: Number(e.target.value),
+                    },
+                  }))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>
@@ -163,8 +156,15 @@ const Controls: React.FC<Props> = ((props: Props) => {
               <label className="block mb-1">Max Line Count</label>
               <input
                 type="number"
-                value={maxLineCount}
-                onChange={(e) => setMaxLineCount(Number(e.target.value))}
+                value={state.configurations.maxLineCount}
+                onChange={(e) => 
+                  updateState((prev) => ({
+                    ...prev,
+                    configurations: {
+                      ...prev.configurations,
+                      maxLineCount: Number(e.target.value),
+                    },
+                  }))}
                 className="border rounded px-3 py-2 w-full"
               />
             </div>

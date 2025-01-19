@@ -1,21 +1,17 @@
 "use client";
 
-import { markCenterPointWithCross } from "@/app/utils/canvas_operations";
+import { markCenterPointWithCross } from "@/app/utils/CanvasOperations";
 import { useEffect, useRef } from "react";
 
 const Mask: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     useEffect(() => {
         if (canvasRef.current) {
-            const canvas = canvasRef.current;
-            const ctx = canvas.getContext('2d');
-            
+            const canvas = canvasRef.current;            
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
-
             const startX = canvas.width / 2;
             const startY = canvas.height / 2;
-
             markCenterPointWithCross(canvas, startX, startY);
         }
     }, []);

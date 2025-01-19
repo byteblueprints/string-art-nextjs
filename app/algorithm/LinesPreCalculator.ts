@@ -1,6 +1,6 @@
-import { CurrentStatus } from "../types/enum/CurrentStatus";
+import { WorkingStatus } from "../types/enum/WorkingStatus";
 import { LinePreCalculatingWorkerResponse, LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
-import { MIN_DISTANCE } from "../utils/constants";
+import { MIN_DISTANCE } from "../utils/Constants";
 
 export class LinesPreCalculator {
 
@@ -13,14 +13,14 @@ export class LinesPreCalculator {
         r: number,
     ) {
         let allPosibleCombinations = (nailCount * nailCount) - (nailCount * MIN_DISTANCE)
-        const linePreCalculatingWorker = new Worker(new URL("../workers/line_calculating.worker.ts", import.meta.url));
+        const linePreCalculatingWorker = new Worker(new URL("../workers/LineCalculating.Worker.ts", import.meta.url));
         const linePreCalculatingWorkerMsg: LinePreCalculatingWorkerMsg = { xc: xc, yc: yc, r: r, nailCount: nailCount }
 
         linePreCalculatingWorker.postMessage(linePreCalculatingWorkerMsg);
 
         linePreCalculatingWorker.onmessage = async function (e) {
             const calculateLinMsgFromWorker: LinePreCalculatingWorkerResponse = e.data
-            if (calculateLinMsgFromWorker.status == CurrentStatus.INPROGRESS) {
+            if (calculateLinMsgFromWorker.status == WorkingStatus.INPROGRESS) {
                 setPreCalcLineCount(calculateLinMsgFromWorker.count)
                 if (calculateLinMsgFromWorker.count >= allPosibleCombinations) {
                     setLineCalculated(true)

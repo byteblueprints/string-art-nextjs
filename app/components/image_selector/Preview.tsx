@@ -4,34 +4,12 @@ import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import Controls from "./Controls";
 import Mask from "./Mask";
 import PreviewCanvas from "./PreviewCanvas";
+import { useContext } from "react";
+import { AppContext } from "@/app/context_provider";
 
-interface Props {
-    selectedImage: HTMLImageElement | null
-    setImgXPos: React.Dispatch<React.SetStateAction<number>>
-    setImgYPos: React.Dispatch<React.SetStateAction<number>>
-    setImgScale: React.Dispatch<React.SetStateAction<number>>
-    setNumOfNails: React.Dispatch<React.SetStateAction<number>>
-    setStringWeight: React.Dispatch<React.SetStateAction<number>>
-    setMaxLineCount: React.Dispatch<React.SetStateAction<number>>
-    numOfNails: number
-    stringWeight: number
-    maxLineCount: number
-    stringArtInProgress: boolean
-}
-const Preview: React.FC<Props> = (props: Props) => {
-    const {
-        selectedImage,
-        setImgXPos,
-        setImgYPos,
-        setImgScale,
-        setNumOfNails,
-        setStringWeight,
-        setMaxLineCount,
-        numOfNails,
-        stringWeight,
-        maxLineCount,
-        stringArtInProgress
-    } = props
+const Preview: React.FC = () => {
+    const { state } = useContext(AppContext);
+
     return (
         <>
             <Mask />
@@ -41,24 +19,12 @@ const Preview: React.FC<Props> = (props: Props) => {
                     initialPositionX={0}
                     initialPositionY={0}
                     smooth={false}
-                    disabled={stringArtInProgress}
+                    disabled={state.stringArtInProgress}
                 >
                     <TransformComponent>
-                        <PreviewCanvas selectedImage={selectedImage} />
+                        <PreviewCanvas />
                     </TransformComponent>
-                    <Controls
-                        setImgXPos={setImgXPos}
-                        setImgYPos={setImgYPos}
-                        setImgScale={setImgScale}
-                        selectedImage={selectedImage}
-                        setNumOfNails={setNumOfNails}
-                        setStringWeight={setStringWeight}
-                        setMaxLineCount={setMaxLineCount}
-                        numOfNails={numOfNails}
-                        maxLineCount={maxLineCount}
-                        stringWeight={stringWeight}
-                        stringArtInProgress={stringArtInProgress}
-                    />
+                    <Controls />
                 </TransformWrapper>
             </div>
         </>

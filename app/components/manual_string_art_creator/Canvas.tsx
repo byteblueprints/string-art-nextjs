@@ -1,8 +1,8 @@
 "use client";
 
 import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
-import { createTempCanvas, drawNailsWithNumbers, resizeImage, setCanvasDimensions } from '@/app/utils/canvas_operations';
-import { MANUAL_DRAW_PADDING, OUTPUT_SCALING_FACTOR } from '@/app/utils/constants';
+import { createTempCanvas, drawNailsWithNumbers, resizeImage, setCanvasDimensions } from '@/app/utils/CanvasOperations';
+import { MANUAL_DRAW_PADDING, OUTPUT_SCALING_FACTOR } from '@/app/utils/Constants';
 import Pica from 'pica';
 import React, { RefObject, useEffect, useRef } from 'react';
 

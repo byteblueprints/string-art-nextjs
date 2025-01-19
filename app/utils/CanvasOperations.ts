@@ -1,5 +1,5 @@
 import Pica from 'pica';
-import { MANUAL_DRAW_PADDING } from './constants';
+import { MANUAL_DRAW_PADDING } from './Constants';
 
 const pica = Pica()
 
@@ -170,7 +170,7 @@ export const createTempCanvas = (finalImage: ImageData) => {
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = finalImage.width;
     tempCanvas.height = finalImage.height;
-    const ctx = tempCanvas.getContext("2d");
+    const ctx = getContext(tempCanvas);
     if (ctx) {
         ctx.putImageData(finalImage, 0, 0);
     }

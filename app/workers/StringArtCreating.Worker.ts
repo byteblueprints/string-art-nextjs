@@ -1,4 +1,4 @@
-import { CurrentStatus } from "../types/enum/CurrentStatus";
+import { WorkingStatus } from "../types/enum/WorkingStatus";
 import { StringArtWorkerMsg } from "../types/WorkerMessages";
 import { LineSolver } from "../algorithm/GreedyBestLineFinder";
 import { Storage } from "../algorithm/Storage";
@@ -22,27 +22,27 @@ self.onmessage = async (event) => {
     data.stringWeight,
     data.skip,
     (progress) => {
-      if (progress.status == CurrentStatus.INPROGRESS) {
+      if (progress.status == WorkingStatus.INPROGRESS) {
         if (progress.image == undefined) {
           self.postMessage({
             message: "String art inprogress!",
             count: progress.count,
-            status: CurrentStatus.INPROGRESS
+            status: WorkingStatus.INPROGRESS
           });
         } else {
           self.postMessage({
             message: "String art inprogress!",
             imageData: progress.image,
-            status: CurrentStatus.INPROGRESS,
+            status: WorkingStatus.INPROGRESS,
             error:progress.error
           });
         }
-      } else if (progress.status == CurrentStatus.COMPLETED) {
+      } else if (progress.status == WorkingStatus.COMPLETED) {
         self.postMessage({
           message: "Worker done work!",
           imageData: progress.image,
           nailSequence: progress.nailSequence,
-          status: CurrentStatus.COMPLETED
+          status: WorkingStatus.COMPLETED
         });
       }
     }

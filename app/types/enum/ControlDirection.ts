@@ -1,4 +1,4 @@
-export enum ControlType {
+export enum ControlDirection {
     LEFT = 'left',
     RIGHT = 'right',
     UP = 'up',

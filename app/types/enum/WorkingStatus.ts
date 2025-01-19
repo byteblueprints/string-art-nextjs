@@ -1,4 +1,4 @@
-export enum CurrentStatus {
+export enum WorkingStatus {
     STARTED = 'started',
     INPROGRESS = 'inprogress',
     HALTED = "halted",

@@ -1,7 +1,7 @@
 "use client";
 
 import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
-import { ControlType } from '@/app/types/enum/ControlType';
+import { ControlDirection } from '@/app/types/enum/ControlDirection';
 import Pica from 'pica';
 import React, { useEffect, useRef, useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';

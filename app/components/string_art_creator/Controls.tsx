@@ -2,44 +2,47 @@
 
 import { LinesPreCalculator } from '@/app/algorithm/LinesPreCalculator';
 import { StringArtDrawer as GreedyBestLineFinder } from '@/app/algorithm/StringArtDrawer';
-import { MIN_DISTANCE } from '@/app/utils/constants';
-import React, { RefObject, useEffect, useState } from 'react';
+import { AppContext } from '@/app/context_provider';
+import { MIN_DISTANCE } from '@/app/utils/Constants';
+import React, { RefObject, useContext, useEffect, useState } from 'react';
 
 interface Props {
     canvasRef: RefObject<HTMLCanvasElement>
-    setNailSequence: React.Dispatch<React.SetStateAction<number[]>>
-    setViewedImage: React.Dispatch<React.SetStateAction<ImageData | null>>
-    numOfNails: number
-    maxLineCount: number
-    stringWeight: number
-    setStringArtInProgress: React.Dispatch<React.SetStateAction<boolean>>
-    stringArtInProgress: boolean
-}
-
-
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 const Controls: React.FC<Props> = (props: Props) => {
     const {
-        maxLineCount,
         canvasRef,
-        setNailSequence,
-        setViewedImage,
-        numOfNails,
-        stringWeight,
-        setStringArtInProgress,
-        stringArtInProgress
     } = props
-
+    const { state, updateState } = useContext(AppContext);
     const [lineCalculated, setLineCalculated] = useState<boolean>(false)
     const [startDrawing, setStartDrawing] = useState<boolean>(false)
+    const [stringArtInProgress, setStringArtInProgress] = useState<boolean>(false)
     const [preCalcLineCount, setPreCalcLineCount] = useState<number>(0)
     const [count, setCount] = useState<number>(0)
+    const [nailSequence, setNailSequence] = useState<number[]>([])
+    const [viewedImage, setViewedImage] = useState<ImageData | null>(null)
 
 
     useEffect(() => {
-    }, [])
+        updateState((prev) => ({
+            ...prev,
+            stringArtInProgress: stringArtInProgress,
+        }));
+    }, [stringArtInProgress])
+
+    useEffect(() => {
+        updateState((prev) => ({
+            ...prev,
+            nailSequence: nailSequence,
+        }));
+    }, [nailSequence])
+
+    useEffect(() => {
+        updateState((prev) => ({
+            ...prev,
+            finalStringArt: viewedImage,
+        }));
+    }, [viewedImage])
 
     useEffect(() => {
         if (lineCalculated) {
@@ -47,8 +50,8 @@ const Controls: React.FC<Props> = (props: Props) => {
             let greedyBestLineFinder = new GreedyBestLineFinder()
             greedyBestLineFinder.startFindingBestLines(
                 canvasRef,
-                maxLineCount,
-                stringWeight,
+                state.configurations.maxLineCount,
+                state.configurations.stringWeight,
                 setCount,
                 setViewedImage,
                 setNailSequence,
@@ -66,7 +69,7 @@ const Controls: React.FC<Props> = (props: Props) => {
             setStringArtInProgress(true)
             let lineCalculator = new LinesPreCalculator()
             lineCalculator.preCalculateAllLines(
-                numOfNails,
+                state.configurations.numOfNails,
                 setLineCalculated,
                 setPreCalcLineCount,
                 startX,
@@ -85,13 +88,13 @@ const Controls: React.FC<Props> = (props: Props) => {
                         <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
                             <div
                                 className="bg-green-500 h-4 rounded-full"
-                                style={{ width: `${(preCalcLineCount / ((numOfNails * numOfNails) - (numOfNails * MIN_DISTANCE))) * 100}%` }}
+                                style={{ width: `${(preCalcLineCount / ((state.configurations.numOfNails * state.configurations.numOfNails) - (state.configurations.numOfNails * MIN_DISTANCE))) * 100}%` }}
                             ></div>
                             <span
                                 className="absolute inset-0 flex items-center justify-center text-black font-bold"
                                 style={{ right: '0', paddingRight: '4px' }}
                             >
-                                {`${Math.min((preCalcLineCount / ((numOfNails * numOfNails) - (numOfNails * MIN_DISTANCE))) * 100, 100).toFixed(0)}%`}
+                                {`${Math.min((preCalcLineCount / ((state.configurations.numOfNails * state.configurations.numOfNails) - (state.configurations.numOfNails * MIN_DISTANCE))) * 100, 100).toFixed(0)}%`}
                             </span>
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
@@ -108,13 +111,13 @@ const Controls: React.FC<Props> = (props: Props) => {
                         <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
                             <div
                                 className="bg-green-500 h-4 rounded-full"
-                                style={{ width: `${(count / maxLineCount) * 100}%` }}
+                                style={{ width: `${(count / state.configurations.maxLineCount) * 100}%` }}
                             ></div>
                             <span
                                 className="absolute inset-0 flex items-center justify-center text-black font-bold"
                                 style={{ right: '0', paddingRight: '4px' }}
                             >
-                                {`${Math.min((count / maxLineCount) * 100, 100).toFixed(0)}%`}
+                                {`${Math.min((count / state.configurations.maxLineCount) * 100, 100).toFixed(0)}%`}
                             </span>
                         </div>
                         <div className="text-lg font-semibold text-gray-800">
