@@ -1,21 +1,22 @@
+import { STORE_DB_NAME, STORE_NAME_FOR_ALL_LINES, STORE_NAME_FOR_NAILS } from "../utils/Constants";
+
 export class Storage {
     private storeName: string = ""
-    private dbName: string = "StringArt"
 
     public constructor(storeName: string) {
         this.storeName = storeName
     }
     public openIndexedDB = (): Promise<IDBDatabase> => {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, 1);
+            const request = indexedDB.open(STORE_DB_NAME, 1);
 
             request.onupgradeneeded = function (event) {
                 const db = (event.target as IDBRequest).result;
-                if (!db.objectStoreNames.contains("lines")) {
-                    db.createObjectStore("lines", { keyPath: "id" });
+                if (!db.objectStoreNames.contains(STORE_NAME_FOR_ALL_LINES)) {
+                    db.createObjectStore(STORE_NAME_FOR_ALL_LINES, { keyPath: "id" });
                 }
-                if (!db.objectStoreNames.contains("nails")) {
-                    db.createObjectStore("nails", { keyPath: "id" });
+                if (!db.objectStoreNames.contains(STORE_NAME_FOR_NAILS)) {
+                    db.createObjectStore(STORE_NAME_FOR_NAILS, { keyPath: "id" });
                 }
             };
 
@@ -29,7 +30,7 @@ export class Storage {
             };
         });
     };
-    public store = async (key: string, value: any): Promise<void> => {
+    public put = async (key: string, value: any): Promise<void> => {
         try {
             const db = await this.openIndexedDB();
             const transaction = db.transaction([this.storeName], "readwrite");

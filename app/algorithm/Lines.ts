@@ -1,11 +1,11 @@
 import { WorkingStatus } from "../types/enum/WorkingStatus";
-import { MIN_DISTANCE } from "../utils/Constants";
+import { MIN_DISTANCE, STORE_NAME_FOR_ALL_LINES } from "../utils/Constants";
 import { BresenhamAlgorithm } from "./BresenhamAlgorithm";
 import { Storage } from "./Storage";
 
 export class Lines {
   public async storeAllPosibleLineCordinates(nailsCordinates: Array<[number, number]>, callback: (progress: any) => void) {
-    const lineStorage = new Storage("lines")
+    const lineStorage = new Storage(STORE_NAME_FOR_ALL_LINES)
     let counter = 0;
     const numOfNails = nailsCordinates.length;
     let lineCoordinates: { [key: string]: Array<[number, number]> } | null = {};
@@ -24,7 +24,7 @@ export class Lines {
         counter++;
         count++;
       }
-      await lineStorage.store(`${i}`, lineCoordinates);
+      await lineStorage.put(`${i}`, lineCoordinates);
       callback({ lines: lineCoordinates 
         ? Object.values(lineCoordinates).flatMap(coordinatesArray => coordinatesArray) 
         : [], key: `${i}`, status: WorkingStatus.INPROGRESS, calculateLineCount: counter })

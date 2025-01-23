@@ -7,8 +7,8 @@ interface Props {
   setShowConfig: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Configurations: React.FC<Props> = ((props: Props) => {
-  let setShowConfig = props.setShowConfig
-  
+  const { setShowConfig } = props
+
   const { state, updateState } = useContext(AppContext);
   return (
     <>

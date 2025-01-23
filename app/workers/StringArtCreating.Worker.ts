@@ -1,16 +1,17 @@
 import { WorkingStatus } from "../types/enum/WorkingStatus";
 import { StringArtWorkerMsg } from "../types/WorkerMessages";
-import { LineSolver } from "../algorithm/GreedyBestLineFinder";
+import { GreedyBestLineFinder } from "../algorithm/GreedyBestLineFinder";
 import { Storage } from "../algorithm/Storage";
+import { STORE_KEY_NAME_FOR_NAIL_CORDINATES, STORE_NAME_FOR_NAILS } from "../utils/Constants";
 
 
-const nailStorage = new Storage("nails")
+const nailStorage = new Storage(STORE_NAME_FOR_NAILS)
 self.onmessage = async (event) => {
   const data: StringArtWorkerMsg = event.data;
 
   
-  const lineSolver = new LineSolver();
-  const nailsCordinates = await nailStorage.getByKey("nailCoordinates");
+  const lineSolver = new GreedyBestLineFinder();
+  const nailsCordinates = await nailStorage.getByKey(STORE_KEY_NAME_FOR_NAIL_CORDINATES);
 
   await lineSolver.solveIterativelyWithLineScores(
     data.imageData,

@@ -5,3 +5,7 @@ export const DEFAULT_MAX_LINE_COUNT = 4000;
 export const DEFAULT_NUM_OF_NAILS = 250;
 export const DEFAULT_STRING_WEIGHT = 20;
 export const BASE_IMAGE_FILE_NAME = "base.jpeg";
+export const STORE_NAME_FOR_ALL_LINES = "lines";
+export const STORE_NAME_FOR_NAILS = "nails";
+export const STORE_DB_NAME = "StringArt";
+export const STORE_KEY_NAME_FOR_NAIL_CORDINATES = "nailCoordinates";

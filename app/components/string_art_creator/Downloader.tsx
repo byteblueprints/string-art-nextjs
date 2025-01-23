@@ -1,26 +1,28 @@
 "use client";
 
-import React from 'react';
+import { AppContext } from '@/app/context_provider';
+import React, { useContext } from 'react';
 import { FaDownload } from 'react-icons/fa6';
 
 interface Props {
-    image: ImageData | null
     downloadDisabled: boolean
 }
 
 
 const Downloader: React.FC<Props> = (props: Props) => {
-    const { image, downloadDisabled } = props
+    const { downloadDisabled } = props
+
+    const { state } = useContext(AppContext);
 
     const handleDownload = () => {
-        if (image) {
-            const offscreenCanvas = new OffscreenCanvas(image.width, image.height);
+        if (state.finalStringArt) {
+            const offscreenCanvas = new OffscreenCanvas(state.finalStringArt.width, state.finalStringArt.height);
             const offScreenContext = offscreenCanvas.getContext('2d');
             if (!offScreenContext) {
                 throw new Error('2D context not available');
             }
 
-            offScreenContext.putImageData(image, 0, 0);
+            offScreenContext.putImageData(state.finalStringArt, 0, 0);
 
             offscreenCanvas.convertToBlob().then(blob => {
                 const url = URL.createObjectURL(blob);
@@ -34,10 +36,7 @@ const Downloader: React.FC<Props> = (props: Props) => {
             });
         }
     };
-
-    const downloadFinalImage = (targetResized: ImageData) => {
-
-    }
+    
     return (
         <>
             <button

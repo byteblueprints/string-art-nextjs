@@ -55,8 +55,8 @@ const FileChooser: React.FC = () => {
 
 
   return (
-    <div className="space-y-4">
-      <label className="flex flex-col items-center p-2 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 text-center">
+    <div className="flex space-x-4">
+      <label className="flex-1 flex flex-col items-center p-2 bg-blue-500 border border-blue-600 rounded-full cursor-pointer text-white hover:bg-blue-600 transition duration-300 text-center">
         <span className="w-1/2 text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis">
           Click to Upload (JPG, JPEG, PNG)
         </span>
@@ -72,11 +72,10 @@ const FileChooser: React.FC = () => {
       <button
         onClick={handleReset}
         disabled={state.stringArtInProgress}
-        className={`w-full flex items-center justify-center p-2 border rounded-full transition duration-300 ${
-          state.stringArtInProgress
-            ? "bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed"
-            : "bg-red-500 border-red-600 text-white hover:bg-red-600 cursor-pointer"
-        }`}
+        className={`flex-1 flex items-center justify-center p-2 border rounded-full transition duration-300 ${state.stringArtInProgress
+          ? "bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed"
+          : "bg-red-500 border-red-600 text-white hover:bg-red-600 cursor-pointer"
+          }`}
       >
         Reset
       </button>

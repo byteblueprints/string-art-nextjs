@@ -1,10 +1,10 @@
 import { Storage } from './Storage';
 import { WorkingStatus } from '../types/enum/WorkingStatus';
-import { NailsCoordinatesCalculator } from './NailsCoordinatesCalculator';
+import { STORE_NAME_FOR_ALL_LINES } from '../utils/Constants';
 
-const lineStorage = new Storage("lines")
+const lineStorage = new Storage(STORE_NAME_FOR_ALL_LINES)
 
-export class LineSolver {
+export class GreedyBestLineFinder {
     public async solveIterativelyWithLineScores(
         baseImage: ImageData,
         maxIterations: number,
@@ -24,7 +24,7 @@ export class LineSolver {
         const nailsCount = nailsCoord.length;
         let startNail = 0;
         nailSequence.push(startNail);
-        let target = this.createImageDataWithNails(height * outputScalingFactor, width * outputScalingFactor, 255, nailsCount);
+        let target = this.createImageData(height * outputScalingFactor, width * outputScalingFactor, 255);
         while (count <= maxIterations) {
             const allLineCoordinates = await lineStorage.getByKey(`${startNail}`);
             let bestNail = this.getBestNail(skip, nailsCount, startNail, lastPins, doneNails, allLineCoordinates, error);
@@ -54,7 +54,7 @@ export class LineSolver {
                 lastPins.shift();
             }
             nailSequence.push(bestNail);
-            target = this.drawLineUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint, stringWeight);
+            target = this.colorPixelsUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint, stringWeight);
             if (count % 10 === 0) {
                 callback({
                     image: target,
@@ -115,35 +115,7 @@ export class LineSolver {
         }
         return imageData;
     }
-    private createImageDataWithNails(width: number, height: number, fillValue: number, nailCount: number): ImageData {
-        const imageData = new ImageData(width, height);
-        const startX = (width / 2);
-        const startY = (height / 2);
-        const radius = Math.min(width, height) / 2;
-        // const nailCoordinates: [number, number][] = new NailsCoordinatesCalculator(startX, startY, radius).getNailsCoordinates(nailCount)
-        for (let i = 0; i < imageData.data.length; i += 4) {
-            imageData.data[i] = fillValue;
-            imageData.data[i + 1] = fillValue;
-            imageData.data[i + 2] = fillValue;
-            imageData.data[i + 3] = 255;
-        }
-        // nailCoordinates.forEach(([x, y]) => {
-        //     for (let dx = -1; dx <= 1; dx++) {
-        //         for (let dy = -1; dy <= 1; dy++) {
-        //             const pixelX = x + dx;
-        //             const pixelY = y + dy;
-        //             if (pixelX >= 0 && pixelX < width && pixelY >= 0 && pixelY < imageData.height) {
-        //                 const index = (pixelY * width + pixelX) * 4; // Calculate the index for RGBA in ImageData
-        //                 imageData.data[index] = 255;     // Red
-        //                 imageData.data[index + 1] = 0; // Green
-        //                 imageData.data[index + 2] = 0; // Blue
-        //                 imageData.data[index + 3] = 255; // Alpha
-        //             }
-        //         }
-        //     }
-        // });
-        return imageData;
-    }
+
     private getPixelValue(imageData: ImageData, x: number, y: number): number {
         const index = (y * imageData.width + x) * 4;
         return imageData.data[index];
@@ -167,7 +139,7 @@ export class LineSolver {
         return result;
     }
 
-    private drawLineUsingBreshenHamLineDrawingAlgo(
+    private colorPixelsUsingBreshenHamLineDrawingAlgo(
         imageData: ImageData,
         startPoint: { x: number; y: number },
         endPoint: { x: number; y: number },

@@ -3,8 +3,8 @@
 import { LinesPreCalculator } from '@/app/algorithm/LinesPreCalculator';
 import { StringArtDrawer as GreedyBestLineFinder } from '@/app/algorithm/StringArtDrawer';
 import { AppContext } from '@/app/context_provider';
-import { MIN_DISTANCE } from '@/app/utils/Constants';
 import React, { RefObject, useContext, useEffect, useState } from 'react';
+import ProgressBar from './ProgressBar';
 
 interface Props {
     canvasRef: RefObject<HTMLCanvasElement>
@@ -18,7 +18,7 @@ const Controls: React.FC<Props> = (props: Props) => {
     const [startDrawing, setStartDrawing] = useState<boolean>(false)
     const [stringArtInProgress, setStringArtInProgress] = useState<boolean>(false)
     const [preCalcLineCount, setPreCalcLineCount] = useState<number>(0)
-    const [count, setCount] = useState<number>(0)
+    const [stringArtLineCount, setStringArtLineCount] = useState<number>(0)
     const [nailSequence, setNailSequence] = useState<number[]>([])
     const [viewedImage, setViewedImage] = useState<ImageData | null>(null)
 
@@ -42,6 +42,10 @@ const Controls: React.FC<Props> = (props: Props) => {
             ...prev,
             finalStringArt: viewedImage,
         }));
+        setStringArtLineCount(0)
+        setPreCalcLineCount(0)
+        setStartDrawing(false)
+        setLineCalculated(false)
     }, [viewedImage])
 
     useEffect(() => {
@@ -52,7 +56,7 @@ const Controls: React.FC<Props> = (props: Props) => {
                 canvasRef,
                 state.configurations.maxLineCount,
                 state.configurations.stringWeight,
-                setCount,
+                setStringArtLineCount,
                 setViewedImage,
                 setNailSequence,
                 setStringArtInProgress
@@ -82,54 +86,7 @@ const Controls: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            {!startDrawing ? (
-                <>
-                    <div className='flex flex-col items-center justify-cente'>
-                        <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
-                            <div
-                                className="bg-green-500 h-4 rounded-full"
-                                style={{ width: `${(preCalcLineCount / ((state.configurations.numOfNails * state.configurations.numOfNails) - (state.configurations.numOfNails * MIN_DISTANCE))) * 100}%` }}
-                            ></div>
-                            <span
-                                className="absolute inset-0 flex items-center justify-center text-black font-bold"
-                                style={{ right: '0', paddingRight: '4px' }}
-                            >
-                                {`${Math.min((preCalcLineCount / ((state.configurations.numOfNails * state.configurations.numOfNails) - (state.configurations.numOfNails * MIN_DISTANCE))) * 100, 100).toFixed(0)}%`}
-                            </span>
-                        </div>
-                        <div className="text-lg font-semibold text-gray-800">
-                            All Posible Lines
-                        </div>
-                        <div className="text-lg font-semibold text-gray-800">
-                            {preCalcLineCount}
-                        </div>
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div className="flex flex-col items-center">
-                        <div className="relative w-full bg-gray-200 rounded-full h-4 mb-4">
-                            <div
-                                className="bg-green-500 h-4 rounded-full"
-                                style={{ width: `${(count / state.configurations.maxLineCount) * 100}%` }}
-                            ></div>
-                            <span
-                                className="absolute inset-0 flex items-center justify-center text-black font-bold"
-                                style={{ right: '0', paddingRight: '4px' }}
-                            >
-                                {`${Math.min((count / state.configurations.maxLineCount) * 100, 100).toFixed(0)}%`}
-                            </span>
-                        </div>
-                        <div className="text-lg font-semibold text-gray-800">
-                            Viewed Thread Count
-                        </div>
-                        <div className="text-lg font-semibold text-gray-800">
-                            {count}
-                        </div>
-                    </div>
-
-                </>
-            )}
+            <ProgressBar startDrawing={startDrawing} preCalcLineCount={preCalcLineCount} stringArtLineCount={stringArtLineCount}/>
             <div className='flex flex-col items-center justify-cente'>
                 <button
                     disabled={stringArtInProgress}

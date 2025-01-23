@@ -4,11 +4,10 @@ import { WorkingStatus } from '../types/enum/WorkingStatus';
 import { MIN_DISTANCE, OUTPUT_SCALING_FACTOR } from '../utils/Constants';
 import { RefObject } from 'react';
 import { getContext } from '../utils/CanvasOperations';
+import sleep from '../utils/TimeUtils';
 
 const pica = Pica();
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 export class StringArtDrawer {
 
     public async startFindingBestLines(
@@ -24,64 +23,56 @@ export class StringArtDrawer {
             throw Error("Unable to find the canvas")
         }
         let canvas: HTMLCanvasElement = canvasRef.current;
-        let ctx: CanvasRenderingContext2D | null = null
-        let imageData: ImageData;
+        let ctx: CanvasRenderingContext2D = getContext(canvas)
+        let imageData: ImageData = ctx.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight);
         let nailSeq: number[] = [];
-        if (canvas) {
-            ctx = canvas.getContext('2d');
 
-            if (ctx) {
-                imageData = ctx.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight);
-                const startX = (canvas.clientWidth / 2);
-                const startY = (canvas.clientHeight / 2);
-                const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2;
-                ctx.globalCompositeOperation = 'destination-in';
-                ctx.beginPath();
-                ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
+        const startX = (canvas.clientWidth / 2);
+        const startY = (canvas.clientHeight / 2);
+        const radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2;
 
-                this.convertToGrayscale(imageData);
-                await sleep(1000)
-                ctx.putImageData(imageData, 0, 0);
-                ctx.globalCompositeOperation = 'source-over';
-                const lineSolverMsgToWorker: StringArtWorkerMsg = {
-                    maxLineCount: maxLineCount,
-                    imageData: imageData,
-                    height: canvas.clientHeight,
-                    width: canvas.clientWidth,
-                    outputScalingFactor: OUTPUT_SCALING_FACTOR,
-                    stringWeight: stringWeight,
-                    skip: MIN_DISTANCE,
-                    allLineCoordinates: {},
-                    nailsCordinates: []
-                }
-                const stringArtWorker = new Worker(new URL("../workers/StringArtCreating.Worker.ts", import.meta.url));
+        ctx.globalCompositeOperation = 'destination-in';
+        ctx.beginPath();
+        ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
 
-                console.log("Started post message to lineSolverWorker")
-                stringArtWorker.postMessage(lineSolverMsgToWorker);
-                stringArtWorker.onmessage = function (e) {
-                    const lineSolverMsgFromWorker: StringArtWorkerResponse = e.data
-
-                    if (lineSolverMsgFromWorker.status == WorkingStatus.INPROGRESS) {
-                        if (lineSolverMsgFromWorker.imageData == undefined) {
-                            setCount(lineSolverMsgFromWorker.count)
-                        } else {
-                            if (lineSolverMsgFromWorker.imageData != undefined) {
-                                if (ctx) {
-                                    showImage(ctx, lineSolverMsgFromWorker.imageData, canvas)
-                                }
-                            }
-                        }
-                    } else if (lineSolverMsgFromWorker.status == WorkingStatus.COMPLETED) {
-                        setViewedImage(lineSolverMsgFromWorker.imageData)
-                        setNailSequence(lineSolverMsgFromWorker.nailSequence)
-                        setStringArtInProgress(false)
-                        stringArtWorker.terminate()
-                    }
-                };
-            }
+        this.convertToGrayscale(imageData);
+        await sleep(1000)
+        ctx.putImageData(imageData, 0, 0);
+        ctx.globalCompositeOperation = 'source-over';
+        const lineSolverMsgToWorker: StringArtWorkerMsg = {
+            maxLineCount: maxLineCount,
+            imageData: imageData,
+            height: canvas.clientHeight,
+            width: canvas.clientWidth,
+            outputScalingFactor: OUTPUT_SCALING_FACTOR,
+            stringWeight: stringWeight,
+            skip: MIN_DISTANCE,
+            allLineCoordinates: {},
+            nailsCordinates: []
         }
+        const stringArtWorker = new Worker(new URL("../workers/StringArtCreating.Worker.ts", import.meta.url));
+
+        stringArtWorker.postMessage(lineSolverMsgToWorker);
+        stringArtWorker.onmessage = function (e) {
+            const lineSolverMsgFromWorker: StringArtWorkerResponse = e.data
+
+            if (lineSolverMsgFromWorker.status == WorkingStatus.INPROGRESS) {
+                if (lineSolverMsgFromWorker.imageData == undefined) {
+                    setCount(lineSolverMsgFromWorker.count)
+                } else {
+                    if (lineSolverMsgFromWorker.imageData != undefined) {
+                        showImage(ctx, lineSolverMsgFromWorker.imageData, canvas.clientHeight, canvas.clientWidth)
+                    }
+                }
+            } else if (lineSolverMsgFromWorker.status == WorkingStatus.COMPLETED) {
+                setViewedImage(lineSolverMsgFromWorker.imageData)
+                setNailSequence(lineSolverMsgFromWorker.nailSequence)
+                setStringArtInProgress(false)
+                stringArtWorker.terminate()
+            }
+        };
         return { nailSeq };
     }
     private convertToGrayscale(imageData: ImageData) {
@@ -99,34 +90,9 @@ export class StringArtDrawer {
         }
     }
 }
-function drawNails(nailsCordinates: [number, number][], ctx: CanvasRenderingContext2D) {
-    nailsCordinates.forEach(([xx, yy]) => {
-        for (let x = xx; x < xx + 2; x++) {
-            for (let y = yy; y < yy + 2; y++) {
-                if (ctx) {
-                    const pixelData = ctx.createImageData(1, 1);
-                    pixelData.data[0] = 255;
-                    pixelData.data[1] = 0;
-                    pixelData.data[2] = 0;
-                    pixelData.data[3] = 255;
-                    ctx.putImageData(pixelData, x, y);
-                }
-            }
-        };
-    });
-}
 
 
-function cleanup(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement | null) {
-    if (ctx && canvas) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-    canvas = null;
-    ctx = null;
-}
-
-
-function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData, c: HTMLCanvasElement): void {
+function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData, clientHeight: number, clientWidth: number): void {
     const canvas = document.createElement('canvas');
     canvas.width = imageData.width;
     canvas.height = imageData.height;
@@ -136,12 +102,12 @@ function showImage(outputContext: CanvasRenderingContext2D, imageData: ImageData
         ctx.putImageData(imageData, 0, 0);
 
         const outputCanvas = document.createElement('canvas');
-        outputCanvas.width = c.clientWidth;
-        outputCanvas.height = c.clientHeight;
+        outputCanvas.width = clientWidth;
+        outputCanvas.height = clientHeight;
 
         pica.resize(canvas, outputCanvas, {
             quality: 3
-        }).then((result) => {
+        }).then(() => {
             if (outputContext != null) {
                 outputContext.drawImage(outputCanvas, 0, 0);
             }

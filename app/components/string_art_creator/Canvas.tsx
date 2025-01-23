@@ -27,10 +27,6 @@ const Canvas: React.FC = () => {
             }));
         } else {
             setDownloadDisabled(true)
-            updateState((prev) => ({
-                ...prev,
-                finalStringArt: null,
-            }));
         }
     }, [state.finalStringArt])
 
@@ -51,7 +47,7 @@ const Canvas: React.FC = () => {
                 <div className="relative h-full w-[95%] border-2 border-gray-300 rounded-2xl">
                     <canvas ref={canvasRef} id="string_art" className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                     <div className="absolute top-5 right-5">
-                        <Downloader image={state.finalStringArt} downloadDisabled={downloadDisabled} />
+                        <Downloader downloadDisabled={downloadDisabled} />
                     </div>
                 </div>
                 <div className="absolute w-[85%] bottom-0 left-1/2 transform -translate-x-1/2  translate-y-[120%]">

@@ -11,7 +11,6 @@ export type LinePreCalculatingWorkerResponse = {
     message: string;
     count: number
     status: WorkingStatus
-    lines: Array<[number, number]>
 };
 
 export type StringArtWorkerMsg = {

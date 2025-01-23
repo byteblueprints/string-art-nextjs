@@ -3,9 +3,10 @@ import { LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
 import { Lines } from "../algorithm/Lines";
 import { NailsCoordinatesCalculator } from "../algorithm/NailsCoordinatesCalculator";
 import { Storage } from "../algorithm/Storage";
+import { STORE_KEY_NAME_FOR_NAIL_CORDINATES, STORE_NAME_FOR_ALL_LINES, STORE_NAME_FOR_NAILS } from "../utils/Constants";
 
-const lineStorage = new Storage("lines")
-const nailStorage = new Storage("nails")
+const lineStorage = new Storage(STORE_NAME_FOR_ALL_LINES)
+const nailStorage = new Storage(STORE_NAME_FOR_NAILS)
 
 self.onmessage = async (event) => {
   await lineStorage.clearObjectStore();
@@ -15,7 +16,7 @@ self.onmessage = async (event) => {
   if (data.xc !== undefined && data.yc !== undefined && data.r !== undefined && data.nailCount !== undefined) {
     const calculator = new NailsCoordinatesCalculator(data.xc, data.yc, data.r);
     const nailsCoordinates = calculator.getNailsCoordinates(data.nailCount);
-    await nailStorage.store("nailCoordinates", nailsCoordinates);
+    await nailStorage.put(STORE_KEY_NAME_FOR_NAIL_CORDINATES, nailsCoordinates);
     self.postMessage({
       message: "Calculating nail cordinates completed"
     })
@@ -27,7 +28,6 @@ self.onmessage = async (event) => {
           message: "Line precalculating inprogress! " + progress.calculateLineCount,
           count: progress.calculateLineCount,
           status: WorkingStatus.INPROGRESS,
-          lines: progress.lines
         })
       } 
     });
