@@ -1,7 +1,7 @@
 "use client";
 
 import { AppContext } from "@/app/context_provider";
-import { drawZoomedImageOnCanvas, getContext } from "@/app/utils/CanvasOperations";
+import { drawImageOnCanvas, getContext } from "@/app/utils/CanvasOperations";
 import { useContext, useEffect, useRef } from "react";
 
 const PreviewCanvas: React.FC = () => {
@@ -11,11 +11,7 @@ const PreviewCanvas: React.FC = () => {
     useEffect(() => {
         if (state.selectedImage && canvasRef.current) {
             const canvas = canvasRef.current;
-            const ctx = getContext(canvas);
-
-            if (ctx) {
-                drawZoomedImageOnCanvas(canvas, state.selectedImage, 0.4);
-            }
+            drawImageOnCanvas(canvas, state.selectedImage, 0.4);
         }
     }, [state.selectedImage]);
     return (

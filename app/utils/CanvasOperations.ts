@@ -42,7 +42,7 @@ export const markCenterPointWithCross = (
     ctx.fill();
 };
 
-export const drawZoomedImageOnCanvas = (
+export const drawImageOnCanvas = (
     canvas: HTMLCanvasElement,
     image: HTMLImageElement,
     alpha: number
