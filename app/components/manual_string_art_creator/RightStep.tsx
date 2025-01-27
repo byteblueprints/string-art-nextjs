@@ -1,126 +1,39 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import { AppContext, DrawingContext } from '@/app/context_provider';
+import React, { useContext, useEffect } from 'react';
 import { FaAngleRight } from 'react-icons/fa';
 
-interface Props {
-  nailSequence: number[];
-  setConstructedFinal: React.Dispatch<React.SetStateAction<ImageData | null>>;
-  target: ImageData | null;
-  setTarget: React.Dispatch<React.SetStateAction<ImageData | null>>;
-  nailsCordinates: [number, number][]
-  isManualThreading: boolean
-  index: number
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
-}
 
-const RightStep: React.FC<Props> = (props: Props) => {
-  const { nailSequence, target, setTarget, setConstructedFinal, nailsCordinates, isManualThreading, index, setIndex } = props;
-  useEffect(() => {
-    setTarget(createImageData(800, 800, 255));
-  }, [])
+const RightStep: React.FC = () => {  
+  const { state: appState } = useContext(AppContext);
+  const { state: drawingState, updateState: updateDrawingState } = useContext(DrawingContext);
 
   useEffect(() => {
-    if (isManualThreading) {
+    if (drawingState.startManualThreading && !appState.stringArtInProgress) {
       right()
     }
-  }, [isManualThreading])
+  }, [drawingState.startManualThreading])
 
-  const createImageData = (width: number, height: number, fillValue: number): ImageData => {
-    const imageData = new ImageData(width, height);
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      imageData.data[i] = fillValue;
-      imageData.data[i + 1] = 0;
-      imageData.data[i + 2] = 0;
-      imageData.data[i + 3] = 255;
-    }
-    return imageData;
-  }
   const right = async () => {
-    if (isManualThreading && target) {
-      const currentStartPoint = {
-        x: nailsCordinates[nailSequence[index]][0],
-        y: nailsCordinates[nailSequence[index]][1],
-      };
-      const currentEndPoint = {
-        x: nailsCordinates[nailSequence[index + 1]][0],
-        y: nailsCordinates[nailSequence[index + 1]][1],
-      };
-      let targetWithLine = drawLineUsingBreshenHamLineDrawingAlgo(target, currentStartPoint, currentEndPoint, { r: 255, g: 0, b: 0 });
-
-      if (index > 0) {
-        const previousStartPoint = {
-          x: nailsCordinates[nailSequence[index - 1]][0],
-          y: nailsCordinates[nailSequence[index - 1]][1],
-        };
-        const previousEndPoint = {
-          x: nailsCordinates[nailSequence[index]][0],
-          y: nailsCordinates[nailSequence[index]][1],
-        };
-        targetWithLine = drawLineUsingBreshenHamLineDrawingAlgo(target, previousStartPoint, previousEndPoint, { r: 0, g: 0, b: 0 });
-      }
-      setTarget(targetWithLine)
-      setConstructedFinal(targetWithLine)
-      setIndex(index + 1);
+    if (appState.configurations.maxLineCount === drawingState.currentIndex + 1) {
+      return;      
     }
-  };
-  const drawLineUsingBreshenHamLineDrawingAlgo = (imageData: ImageData, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }, color: { r: number, g: number, b: number }): ImageData => {
-    const { width, height, data } = imageData;
-
-    const dx = Math.abs(endPoint.x - startPoint.x);
-    const dy = Math.abs(endPoint.y - startPoint.y);
-    const sx = startPoint.x < endPoint.x ? 1 : -1;
-    const sy = startPoint.y < endPoint.y ? 1 : -1;
-    let err = dx - dy;
-
-    let x = startPoint.x;
-    let y = startPoint.y;
-
-    while (true) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        const index = (y * width + x) * 4;
-        data[index] = color.r;
-        data[index + 1] = color.g;
-        data[index + 2] = color.b;
-        data[index + 3] = 255;
-      }
-
-      if (x === endPoint.x && y === endPoint.y) break;
-
-      const e2 = 2 * err;
-      if (e2 > -dy) {
-        err -= dy;
-        x += sx;
-      }
-      if (e2 < dx) {
-        err += dx;
-        y += sy;
-      }
-    }
-
-    return imageData;
-  }
-  const drawNails = (nailsCordinates: [number, number][], ctx: CanvasRenderingContext2D) => {
-    nailsCordinates.forEach(([xx, yy]) => {
-      for (let x = xx; x < xx + 2; x++) {
-        for (let y = yy; y < yy + 2; y++) {
-          if (ctx) {
-            const pixelData = ctx.createImageData(1, 1);
-            pixelData.data[0] = 255;
-            pixelData.data[1] = 0;
-            pixelData.data[2] = 0;
-            pixelData.data[3] = 255;
-            ctx.putImageData(pixelData, x, y);
-          }
-        }
+    updateDrawingState((prev) => {
+      const previousIndex = prev.currentIndex;
+      const newIndex = prev.currentIndex + 1;
+      return {
+        ...prev,
+        currentIndex: newIndex,
+        previousIndex: previousIndex,
       };
     });
-  }
+  };
   return (
     <button
-      className={`bg-blue-500 text-white px-4 py-2 rounded-full ${isManualThreading ? '' : 'opacity-50 cursor-not-allowed'}`}
+      className={`bg-blue-500 text-white px-4 py-2 rounded-full ${drawingState.startManualThreading ? '' : 'opacity-50 cursor-not-allowed'}`}
       onClick={() => right()}
-      disabled={!isManualThreading}
+      disabled={!drawingState.startManualThreading || !appState.manualDrawingPosible}
     >
       <FaAngleRight />
     </button>

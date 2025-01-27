@@ -24,6 +24,7 @@ const Canvas: React.FC = () => {
             updateState((prev) => ({
                 ...prev,
                 finalStringArt: state.finalStringArt,
+                manualDrawingPosible: true,
             }));
         } else {
             setDownloadDisabled(true)

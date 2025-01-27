@@ -9,4 +9,14 @@ export type ApplicationContext = {
     finalStringArt: ImageData | null
     stringArtInProgress: boolean
     configurations: Confifurations
+    manualDrawingPosible: boolean
+};
+
+export type ManualDrawingContext = {
+    currentIndex: number
+    previousIndex: number
+    showFinalStringArt: boolean
+    startManualThreading: boolean
+    drawnImage: ImageData | null
+    nailsCoordinates: Array<[number, number]>
 };

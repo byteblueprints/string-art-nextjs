@@ -161,7 +161,7 @@ export const drawNailsWithNumbers = (nailsCordinates: [number, number][], canvas
     });
 }
 
-export const setCanvasDimensions = (canvas: HTMLCanvasElement) => {
+export const setCSSDimentions = (canvas: HTMLCanvasElement) => {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 };
@@ -178,6 +178,29 @@ export const createTempCanvas = (finalImage: ImageData) => {
 };
 
 export const resizeImage = async (tempCanvas: HTMLCanvasElement, canvas: HTMLCanvasElement) => {
+    const outputCanvas = document.createElement('canvas');
+    outputCanvas.width = canvas.clientWidth;
+    outputCanvas.height = canvas.clientHeight;
+    const outputContext = getContext(canvas)
+    return pica.resize(tempCanvas, outputCanvas, { quality: 3 })
+        .then(() => {
+            if (outputContext) {
+                outputContext.globalCompositeOperation = 'source-over';
+                outputContext.drawImage(
+                    outputCanvas,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+            }
+        })
+        .finally(() => {
+            outputCanvas.remove();
+        });
+};
+
+export const resizeImageWithPadding = async (tempCanvas: HTMLCanvasElement, canvas: HTMLCanvasElement) => {
     const outputCanvas = document.createElement('canvas');
     outputCanvas.width = canvas.clientWidth;
     outputCanvas.height = canvas.clientHeight;

@@ -1,6 +1,7 @@
 import { Storage } from './Storage';
 import { WorkingStatus } from '../types/enum/WorkingStatus';
 import { STORE_NAME_FOR_ALL_LINES } from '../utils/Constants';
+import { drawBreshenHamLineWithStringWeight } from './BresenhamAlgorithm';
 
 const lineStorage = new Storage(STORE_NAME_FOR_ALL_LINES)
 
@@ -54,7 +55,7 @@ export class GreedyBestLineFinder {
                 lastPins.shift();
             }
             nailSequence.push(bestNail);
-            target = this.colorPixelsUsingBreshenHamLineDrawingAlgo(target, startPoint, endPoint, stringWeight);
+            target = drawBreshenHamLineWithStringWeight(target, startPoint, endPoint, stringWeight);
             if (count % 10 === 0) {
                 callback({
                     image: target,
@@ -137,48 +138,6 @@ export class GreedyBestLineFinder {
             result.data[i + 3] = 255;
         }
         return result;
-    }
-
-    private colorPixelsUsingBreshenHamLineDrawingAlgo(
-        imageData: ImageData,
-        startPoint: { x: number; y: number },
-        endPoint: { x: number; y: number },
-        stringWeight: number
-    ): ImageData {
-        const { width, height, data } = imageData;
-
-        const dx = Math.abs(endPoint.x - startPoint.x);
-        const dy = Math.abs(endPoint.y - startPoint.y);
-        const sx = startPoint.x < endPoint.x ? 1 : -1;
-        const sy = startPoint.y < endPoint.y ? 1 : -1;
-        let err = dx - dy;
-
-        let x = startPoint.x;
-        let y = startPoint.y;
-
-        while (true) {
-            if (x >= 0 && x < width && y >= 0 && y < height) {
-                const index = (y * width + x) * 4;
-                data[index] = stringWeight;
-                data[index + 1] = stringWeight;
-                data[index + 2] = stringWeight;
-                data[index + 3] = 255;
-            }
-
-            if (x === endPoint.x && y === endPoint.y) break;
-
-            const e2 = 2 * err;
-            if (e2 > -dy) {
-                err -= dy;
-                x += sx;
-            }
-            if (e2 < dx) {
-                err += dx;
-                y += sy;
-            }
-        }
-
-        return imageData;
     }
 }
 

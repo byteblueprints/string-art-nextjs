@@ -7,6 +7,7 @@ export class NailsCoordinatesCalculator {
     this.centerX = centerX;
     this.centerY = centerY;
     this.radius = radius;
+    console.log(`centerX: ${this.centerX}, centerY: ${this.centerY}, radius: ${this.radius}`);
   }
 
   public getNailsCoordinates(inputNumOfNails: number): [number, number][] {

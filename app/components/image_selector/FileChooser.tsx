@@ -49,6 +49,7 @@ const FileChooser: React.FC = () => {
       updateState((prev) => ({
         ...prev,
         selectedImage: image,
+        manualDrawingPosible: false,
       }));
     };
   };

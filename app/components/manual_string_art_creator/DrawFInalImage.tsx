@@ -1,44 +1,34 @@
 "use client";
 
-import React, { useState } from 'react';
+import { AppContext, DrawingContext } from '@/app/context_provider';
+import React, { useContext, useEffect, useState } from 'react';
 
-interface Props {
-  setConstructedFinal: React.Dispatch<React.SetStateAction<ImageData | null>>;
-  finalStringArt: ImageData | null;
-  target: ImageData | null;
-  stringArtInProgress: boolean
-}
-
-const DrawFinalImage: React.FC<Props> = (props: Props) => {
-  const { setConstructedFinal, finalStringArt, target, stringArtInProgress } = props;
+const DrawFinalImage: React.FC = () => {
+  const { state: appState } = useContext(AppContext);
+  const { updateState: updateDrawingState } = useContext(DrawingContext);
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setIsChecked(event.target.checked);
-    finalView(event.target.checked);
   };
-  const finalView = async (checked: boolean | ((prevState: boolean) => boolean) | undefined) => {
-    if (finalStringArt && checked) {
-      setConstructedFinal(finalStringArt);
-    } else {
-      if (target) {
-        const newImageData = new ImageData(
-          new Uint8ClampedArray(target.data),
-          target.width,
-          target.height
-        );
-
-        setConstructedFinal(newImageData);
-      } else {
-        setConstructedFinal(null)
-      }
+  useEffect(() => {
+    if (!appState.manualDrawingPosible) {
+      setIsChecked(false);
     }
-  };
+  }, [appState.manualDrawingPosible]);
+  useEffect(() => {
+    updateDrawingState((prev) => {
+      return {
+        ...prev,
+        showFinalStringArt: isChecked,
+      };
+    });
+  }, [isChecked]);
 
   return (
     <label className="inline-flex items-center cursor-pointer">
       <input
-        disabled={stringArtInProgress}
+        disabled={appState.stringArtInProgress || !appState.manualDrawingPosible}
         type="checkbox"
         className="form-checkbox h-5 w-5 text-blue-600"
         onChange={handleCheckboxChange}
