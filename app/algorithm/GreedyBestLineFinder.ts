@@ -1,6 +1,6 @@
 import { Storage } from './Storage';
 import { WorkingStatus } from '../types/enum/WorkingStatus';
-import { STORE_NAME_FOR_ALL_LINES } from '../utils/Constants';
+import { STORE_NAME_FOR_ALL_LINES } from '../Constants';
 import { drawBreshenHamLineWithStringWeight } from './BresenhamAlgorithm';
 
 const lineStorage = new Storage(STORE_NAME_FOR_ALL_LINES)

@@ -1,7 +1,7 @@
 "use client";
 
 import { AppContext, defaultApplicationContext } from "@/app/context_provider";
-import { BASE_IMAGE_FILE_NAME } from "@/app/utils/Constants";
+import { BASE_IMAGE_FILE_NAME } from "@/app/Constants";
 import { useContext, useEffect, useState } from "react";
 
 const FileChooser: React.FC = () => {

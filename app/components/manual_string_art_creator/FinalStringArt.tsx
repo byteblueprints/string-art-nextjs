@@ -3,7 +3,7 @@
 import { NailsCoordinatesCalculator } from '@/app/algorithm/NailsCoordinatesCalculator';
 import { AppContext, DrawingContext } from '@/app/context_provider';
 import { createTempCanvas, drawNailsWithNumbers, resizeImage, resizeImageWithPadding, setCSSDimentions } from '@/app/utils/CanvasOperations';
-import { MANUAL_DRAW_PADDING } from '@/app/utils/Constants';
+import { MANUAL_DRAW_PADDING } from '@/app/Constants';
 import React, { useContext, useEffect, useRef } from 'react';
 
 const FinalStringArt: React.FC = () => {
