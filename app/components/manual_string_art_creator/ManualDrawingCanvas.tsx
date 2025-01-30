@@ -10,7 +10,7 @@ import {
   resizeImage,
   setCSSDimentions
 } from "@/app/utils/CanvasOperations";
-import { MANUAL_DRAW_PADDING, OUTPUT_SCALING_FACTOR } from "@/app/utils/constants";
+import { MANUAL_DRAW_PADDING, OUTPUT_SCALING_FACTOR } from "@/app/utils/Constants";
 import { createImageData } from "@/app/utils/ImageUtils";
 
 const ManualDrawingCanvas: React.FC = () => {

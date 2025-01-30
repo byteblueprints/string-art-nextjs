@@ -2,7 +2,7 @@ import { WorkingStatus } from "../types/enum/WorkingStatus";
 import { StringArtWorkerMsg } from "../types/WorkerMessages";
 import { GreedyBestLineFinder } from "../algorithm/GreedyBestLineFinder";
 import { Storage } from "../algorithm/Storage";
-import { STORE_KEY_NAME_FOR_NAIL_CORDINATES, STORE_NAME_FOR_NAILS } from "../utils/constants";
+import { STORE_KEY_NAME_FOR_NAIL_CORDINATES, STORE_NAME_FOR_NAILS } from "../utils/Constants";
 
 
 const nailStorage = new Storage(STORE_NAME_FOR_NAILS)

@@ -1,4 +1,4 @@
-import { STORE_DB_NAME, STORE_NAME_FOR_ALL_LINES, STORE_NAME_FOR_NAILS } from "../utils/constants";
+import { STORE_DB_NAME, STORE_NAME_FOR_ALL_LINES, STORE_NAME_FOR_NAILS } from "../utils/Constants";
 
 export class Storage {
     private storeName: string = ""

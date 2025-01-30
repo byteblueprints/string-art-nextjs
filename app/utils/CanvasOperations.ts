@@ -1,5 +1,5 @@
 import Pica from 'pica';
-import { MANUAL_DRAW_PADDING } from './constants';
+import { MANUAL_DRAW_PADDING } from './Constants';
 
 const pica = Pica()
 
