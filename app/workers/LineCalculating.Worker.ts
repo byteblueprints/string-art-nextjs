@@ -3,7 +3,7 @@ import { LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
 import { Lines } from "../algorithm/Lines";
 import { NailsCoordinatesCalculator } from "../algorithm/NailsCoordinatesCalculator";
 import { Storage } from "../algorithm/Storage";
-import { STORE_KEY_NAME_FOR_NAIL_CORDINATES, STORE_NAME_FOR_ALL_LINES, STORE_NAME_FOR_NAILS } from "../utils/Constants";
+import { STORE_KEY_NAME_FOR_NAIL_CORDINATES, STORE_NAME_FOR_ALL_LINES, STORE_NAME_FOR_NAILS } from "../utils/constants";
 
 const lineStorage = new Storage(STORE_NAME_FOR_ALL_LINES)
 const nailStorage = new Storage(STORE_NAME_FOR_NAILS)

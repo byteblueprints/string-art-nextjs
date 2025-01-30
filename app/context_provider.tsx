@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
-import { DEFAULT_MAX_LINE_COUNT, DEFAULT_NUM_OF_NAILS, DEFAULT_STRING_WEIGHT } from "./utils/Constants";
+import { DEFAULT_MAX_LINE_COUNT, DEFAULT_NUM_OF_NAILS, DEFAULT_STRING_WEIGHT } from "./utils/constants";
 import { ApplicationContext, ManualDrawingContext } from './types/ContextTypes';
 
 // This defines the default application context, creates the application context, and provides the application context provider.

@@ -1,7 +1,7 @@
 "use client";
 
 import { AppContext } from '@/app/context_provider';
-import { MIN_DISTANCE } from '@/app/utils/Constants';
+import { MIN_DISTANCE } from '@/app/utils/constants';
 import React, { useContext } from 'react';
 
 interface Props {

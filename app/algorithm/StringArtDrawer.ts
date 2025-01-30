@@ -1,7 +1,7 @@
 import Pica from 'pica';
 import { StringArtWorkerResponse, StringArtWorkerMsg } from "../types/WorkerMessages";
 import { WorkingStatus } from '../types/enum/WorkingStatus';
-import { MIN_DISTANCE, OUTPUT_SCALING_FACTOR } from '../utils/Constants';
+import { MIN_DISTANCE, OUTPUT_SCALING_FACTOR } from '../utils/constants';
 import { RefObject } from 'react';
 import { getContext } from '../utils/CanvasOperations';
 import sleep from '../utils/TimeUtils';

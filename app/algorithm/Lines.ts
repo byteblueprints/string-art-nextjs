@@ -1,5 +1,5 @@
 import { WorkingStatus } from "../types/enum/WorkingStatus";
-import { MIN_DISTANCE, STORE_NAME_FOR_ALL_LINES } from "../utils/Constants";
+import { MIN_DISTANCE, STORE_NAME_FOR_ALL_LINES } from "../utils/constants";
 import { BresenhamAlgorithm } from "./BresenhamAlgorithm";
 import { Storage } from "./Storage";
 

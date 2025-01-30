@@ -1,6 +1,6 @@
 import { WorkingStatus } from "../types/enum/WorkingStatus";
 import { LinePreCalculatingWorkerResponse, LinePreCalculatingWorkerMsg } from "../types/WorkerMessages";
-import { MIN_DISTANCE } from "../utils/Constants";
+import { MIN_DISTANCE } from "../utils/constants";
 
 export class LinesPreCalculator {
 
