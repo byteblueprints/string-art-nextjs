@@ -9,11 +9,11 @@ const ManualStringArtCreator: React.FC = () => {
   return (
     <>
       <ManualDrawingContextProvider>
-        <div className="container flex">
-          <div className="column w-1/2">
+        <div className="container flex flex-col lg:flex-row h-screen">
+          <div className="column h-full lg:w-1/2">
             <Preview />
           </div>
-          <div className="column w-1/2">
+          <div className="column h-full lg:w-1/2">
             <Controls />
           </div>
         </div>

@@ -136,8 +136,6 @@ export const circleCrop = (
 
 
 export const drawNailsWithNumbers = (nailsCordinates: [number, number][], canvas: HTMLCanvasElement) => {
-    let count = 0;
-    let i = 1;
     const ctx = getContext(canvas);
     nailsCordinates.forEach(([xx, yy]) => {
         for (let x = xx - 1; x < xx + 2; x++) {
@@ -152,12 +150,6 @@ export const drawNailsWithNumbers = (nailsCordinates: [number, number][], canvas
                 }
             }
         };
-        if (count % 5 == 0) {
-            ctx.font = "10px Arial";
-            ctx.fillText("" + i, xx, yy);
-        }
-        count++;
-        i++;
     });
 }
 
