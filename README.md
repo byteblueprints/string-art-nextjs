@@ -3,12 +3,16 @@
 Welcome to the String Art project built with Next.js! This project showcases the creation of string art patterns using web technologies.
 
 ## Table of Contents
+- [Live Preview](#live-preview) 
 - [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Live Preview
+[String Art Preview](https://byteblueprints.github.io/string-art-nextjs/) 
 
 ## Introduction
 String art is a beautiful and intricate form of art that involves creating patterns using strings. This project leverages the power of Next.js to generate and display these patterns dynamically.
