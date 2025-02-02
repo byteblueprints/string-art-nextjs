@@ -138,18 +138,9 @@ export const circleCrop = (
 export const drawNailsWithNumbers = (nailsCordinates: [number, number][], canvas: HTMLCanvasElement) => {
     const ctx = getContext(canvas);
     nailsCordinates.forEach(([xx, yy]) => {
-        for (let x = xx - 1; x < xx + 2; x++) {
-            for (let y = yy - 1; y < yy + 2; y++) {
-                if (ctx) {
-                    const pixelData = ctx.createImageData(1, 1);
-                    pixelData.data[0] = 255;
-                    pixelData.data[1] = 0;
-                    pixelData.data[2] = 0;
-                    pixelData.data[3] = 255;
-                    ctx.putImageData(pixelData, x, y);
-                }
-            }
-        };
+        const pixelData = ctx.createImageData(1, 1);
+        pixelData.data.set([255, 0, 0, 255]);
+        ctx.putImageData(pixelData, xx, yy);
     });
 }
 

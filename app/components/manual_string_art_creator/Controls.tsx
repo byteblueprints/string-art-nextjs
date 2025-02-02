@@ -36,7 +36,7 @@ const Controls: React.FC = (() => {
     <>
       <div className="h-full lg:h-[80%] lg:basis-1/2 mt-10 p-5 flex flex-col justify-center items-center">
         <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
-          Current Index: {drawingState.currentIndex}
+          Current Step: {drawingState.currentIndex + 1}
         </div>
         <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
           Starting Nail: {appState.nailSequence[drawingState.currentIndex] + 1} -{'>'} End Nail: {appState.nailSequence[drawingState.currentIndex + 1] + 1}
