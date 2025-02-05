@@ -38,6 +38,20 @@ const Controls: React.FC = (() => {
         <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
           Current Step: {drawingState.currentIndex + 1}
         </div>
+        <input
+          type="range"
+          min="0"
+          max={appState.configurations.maxLineCount - 1}
+          value={drawingState.currentIndex}
+          onChange={(e) => {
+            const newIndex = parseInt(e.target.value);
+            updateDrawingState(prev => ({
+              ...prev,
+              currentIndex: newIndex,
+            }));
+          }}
+          className="w-full mt-2 mb-4"
+        />
         <div className="text-xs font-medium md:text-sm md:font-medium whitespace-nowrap overflow-hidden text-ellipsis text-black p-3">
           Starting Nail: {appState.nailSequence[drawingState.currentIndex] + 1} -{'>'} End Nail: {appState.nailSequence[drawingState.currentIndex + 1] + 1}
         </div>
@@ -54,6 +68,21 @@ const Controls: React.FC = (() => {
           <RightStep />
           <DrawFinalImage />
         </div>
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-full mb-4"
+          onClick={() => {
+            const csvContent = appState.nailSequence.join(',');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nail_sequence.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+          }}
+        >
+          Download Nail Sequence
+        </button>
       </div>
     </>
   );
