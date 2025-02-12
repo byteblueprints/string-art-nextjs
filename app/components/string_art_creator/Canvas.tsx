@@ -44,7 +44,7 @@ const Canvas: React.FC = () => {
     }, [state.imgXPos, state.imgYPos, state.imgScale, state.selectedImage]);
     return (
         <>
-            <div className="relative flex flex-col h-full items-center">
+            <div className="relative flex flex-col h-full items-center  mt-5">
                 <div className="relative h-full w-[95%] border-2 border-gray-300 rounded-2xl">
                     <canvas ref={canvasRef} id="string_art" className="absolute h-full aspect-square top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                     <div className="absolute top-5 right-5">

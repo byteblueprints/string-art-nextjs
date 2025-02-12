@@ -6,7 +6,7 @@ import Preview from "./Preview";
 
 const ImageSelector: React.FC = () => {
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col h-full relative mt-5">
       <div className="relative h-full">
         <Preview />
       </div>

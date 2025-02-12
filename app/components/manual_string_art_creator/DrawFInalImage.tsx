@@ -26,11 +26,11 @@ const DrawFinalImage: React.FC = () => {
   }, [isChecked]);
 
   return (
-    <label className="inline-flex items-center cursor-pointer">
+    <label className="inline-flex items-center">
       <input
         disabled={appState.stringArtInProgress || !appState.manualDrawingPosible || drawingState.drawImageUsingCSV}
         type="checkbox"
-        className="form-checkbox h-5 w-5 text-blue-600"
+        className={`form-checkbox h-5 w-5 text-blue-600 ${drawingState.startManualThreading ? '' : 'opacity-50 cursor-not-allowed'}`}
         onChange={handleCheckboxChange}
         checked={isChecked}
       />

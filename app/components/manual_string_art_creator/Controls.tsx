@@ -83,16 +83,17 @@ const Controls: React.FC = (() => {
 
         <button
           disabled={appState.stringArtInProgress || !appState.manualDrawingPosible}
-          className="bg-blue-500 text-white px-4 py-2 rounded-full"
+          className={`bg-blue-500 text-white px-4 py-2 rounded-full ${appState.stringArtInProgress || !appState.manualDrawingPosible ? 'opacity-50 cursor-not-allowed' : ''}`}
           onClick={() => start()}
         >
-          Start Manual Threading
+          Start Manual Viewing on Canvas
         </button>
         <div className="flex p-4 space-x-4 justify-center items-center bg-white">
           <LeftStep />
           <RightStep />
           <DrawFinalImage />
         </div>
+        <hr className="border-gray-300 my-10 w-full" />
         <button
           className="bg-green-500 text-white px-4 py-2 rounded-full mb-4"
           onClick={() => {
