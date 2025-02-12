@@ -19,4 +19,5 @@ export type ManualDrawingContext = {
     startManualThreading: boolean
     drawnImage: ImageData | null
     nailsCoordinates: Array<[number, number]>
+    drawImageUsingCSV: boolean
 };

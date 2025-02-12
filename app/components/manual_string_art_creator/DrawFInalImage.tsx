@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 const DrawFinalImage: React.FC = () => {
   const { state: appState } = useContext(AppContext);
-  const { updateState: updateDrawingState } = useContext(DrawingContext);
+  const { state: drawingState, updateState: updateDrawingState } = useContext(DrawingContext);
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
@@ -28,7 +28,7 @@ const DrawFinalImage: React.FC = () => {
   return (
     <label className="inline-flex items-center cursor-pointer">
       <input
-        disabled={appState.stringArtInProgress || !appState.manualDrawingPosible}
+        disabled={appState.stringArtInProgress || !appState.manualDrawingPosible || drawingState.drawImageUsingCSV}
         type="checkbox"
         className="form-checkbox h-5 w-5 text-blue-600"
         onChange={handleCheckboxChange}

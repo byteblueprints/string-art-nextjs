@@ -7,7 +7,7 @@ import RightStep from "./RightStep";
 import DrawFinalImage from "./DrawFInalImage";
 
 const Controls: React.FC = (() => {
-  const { state: appState } = useContext(AppContext);
+  const { state: appState, updateState: updateAppState } = useContext(AppContext);
   const { state: drawingState, updateState: updateDrawingState } = useContext(DrawingContext);
 
   useEffect(() => {
@@ -19,6 +19,7 @@ const Controls: React.FC = (() => {
           previousIndex: defaultManualDrawingContext.previousIndex,
           startManualThreading: defaultManualDrawingContext.startManualThreading,
           showFinalStringArt: defaultManualDrawingContext.showFinalStringArt,
+          drawImageUsingCSV: defaultManualDrawingContext.drawImageUsingCSV
         };
       });
     }
@@ -31,6 +32,30 @@ const Controls: React.FC = (() => {
         startManualThreading: true,
       };
     });
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      const nailsArray = content.split(",").map((nail) => parseInt(nail.trim(), 10)).filter(Number.isInteger);
+
+      if (nailsArray.length > 0) {
+        updateAppState((prev) => ({
+          ...prev,
+          manualDrawingPosible: true,
+          nailSequence: nailsArray,
+        }));
+        updateDrawingState((prev) => ({
+          ...prev,
+          drawImageUsingCSV: true
+        }));
+      }
+    };
+    reader.readAsText(file);
   };
   return (
     <>
@@ -81,8 +106,17 @@ const Controls: React.FC = (() => {
             window.URL.revokeObjectURL(url);
           }}
         >
-          Download Nail Sequence
+          Download Nail Sequence CSV
         </button>
+        <label className="bg-gray-500 text-white px-4 py-2 rounded-full cursor-pointer">
+          Load Nail Sequence From CSV
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+        </label>
       </div>
     </>
   );

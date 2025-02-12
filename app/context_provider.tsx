@@ -44,6 +44,7 @@ export const defaultManualDrawingContext: ManualDrawingContext = {
     startManualThreading: false,
     drawnImage: null,
     nailsCoordinates: [],
+    drawImageUsingCSV: false,
 };
 export const DrawingContext = createContext<{
     state: ManualDrawingContext;
