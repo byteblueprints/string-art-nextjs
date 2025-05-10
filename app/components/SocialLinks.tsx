@@ -32,8 +32,8 @@ const SocialLinks = () => {
                                 </div>
                             </a>
                             <a href="https://x.com/byteblueprints" target="_blank" rel="noopener noreferrer" className="group hover:scale-110 transition-transform">
-                                <div className="p-2 border-2 border-blue-400 rounded-full group-hover:bg-blue-400 group-hover:text-white transition-colors">
-                                    <FaX className="text-blue-400 text-xl group-hover:text-white transition-colors" />
+                                <div className="p-2 border-2 border-black rounded-full group-hover:bg-black group-hover:text-white transition-colors">
+                                    <FaX className="text-black text-xl group-hover:text-white transition-colors" />
                                 </div>
                             </a>
                             <a href="https://www.instagram.com/sandaruwanwijerathn/" target="_blank" rel="noopener noreferrer" className="group hover:scale-110 transition-transform">
@@ -46,12 +46,12 @@ const SocialLinks = () => {
                                     <FaFacebook className="text-blue-600 text-xl group-hover:text-white transition-colors" />
                                 </div>
                             </a>
-                            <a href="https://m.me/519591774573478" target="_blank" rel="noopener noreferrer" className="group hover:scale-110 transition-transform">
+                            {/* <a href="https://m.me/yourmessengerid" target="_blank" rel="noopener noreferrer" className="group hover:scale-110 transition-transform">
                                 <div className="p-2 border-2 border-blue-500 rounded-full group-hover:bg-blue-500 group-hover:text-white transition-colors">
                                     <FaFacebookMessenger className="text-blue-500 text-xl group-hover:text-white transition-colors" />
                                 </div>
                             </a>
-                            {/* <a href="https://wa.me/yourwhatsappnumber" target="_blank" rel="noopener noreferrer" className="group hover:scale-110 transition-transform">
+                            <a href="https://wa.me/yourwhatsappnumber" target="_blank" rel="noopener noreferrer" className="group hover:scale-110 transition-transform">
                                 <div className="p-2 border-2 border-green-400 rounded-full group-hover:bg-green-400 group-hover:text-white transition-colors">
                                     <FaWhatsapp className="text-green-400 text-xl group-hover:text-white transition-colors" />
                                 </div>
@@ -117,7 +117,7 @@ const SocialLinks = () => {
                                     </li>
                                     <li>
                                         <a href="https://x.com/byteblueprints" className="flex items-center space-x-2">
-                                            <FaX className="text-blue-400 text-xl" />
+                                            <FaX className="text-gray-900 text-xl" />
                                             <span>X</span>
                                         </a>
                                     </li>
@@ -133,13 +133,13 @@ const SocialLinks = () => {
                                             <span>Facebook</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="https://m.me/519591774573478" className="flex items-center space-x-2">
+                                    {/* <li>
+                                        <a href="https://m.me/yourmessengerid" className="flex items-center space-x-2">
                                             <FaFacebookMessenger className="text-blue-500 text-xl" />
                                             <span>Messenger</span>
                                         </a>
                                     </li>
-                                    {/* <li>
+                                    <li>
                                         <a href="https://wa.me/yourwhatsappnumber" className="flex items-center space-x-2">
                                             <FaWhatsapp className="text-green-400 text-xl" />
                                             <span>WhatsApp</span>
