@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaLinkedin, FaTwitter, FaInstagram, FaFacebook, FaFacebookMessenger, FaWhatsapp, FaYoutube, FaTiktok, FaCoffee, FaPatreon } from "react-icons/fa";
+import { FaX } from 'react-icons/fa6';
 
 const SocialLinks = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -109,53 +110,53 @@ const SocialLinks = () => {
                                 <h2 className="text-xl font-semibold mb-4">Connect with me:</h2>
                                 <ul className="space-y-4">
                                     <li>
-                                        <a href="https://linkedin.com/in/yourprofile" className="flex items-center space-x-2">
+                                        <a href="https://www.linkedin.com/in/sandaruwan-wijerathne/" className="flex items-center space-x-2">
                                             <FaLinkedin className="text-blue-500 text-xl" />
                                             <span>LinkedIn</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://twitter.com/yourprofile" className="flex items-center space-x-2">
-                                            <FaTwitter className="text-blue-400 text-xl" />
-                                            <span>Twitter</span>
+                                        <a href="https://x.com/byteblueprints" className="flex items-center space-x-2">
+                                            <FaX className="text-blue-400 text-xl" />
+                                            <span>X</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://instagram.com/yourprofile" className="flex items-center space-x-2">
+                                        <a href="https://www.instagram.com/sandaruwanwijerathn/" className="flex items-center space-x-2">
                                             <FaInstagram className="text-pink-400 text-xl" />
                                             <span>Instagram</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://facebook.com/yourprofile" className="flex items-center space-x-2">
+                                        <a href="https://facebook.com/sandaruwan.wijerathne.31" className="flex items-center space-x-2">
                                             <FaFacebook className="text-blue-600 text-xl" />
                                             <span>Facebook</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://m.me/yourmessengerid" className="flex items-center space-x-2">
+                                        <a href="https://m.me/519591774573478" className="flex items-center space-x-2">
                                             <FaFacebookMessenger className="text-blue-500 text-xl" />
                                             <span>Messenger</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <a href="https://wa.me/yourwhatsappnumber" className="flex items-center space-x-2">
                                             <FaWhatsapp className="text-green-400 text-xl" />
                                             <span>WhatsApp</span>
                                         </a>
-                                    </li>
+                                    </li> */}
                                     <li>
-                                        <a href="https://youtube.com/yourchannel" className="flex items-center space-x-2">
+                                        <a href="https://www.youtube.com/@ByteBlueprints" className="flex items-center space-x-2">
                                             <FaYoutube className="text-red-500 text-xl" />
                                             <span>YouTube</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <a href="https://www.tiktok.com/@yourprofile" className="flex items-center space-x-2">
                                             <FaTiktok className="text-black text-xl" />
                                             <span>TikTok</span>
                                         </a>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
 
@@ -163,13 +164,13 @@ const SocialLinks = () => {
                                 <h2 className="text-xl font-semibold mb-4">Support my work:</h2>
                                 <ul className="space-y-4">
                                     <li>
-                                        <a href="https://www.buymeacoffee.com/yourprofile" className="flex items-center space-x-2">
+                                        <a href="https://buymeacoffee.com/byteblueprints" className="flex items-center space-x-2">
                                             <FaCoffee className="text-yellow-400 text-xl" />
                                             <span>Buy Me a Coffee</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://patreon.com/yourprofile" className="flex items-center space-x-2">
+                                        <a href="https://www.patreon.com/c/byteblueprints" className="flex items-center space-x-2">
                                             <FaPatreon className="text-red-600 text-xl" />
                                             <span>Patreon</span>
                                         </a>
